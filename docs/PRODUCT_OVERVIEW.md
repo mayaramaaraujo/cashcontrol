@@ -4,7 +4,14 @@ Shared income/bills tracker for couples and roommates. Group members log what th
 
 ## Status
 
-Design tokens, feature-based architecture skeleton, and the shared design-system primitives (Avatar, Button, Input, Chip, SegmentedControl, Sheet, BottomNav — `src/shared/components/`) are in place. Supabase is wired up and the Login/Signup screens + auth session handling are done. Group setup, Home/Bills/History/People screens, and the rest of the data model are still to come.
+Design tokens, feature-based architecture skeleton, and the shared design-system primitives (Avatar, Button, Input, Chip, SegmentedControl, Sheet, BottomNav — `src/shared/components/`) are in place. See `docs/DESIGN_SYSTEM.md`. Supabase is wired up and the Login/Signup screens + auth session handling are done — see `docs/AUTH.md`. Group setup, Home/Bills/History/People screens, and the rest of the data model are still to come.
+
+## Implementation docs
+
+Each major implementation has its own writeup in `docs/`:
+
+- [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) — design tokens, feature-based architecture, shared UI primitives.
+- [`AUTH.md`](./AUTH.md) — Supabase auth, Login/Signup UI, session handling, route protection.
 
 ## Architecture
 
