@@ -1,26 +1,181 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Background layers */
+  --color-bg-base: #131120;
+  --color-bg-elevated: #1a1726;
+  --color-bg-sheet: #1a1726;
+  --color-bg-hero-from: #2a1d35;
+  --color-bg-hero-via: #1c1628;
+  --color-bg-hero-to: #181322;
+  --color-bg-page-from: #241a3a;
+  --color-bg-page-via: #16121f;
+  --color-bg-page-to: #0c0a12;
+
+  /* Text */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #e7e4f0;
+  --color-text-tertiary: #cfccdd;
+  --color-text-muted: #9a97ad;
+  --color-text-subtle: #8d8aa3;
+  --color-text-faint: #7c7991;
+  --color-text-dim: #6b6880;
+  --color-text-faintest: #56536a;
+  --color-text-icon: #b6b3c9;
+
+  /* Primary (brand pink/mauve) */
+  --color-primary: #c264af;
+  --color-primary-dark: #9c4f8f;
+  --color-primary-darker: #8a3f7d;
+  --color-primary-light: #d27cc0;
+  --color-primary-muted: #c6a9d4;
+
+  /* Semantic accents */
+  --color-positive: #6fd4ce;
+  --color-positive-dark: #56c6c0;
+  --color-warning: #e0a458;
+  --color-warning-dark: #e0b85a;
+  --color-danger: #e08a8a;
+  --color-violet: #9b8cf0;
+  --color-violet-dark: #7d7bd6;
+  --color-neutral-accent: #7f8b95;
+
+  /* Avatar / category cycling palette */
+  --color-avatar-1: #e88aa0;
+  --color-avatar-2: #8ad6a0;
+  --color-avatar-3: #88b6e8;
+  --color-avatar-4: #e0b85a;
+  --color-avatar-5: #9b8cf0;
+  --color-avatar-6: #6fd4ce;
+
+  /* Translucent surface steps (over dark backgrounds) */
+  --color-surface-1: rgba(255, 255, 255, 0.03);
+  --color-surface-2: rgba(255, 255, 255, 0.05);
+  --color-surface-3: rgba(255, 255, 255, 0.07);
+  --color-surface-4: rgba(255, 255, 255, 0.09);
+  --color-surface-border: rgba(255, 255, 255, 0.08);
+
+  /* Radii */
+  --radius-xs: 8px;
+  --radius-sm: 11px;
+  --radius-md: 13px;
+  --radius-lg: 15px;
+  --radius-xl: 18px;
+  --radius-2xl: 22px;
+  --radius-3xl: 26px;
+
+  /* Glow shadows */
+  --shadow-glow-primary: 0 16px 34px -12px rgba(194, 100, 175, 0.7);
+  --shadow-glow-positive: 0 16px 34px -12px rgba(111, 212, 206, 0.5);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg-base: var(--color-bg-base);
+  --color-bg-elevated: var(--color-bg-elevated);
+  --color-bg-sheet: var(--color-bg-sheet);
+  --color-bg-hero-from: var(--color-bg-hero-from);
+  --color-bg-hero-via: var(--color-bg-hero-via);
+  --color-bg-hero-to: var(--color-bg-hero-to);
+  --color-bg-page-from: var(--color-bg-page-from);
+  --color-bg-page-via: var(--color-bg-page-via);
+  --color-bg-page-to: var(--color-bg-page-to);
+
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-tertiary: var(--color-text-tertiary);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-subtle: var(--color-text-subtle);
+  --color-text-faint: var(--color-text-faint);
+  --color-text-dim: var(--color-text-dim);
+  --color-text-faintest: var(--color-text-faintest);
+  --color-text-icon: var(--color-text-icon);
+
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-primary-darker: var(--color-primary-darker);
+  --color-primary-light: var(--color-primary-light);
+  --color-primary-muted: var(--color-primary-muted);
+
+  --color-positive: var(--color-positive);
+  --color-positive-dark: var(--color-positive-dark);
+  --color-warning: var(--color-warning);
+  --color-warning-dark: var(--color-warning-dark);
+  --color-danger: var(--color-danger);
+  --color-violet: var(--color-violet);
+  --color-violet-dark: var(--color-violet-dark);
+  --color-neutral-accent: var(--color-neutral-accent);
+
+  --color-avatar-1: var(--color-avatar-1);
+  --color-avatar-2: var(--color-avatar-2);
+  --color-avatar-3: var(--color-avatar-3);
+  --color-avatar-4: var(--color-avatar-4);
+  --color-avatar-5: var(--color-avatar-5);
+  --color-avatar-6: var(--color-avatar-6);
+
+  --color-surface-1: var(--color-surface-1);
+  --color-surface-2: var(--color-surface-2);
+  --color-surface-3: var(--color-surface-3);
+  --color-surface-4: var(--color-surface-4);
+  --color-surface-border: var(--color-surface-border);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-3xl: var(--radius-3xl);
+
+  --shadow-glow-primary: var(--shadow-glow-primary);
+  --shadow-glow-positive: var(--shadow-glow-positive);
+
+  --font-display: var(--font-sora);
+  --font-body: var(--font-manrope);
+
+  --animate-sheet-in: cc-sheet-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-dim-in: cc-dim-in 0.25s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes cc-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes cc-dim-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-body), sans-serif;
+}
+
+/* Avatar gradient backgrounds — the 6-color cycling palette used for member/category avatars */
+.avatar-gradient-1 {
+  background: linear-gradient(145deg, var(--color-avatar-1), color-mix(in srgb, var(--color-avatar-1) 62%, black));
+}
+.avatar-gradient-2 {
+  background: linear-gradient(145deg, var(--color-avatar-2), color-mix(in srgb, var(--color-avatar-2) 62%, black));
+}
+.avatar-gradient-3 {
+  background: linear-gradient(145deg, var(--color-avatar-3), color-mix(in srgb, var(--color-avatar-3) 62%, black));
+}
+.avatar-gradient-4 {
+  background: linear-gradient(145deg, var(--color-avatar-4), color-mix(in srgb, var(--color-avatar-4) 62%, black));
+}
+.avatar-gradient-5 {
+  background: linear-gradient(145deg, var(--color-avatar-5), color-mix(in srgb, var(--color-avatar-5) 62%, black));
+}
+.avatar-gradient-6 {
+  background: linear-gradient(145deg, var(--color-avatar-6), color-mix(in srgb, var(--color-avatar-6) 62%, black));
 }
