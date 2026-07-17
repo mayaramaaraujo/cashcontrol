@@ -1,3 +1,119 @@
-export default async function HomePage() {
-  return <p>Coming soon</p>;
+import { redirect } from "next/navigation";
+import { Plus } from "lucide-react";
+import { getCurrentGroup } from "@/shared/lib/supabase/get-current-group";
+import { createClient } from "@/shared/lib/supabase/server";
+import { GROUP_MEMBER_COLUMNS, mapGroupMemberRow } from "@/features/groups/lib";
+import type { IncomeEntry } from "@/features/income/types";
+import type { Bill } from "@/features/bills/types";
+import {
+  computeHero,
+  computeMemberStrip,
+  buildIncomeActivity,
+  buildBillActivity,
+} from "@/features/dashboard/lib";
+import { HeroSection } from "@/features/dashboard/components/HeroSection";
+import { MemberStrip } from "@/features/dashboard/components/MemberStrip";
+import { ActivitySection } from "@/features/dashboard/components/ActivitySection";
+
+function monthRange(month: string) {
+  const [year, monthNum] = month.split("-").map(Number);
+  const start = new Date(Date.UTC(year, monthNum - 1, 1));
+  const end = new Date(Date.UTC(year, monthNum, 1));
+  return { start: start.toISOString().slice(0, 10), end: end.toISOString().slice(0, 10) };
+}
+
+interface HomePageProps {
+  searchParams: Promise<{ month?: string }>;
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const currentGroup = await getCurrentGroup();
+  if (!currentGroup) {
+    redirect("/setup");
+  }
+
+  const { month: monthParam } = await searchParams;
+  const now = new Date();
+  const month = monthParam ?? `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const { start, end } = monthRange(month);
+
+  const supabase = await createClient();
+
+  const [membersRes, entriesRes, billsRes, anyEntriesRes] = await Promise.all([
+    supabase
+      .from("group_members")
+      .select(GROUP_MEMBER_COLUMNS)
+      .eq("group_id", currentGroup.groupId)
+      .eq("status", "active")
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("income_entries")
+      .select("id, group_id, member_id, category, amount, note, entry_date, created_at")
+      .eq("group_id", currentGroup.groupId)
+      .gte("entry_date", start)
+      .lt("entry_date", end)
+      .order("entry_date", { ascending: false }),
+    supabase
+      .from("bills")
+      .select("id, group_id, name, category, amount, due_day, fixed, paid, repeat_monthly, created_at")
+      .eq("group_id", currentGroup.groupId)
+      .order("due_day", { ascending: true }),
+    supabase
+      .from("income_entries")
+      .select("id", { count: "exact", head: true })
+      .eq("group_id", currentGroup.groupId),
+  ]);
+
+  const members = (membersRes.data ?? []).map(mapGroupMemberRow);
+
+  const entries: IncomeEntry[] = (entriesRes.data ?? []).map((row) => ({
+    id: row.id,
+    groupId: row.group_id,
+    memberId: row.member_id,
+    category: row.category,
+    amount: Number(row.amount),
+    note: row.note,
+    entryDate: row.entry_date,
+    createdAt: row.created_at,
+  }));
+
+  const bills: Bill[] = (billsRes.data ?? []).map((row) => ({
+    id: row.id,
+    groupId: row.group_id,
+    name: row.name,
+    category: row.category,
+    amount: Number(row.amount),
+    dueDay: row.due_day,
+    fixed: row.fixed,
+    paid: row.paid,
+    repeatMonthly: row.repeat_monthly,
+    createdAt: row.created_at,
+  }));
+
+  const hasAnyActivity = (anyEntriesRes.count ?? 0) > 0 || bills.length > 0;
+
+  const hero = computeHero(entries, bills, members.length);
+  const memberStrip = computeMemberStrip(members, entries);
+  const incomeItems = buildIncomeActivity(entries, members);
+  const billItems = buildBillActivity(bills, month);
+
+  return (
+    <div>
+      <HeroSection hero={hero} />
+      <MemberStrip members={memberStrip} />
+
+      {hasAnyActivity ? (
+        <ActivitySection incomeItems={incomeItems} billItems={billItems} />
+      ) : (
+        <div className="mt-8 flex flex-col items-center gap-3 rounded-2xl border border-surface-border bg-surface-1 p-6 text-center">
+          <p className="text-sm text-text-subtle">
+            No activity yet — add your first income or bill using the button below.
+          </p>
+          <span className="flex size-10 items-center justify-center rounded-xl bg-primary/15">
+            <Plus className="size-5 text-primary-light" />
+          </span>
+        </div>
+      )}
+    </div>
+  );
 }
