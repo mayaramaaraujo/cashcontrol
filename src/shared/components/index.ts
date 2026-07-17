@@ -5,3 +5,5 @@ export { Chip, type ChipAccent } from "./Chip";
 export { SegmentedControl, type SegmentedOption } from "./SegmentedControl";
 export { Sheet } from "./Sheet";
 export { BottomNav, type BottomNavItem } from "./BottomNav";
+export { ProgressBar } from "./ProgressBar";
+export { Switch } from "./Switch";
