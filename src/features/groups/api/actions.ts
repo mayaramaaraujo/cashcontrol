@@ -27,30 +27,18 @@ export async function createGroup(
     return { error: "Not authenticated" };
   }
 
-  const inviteCode = crypto.randomUUID().split("-")[0];
-
-  const { data: group, error: groupError } = await supabase
-    .from("groups")
-    .insert({ name, invite_code: inviteCode, created_by: user.id })
-    .select("id")
-    .single();
-
-  if (groupError || !group) {
-    return { error: groupError?.message ?? "Failed to create group" };
-  }
-
-  const { error: memberError } = await supabase.from("group_members").insert({
-    group_id: group.id,
-    user_id: user.id,
-    display_name: deriveDisplayName(user),
-    role: "admin",
-    status: "active",
-    color_index: 0,
+  // A plain insert()+select() here would fail: groups_select requires an
+  // active group_members row, which doesn't exist until the second insert
+  // below runs, so Postgres rejects reading the just-inserted row back.
+  // The RPC does both inserts atomically as security definer, sidestepping
+  // that chicken-and-egg RLS check (and rolling back both on any failure).
+  const { error: rpcError } = await supabase.rpc("create_group_with_owner", {
+    p_name: name,
+    p_display_name: deriveDisplayName(user),
   });
 
-  if (memberError) {
-    await supabase.from("groups").delete().eq("id", group.id);
-    return { error: memberError.message };
+  if (rpcError) {
+    return { error: rpcError.message };
   }
 
   // Not inside a try/catch in the caller: redirect() throws a special

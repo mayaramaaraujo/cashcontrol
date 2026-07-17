@@ -207,6 +207,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_group_with_owner: {
+        Args: { p_display_name: string; p_name: string }
+        Returns: {
+          created_at: string
+          created_by: string
+          id: string
+          invite_code: string
+          name: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "groups"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      delete_own_account: { Args: never; Returns: undefined }
       is_active_group_member: { Args: { p_group_id: string }; Returns: boolean }
       is_group_admin: { Args: { p_group_id: string }; Returns: boolean }
     }
