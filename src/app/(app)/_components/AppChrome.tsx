@@ -78,7 +78,7 @@ export function AppChrome({ groupName, members, children }: AppChromeProps) {
 
   return (
     <div className="min-h-screen">
-      <div className="fixed inset-x-0 top-0 z-20 flex items-center justify-between bg-gradient-to-b from-bg-base from-80% to-transparent px-5 pt-6 pb-3">
+      <div className="fixed inset-x-0 top-0 z-20 flex items-center justify-between bg-linear-to-b from-bg-base from-80% to-transparent px-5 pt-6 pb-3">
         <div className="min-w-0">
           <button
             type="button"
@@ -98,7 +98,7 @@ export function AppChrome({ groupName, members, children }: AppChromeProps) {
               key={member.id}
               initials={getInitials(member.displayName)}
               colorIndex={member.colorIndex as AvatarColorIndex}
-              className="-ml-2 border-2 border-bg-base first:ml-0"
+              className="not-first:-ml-2 border-2 border-bg-base"
             />
           ))}
           {overflowCount > 0 ? (
@@ -119,7 +119,7 @@ export function AppChrome({ groupName, members, children }: AppChromeProps) {
       />
 
       <Sheet open={showMonthPicker} onClose={() => setShowMonthPicker(false)} title="Select month">
-        <div className="flex max-h-[340px] flex-col gap-1.5 overflow-y-auto">
+        <div className="flex max-h-85 flex-col gap-1.5 overflow-y-auto">
           {monthOptions.map((option) => (
             <button
               key={option.value}

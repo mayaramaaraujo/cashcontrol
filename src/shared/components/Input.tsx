@@ -14,7 +14,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   return (
     <div
       className={`flex h-14 items-center gap-3 rounded-lg border bg-surface-2 px-4 ${
-        invalid ? "border-danger" : "border-surface-border focus-within:border-primary"
+        invalid ? "border-danger" : "not-focus-within:border-surface-border focus-within:border-primary"
       }`}
     >
       {Icon ? <Icon className="size-5 shrink-0 text-text-faint" /> : null}

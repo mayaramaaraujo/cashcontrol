@@ -41,7 +41,7 @@ export function BottomNav<T extends string>({
           type="button"
           onClick={onAddClick}
           aria-label="Add"
-          className="-mt-4 mx-1 flex size-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-dark shadow-glow-primary"
+          className="-mt-4 mx-1 flex size-14 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-primary to-primary-dark shadow-glow-primary"
         >
           <AddIcon className="size-6 text-text-primary" />
         </button>
