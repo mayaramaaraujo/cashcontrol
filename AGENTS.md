@@ -23,14 +23,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Git Workflow
 
-**ALWAYS create a feature/fix branch, never commit directly to main:**
-
-1. Create a descriptive branch: `git checkout -b feature/description` or `git checkout -b fix/description`
-2. Make all commits on the feature branch
-3. When ready, create a pull request to merge into main
-4. Only merge to main via pull request after all checks pass
-
-This ensures main stays clean, changes are reviewed, and history is clear.
+This is a personal project — commit directly to `main`. No feature branches or PRs required.
 
 ## Pre-Commit Testing Requirements
 

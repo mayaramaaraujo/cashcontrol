@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Sora, Manrope } from "next/font/google";
 import "./globals.css";
 
@@ -17,6 +17,19 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "CashControl",
   description: "Track what everyone brings in and what's owed. One shared picture, every month.",
+  applicationName: "CashControl",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "CashControl",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#c264af",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
