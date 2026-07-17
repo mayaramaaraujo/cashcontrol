@@ -160,6 +160,18 @@ body {
   font-family: var(--font-body), sans-serif;
 }
 
+/* Browser autofill (e.g. Chrome) paints its own opaque light background over
+   inputs — override it to match the app's dark surface instead of leaving a
+   white flash behind the field. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-text-primary);
+  -webkit-box-shadow: 0 0 0 1000px var(--color-bg-elevated) inset;
+  box-shadow: 0 0 0 1000px var(--color-bg-elevated) inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
 /* Avatar gradient backgrounds — the 6-color cycling palette used for member/category avatars */
 .avatar-gradient-1 {
   background: linear-gradient(145deg, var(--color-avatar-1), color-mix(in srgb, var(--color-avatar-1) 62%, black));

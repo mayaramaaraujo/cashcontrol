@@ -18,6 +18,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **All IDs must be UUIDs** — use `crypto.randomUUID()` (built into Node 14.17+ and all modern browsers, no package needed) whenever generating an ID in application code. Never use `Date.now()`, random strings, or other non-UUID formats for IDs.
 - **One component per file** — every React component must live in its own dedicated file. Never define two or more components (including private sub-components) in the same file. If a component is only used by one parent, place it in the same feature's `components/` folder (or an `_components/` subfolder) and import it.
 - **No legacy compatibility code before launch** — the app has not launched yet; there are no real users with old URLs or saved state. Never add redirect shims, backwards-compatibility aliases, or deprecated-route stubs. Delete the old thing cleanly and move on.
+- **No mock data in the UI** — build against real data from Supabase from the start; never hardcode placeholder arrays/objects to fake a populated screen. When a query returns nothing, render an explicit blank/empty state (e.g. "No bills yet — add one to get started"), not sample data.
+- **Forms always use `react-hook-form` + `zod`** — any form (login, signup, add income/bill, group setup, etc.) must be built with `useForm` from `react-hook-form` and a `zod` schema passed through `zodResolver` (`@hookform/resolvers/zod`). Define the schema once in the feature's `types.ts` (see `src/features/auth/types.ts`) and infer the form's TS type from it — never hand-roll validation or parse a raw `FormData`/`useState` field by field.
 
 ## Git Workflow
 
