@@ -22,7 +22,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const members = (memberRows ?? []).map(mapGroupMemberRow);
 
   return (
-    <AppChrome groupName={currentGroup.groupName} members={members}>
+    <AppChrome
+      groupName={currentGroup.groupName}
+      members={members}
+      currentMemberId={currentGroup.memberId}
+    >
       {children}
     </AppChrome>
   );

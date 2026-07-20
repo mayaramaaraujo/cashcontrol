@@ -9,6 +9,11 @@ const ACCENT_SELECTED_CLASSES = {
   warning: "border-warning bg-warning/15 text-text-primary",
   violet: "border-violet bg-violet/15 text-text-primary",
   "neutral-accent": "border-neutral-accent bg-neutral-accent/15 text-text-primary",
+  "avatar-1": "border-avatar-1 bg-avatar-1/15 text-text-primary",
+  "avatar-2": "border-avatar-2 bg-avatar-2/15 text-text-primary",
+  "avatar-3": "border-avatar-3 bg-avatar-3/15 text-text-primary",
+  "avatar-4": "border-avatar-4 bg-avatar-4/15 text-text-primary",
+  "avatar-5": "border-avatar-5 bg-avatar-5/15 text-text-primary",
   neutral: "border-surface-4 bg-surface-4 text-text-primary",
 } as const;
 

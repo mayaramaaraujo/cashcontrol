@@ -9,6 +9,7 @@ import { Sheet } from "@/shared/components/Sheet";
 import { BottomNav, type BottomNavItem } from "@/shared/components/BottomNav";
 import type { GroupMember } from "@/features/groups/types";
 import { BillSheet } from "@/features/bills/components/BillSheet";
+import { AddIncomeSheet } from "@/features/income/components/AddIncomeSheet";
 
 type Tab = "home" | "bills" | "history" | "people";
 
@@ -38,10 +39,11 @@ function getMonthOptions() {
 interface AppChromeProps {
   groupName: string;
   members: GroupMember[];
+  currentMemberId: string;
   children: ReactNode;
 }
 
-export function AppChrome({ groupName, members, children }: AppChromeProps) {
+export function AppChrome({ groupName, members, currentMemberId, children }: AppChromeProps) {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -170,7 +172,12 @@ export function AppChrome({ groupName, members, children }: AppChromeProps) {
         </button>
       </Sheet>
 
-      {/* TODO(income): render <AddIncomeSheet members={members} /> here when ?sheet=income */}
+      <AddIncomeSheet
+        open={searchParams.get("sheet") === "income"}
+        onClose={closeSheet}
+        members={members}
+        defaultMemberId={currentMemberId}
+      />
       <BillSheet open={searchParams.get("sheet") === "bill"} onClose={closeSheet} />
     </div>
   );
