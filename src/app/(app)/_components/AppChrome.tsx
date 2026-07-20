@@ -8,6 +8,7 @@ import { Avatar, type AvatarColorIndex } from "@/shared/components/Avatar";
 import { Sheet } from "@/shared/components/Sheet";
 import { BottomNav, type BottomNavItem } from "@/shared/components/BottomNav";
 import type { GroupMember } from "@/features/groups/types";
+import { BillSheet } from "@/features/bills/components/BillSheet";
 
 type Tab = "home" | "bills" | "history" | "people";
 
@@ -71,6 +72,12 @@ export function AppChrome({ groupName, members, children }: AppChromeProps) {
     params.set("sheet", sheet);
     router.push(`${pathname}?${params.toString()}`);
     setShowAddChoice(false);
+  }
+
+  function closeSheet() {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("sheet");
+    router.push(`${pathname}?${params.toString()}`);
   }
 
   const visibleMembers = members.slice(0, 3);
@@ -164,7 +171,7 @@ export function AppChrome({ groupName, members, children }: AppChromeProps) {
       </Sheet>
 
       {/* TODO(income): render <AddIncomeSheet members={members} /> here when ?sheet=income */}
-      {/* TODO(bill): render <BillSheet /> here when ?sheet=bill (create mode) */}
+      <BillSheet open={searchParams.get("sheet") === "bill"} onClose={closeSheet} />
     </div>
   );
 }

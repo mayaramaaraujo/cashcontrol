@@ -24,10 +24,10 @@ export const BILL_CATEGORIES = [
 export type BillCategory = (typeof BILL_CATEGORIES)[number];
 
 export const BILL_CATEGORY_COLORS: Record<BillCategory, string> = {
-  Housing: "avatar-3",
-  Utilities: "avatar-4",
+  Housing: "primary",
+  Utilities: "positive-dark",
   Insurance: "violet",
-  Subscriptions: "avatar-1",
+  Subscriptions: "warning",
   Other: "neutral-accent",
 };
 

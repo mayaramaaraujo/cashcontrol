@@ -4,7 +4,7 @@ Design-system primitives shared across features, built on the tokens in `src/app
 
 - **Avatar** — circular initials badge, cycles through the app's 6-color avatar palette (`colorIndex` 0–5)
 - **Button** — `primary` / `secondary` / `outline` / `danger` variants, `sm` / `md` sizes
-- **Input** — text input with optional leading icon, `invalid` state
+- **Input** — text input with optional leading icon or `leadingText` (e.g. a "€" currency symbol), `invalid` state
 - **Chip** — toggleable pill (category/filter selection), `selected` + `accent` props
 - **SegmentedControl** — equal-width multi-option track (e.g. Income/Bills/Left)
 - **Sheet** — bottom sheet modal (portal, Escape-to-close, backdrop click, scroll lock)
