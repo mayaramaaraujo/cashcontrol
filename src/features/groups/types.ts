@@ -25,3 +25,9 @@ export const createGroupSchema = z.object({
 });
 
 export type CreateGroupValues = z.infer<typeof createGroupSchema>;
+
+export const inviteByEmailSchema = z.object({
+  email: z.email("Enter a valid email address"),
+});
+
+export type InviteByEmailValues = z.infer<typeof inviteByEmailSchema>;

@@ -1,9 +1,16 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/shared/lib/supabase/server";
-import { createGroupSchema, type CreateGroupValues } from "@/features/groups/types";
+import { getCurrentGroup } from "@/shared/lib/supabase/get-current-group";
+import {
+  createGroupSchema,
+  inviteByEmailSchema,
+  type CreateGroupValues,
+  type InviteByEmailValues,
+} from "@/features/groups/types";
 
 function deriveDisplayName(user: User) {
   const metaName = user.user_metadata?.full_name ?? user.user_metadata?.name;
@@ -44,4 +51,41 @@ export async function createGroup(
   // Not inside a try/catch in the caller: redirect() throws a special
   // NEXT_REDIRECT signal that must propagate, not be treated as an error.
   redirect("/home");
+}
+
+function deriveNameFromEmail(email: string) {
+  const localPart = email.split("@")[0];
+  return localPart.charAt(0).toUpperCase() + localPart.slice(1);
+}
+
+export async function inviteByEmail(
+  values: InviteByEmailValues,
+): Promise<{ error: string } | undefined> {
+  const { email } = inviteByEmailSchema.parse(values);
+
+  const currentGroup = await getCurrentGroup();
+  if (!currentGroup) {
+    return { error: "Not in a group" };
+  }
+
+  const supabase = await createClient();
+
+  const { count } = await supabase
+    .from("group_members")
+    .select("id", { count: "exact", head: true })
+    .eq("group_id", currentGroup.groupId);
+
+  const { error } = await supabase.from("group_members").insert({
+    group_id: currentGroup.groupId,
+    invited_email: email,
+    display_name: deriveNameFromEmail(email),
+    status: "invited",
+    color_index: (count ?? 0) % 6,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/people");
 }
