@@ -6,7 +6,7 @@ export const contentType = "image/png";
 
 export default function Icon() {
   return new ImageResponse(
-    buildLogo({ size: size.width, rounded: true, withAccent: false }),
+    buildLogo({ size: size.width, rounded: true }),
     size
   );
 }

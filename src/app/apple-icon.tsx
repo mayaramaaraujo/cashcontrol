@@ -6,7 +6,7 @@ export const contentType = "image/png";
 
 export default function AppleIcon() {
   return new ImageResponse(
-    buildLogo({ size: size.width, rounded: false, withAccent: true }),
+    buildLogo({ size: size.width, rounded: false }),
     size
   );
 }

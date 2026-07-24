@@ -5,7 +5,7 @@ const size = { width: 192, height: 192 };
 
 export function GET() {
   return new ImageResponse(
-    buildLogo({ size: size.width, rounded: true, withAccent: true }),
+    buildLogo({ size: size.width, rounded: true }),
     size
   );
 }

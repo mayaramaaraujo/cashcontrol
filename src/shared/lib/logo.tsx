@@ -1,23 +1,46 @@
 import type { ReactElement } from "react";
 
-const GRADIENT = "linear-gradient(145deg, #c264af 0%, #7d7bd6 100%)";
-const ACCENT = "#6fd4ce";
+// Raw hex values, not Tailwind classes — `next/og`'s ImageResponse (satori)
+// can't consume CSS custom properties, so these mirror --color-primary /
+// --color-primary-darker from globals.css directly.
+const GRADIENT = "linear-gradient(145deg, #c264af 0%, #8a3f7d 100%)";
 
 /**
- * Builds the CashControl mark (gradient badge + "C" + coin accent) as a
- * satori-compatible JSX tree, for use inside `next/og` ImageResponse calls
- * (icon.tsx, apple-icon.tsx, and the PWA icon routes) — kept in one place so
- * every generated icon stays visually identical.
+ * Builds the CashControl mark: the app's gradient tile plus a two-person
+ * glyph (echoing AuthShell.tsx's lucide `Users` icon — the app's "shared
+ * with someone" motif). Rendered as plain divs/border-radius rather than
+ * the literal SVG path: satori (next/og's renderer) doesn't render nested
+ * <svg>/<path> trees or SVG data-URI <img> sources, only flexbox + a CSS
+ * subset (confirmed by testing both against this project's next/og build —
+ * both silently produced a blank box), so the glyph is rebuilt from shapes
+ * satori does support.
  */
-export function buildLogo({
-  size,
-  rounded,
-  withAccent,
-}: {
-  size: number;
-  rounded: boolean;
-  withAccent: boolean;
-}): ReactElement {
+export function buildLogo({ size, rounded }: { size: number; rounded: boolean }): ReactElement {
+  const headSize = size * 0.16;
+  const bodyWidth = size * 0.26;
+  const bodyHeight = size * 0.14;
+  const person = (scale: number) => (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div
+        style={{
+          width: headSize * scale,
+          height: headSize * scale,
+          borderRadius: "50%",
+          background: "#ffffff",
+        }}
+      />
+      <div
+        style={{
+          marginTop: size * 0.02,
+          width: bodyWidth * scale,
+          height: bodyHeight * scale,
+          borderRadius: `${bodyWidth}px ${bodyWidth}px 0 0`,
+          background: "#ffffff",
+        }}
+      />
+    </div>
+  );
+
   return (
     <div
       style={{
@@ -26,37 +49,16 @@ export function buildLogo({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        position: "relative",
         background: GRADIENT,
         borderRadius: rounded ? size * 0.22 : 0,
       }}
     >
-      <span
-        style={{
-          fontFamily: "sans-serif",
-          fontWeight: 800,
-          fontSize: size * 0.56,
-          color: "#ffffff",
-          lineHeight: 1,
-        }}
-      >
-        C
-      </span>
-      {withAccent ? (
-        <div
-          style={{
-            position: "absolute",
-            right: size * 0.13,
-            bottom: size * 0.13,
-            width: size * 0.24,
-            height: size * 0.24,
-            borderRadius: "50%",
-            display: "flex",
-            background: ACCENT,
-            border: `${size * 0.035}px solid rgba(255, 255, 255, 0.92)`,
-          }}
-        />
-      ) : null}
+      <div style={{ display: "flex", alignItems: "flex-end" }}>
+        <div style={{ display: "flex", marginRight: -size * 0.07, opacity: 0.6 }}>
+          {person(0.82)}
+        </div>
+        <div style={{ display: "flex" }}>{person(1)}</div>
+      </div>
     </div>
   );
 }

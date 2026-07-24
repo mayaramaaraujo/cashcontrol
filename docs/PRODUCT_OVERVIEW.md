@@ -4,7 +4,7 @@ Shared income/bills tracker for couples and roommates. Group members log what th
 
 ## Status
 
-Design tokens, feature-based architecture skeleton, and the shared design-system primitives (Avatar, Button, Input, Chip, SegmentedControl, Sheet, BottomNav — `src/shared/components/`) are in place. See `docs/DESIGN_SYSTEM.md`. Supabase is wired up and the Login/Signup screens + auth session handling are done — see `docs/AUTH.md`. Group setup, Home/Bills/History/People screens, and the rest of the data model are still to come.
+Design tokens, feature-based architecture skeleton, and the shared design-system primitives (Avatar, Button, Input, Chip, SegmentedControl, Sheet, BottomNav, ProgressBar, Switch — `src/shared/components/`) are in place. See `docs/DESIGN_SYSTEM.md`. Supabase is wired up and the Login/Signup screens + auth session handling are done — see `docs/AUTH.md`. The full data model (groups, group_members, income_entries, bills, RLS) and all four app screens (Home, Bills, History, People) plus the Add Income/Add Bill sheets are built. The app is installable as a PWA on iOS/Android (manifest + generated icons). Known scope gaps: no join-via-invite-link flow yet, and bills' "paid" state is a single flag with no per-month history.
 
 ## Implementation docs
 
@@ -19,18 +19,19 @@ Each major implementation has its own writeup in `docs/`:
 - **Icons**: [lucide-react](https://lucide.dev/icons/) exclusively — no inline SVG or custom icon components
 - **Forms**: `react-hook-form` + `zod` (via `@hookform/resolvers/zod`) — schemas live in each feature's `types.ts`
 - **Structure**: feature-based under `src/features/*` (`auth`, `groups`, `income`, `bills`, `dashboard`, `history`), each with `components/`, `hooks/`, `api/`, and a shared constants/types file. Cross-feature primitives live in `src/shared/*`.
-- **Backend**: Supabase — auth wired up (`src/shared/lib/supabase/`, `proxy.ts`, `src/app/auth/callback/`); data model not yet built
+- **Backend**: Supabase — auth wired up (`src/shared/lib/supabase/`, `proxy.ts`, `src/app/auth/callback/`); data model (`groups`, `group_members`, `income_entries`, `bills`, all RLS-scoped to group membership) built, see `supabase/migrations/`
 - **Deploy**: Vercel (planned)
-- **PWA**: planned, not yet configured
+- **PWA**: manifest (`src/app/manifest.ts`) + generated icons (`src/app/icon.tsx`, `apple-icon.tsx`, `icon-192/`, `icon-512/`, built via `next/og` from the shared `src/shared/lib/logo.tsx` mark) + `appleWebApp`/`viewport` metadata in the root layout
 
 ## Roadmap
 
 1. ~~Design tokens + architecture skeleton~~ (done)
-2. ~~Shared design-system primitives (Button, Input, Sheet, Chip, Avatar, SegmentedControl, BottomNav)~~ (done — ProgressBar still to come, add when the first screen that needs it is built)
+2. ~~Shared design-system primitives (Button, Input, Sheet, Chip, Avatar, SegmentedControl, BottomNav, ProgressBar, Switch)~~ (done)
 3. ~~Login/Signup screens + Supabase auth (session handling, route protection, Google OAuth)~~ (done)
-4. Screens: Group setup → Home / Bills / History / People
-5. Supabase data model (groups, members, income, bills)
-6. PWA manifest/service worker
+4. ~~Screens: Group setup → Home / Bills / History / People~~ (done)
+5. ~~Supabase data model (groups, members, income, bills)~~ (done)
+6. ~~PWA manifest + installable icons~~ (done)
 7. Vercel deploy
+8. Join-via-invite-link flow (accepting an `invited_email` member row once that person signs up)
 
 Update this file whenever a branch changes architecture, features, or this roadmap.
