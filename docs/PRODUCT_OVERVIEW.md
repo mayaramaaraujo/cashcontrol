@@ -27,7 +27,7 @@ Each major implementation has its own writeup in `docs/`:
 
 1. ~~Design tokens + architecture skeleton~~ (done)
 2. ~~Shared design-system primitives (Button, Input, Sheet, Chip, Avatar, SegmentedControl, BottomNav, ProgressBar, Switch)~~ (done)
-3. ~~Login/Signup screens + Supabase auth (session handling, route protection, Google OAuth)~~ (done)
+3. ~~Login/Signup screens + Supabase auth (session handling, route protection)~~ (done — Google OAuth was tried and removed, see `docs/AUTH.md`)
 4. ~~Screens: Group setup → Home / Bills / History / People~~ (done)
 5. ~~Supabase data model (groups, members, income, bills)~~ (done)
 6. ~~PWA manifest + installable icons~~ (done)

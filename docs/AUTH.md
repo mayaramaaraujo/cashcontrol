@@ -1,6 +1,6 @@
 # Implementation: Supabase Auth + Login/Signup
 
-Backend and screens for signing users in and out. Ships email/password auth plus a wired (but dashboard-gated) Google OAuth path, session refresh, and route protection.
+Backend and screens for signing users in and out. Ships email/password auth, session refresh, and route protection. (Google OAuth was tried and removed — see "Removed" below.)
 
 ## Backend
 
@@ -19,19 +19,20 @@ Backend and screens for signing users in and out. Ships email/password auth plus
 
 ## Feature code (`src/features/auth/`)
 
-- **`types.ts`** — `loginSchema` / `signupSchema` (zod v4, `z.email()`) and their inferred types. Single source of truth for validation shape.
+- **`types.ts`** — `loginSchema` / `signupSchema` (zod v4, `z.email()`) and their inferred types. Single source of truth for validation shape. `signupSchema` requires `name`, passed to `supabase.auth.signUp` as `options.data.full_name` (Supabase auth user metadata) — `src/features/groups/api/actions.ts`'s `deriveDisplayName` reads it back when a signed-up user creates/joins a group.
 - **`components/AuthShell.tsx`** — shared chrome for both screens (gradient icon badge, heading, subtitle, terms footer). Justified as shared since both Login and Signup use it.
 - **`components/LoginForm.tsx`** / **`components/SignupForm.tsx`** — `react-hook-form` + `zodResolver`, built on the existing `Input`/`Button` primitives. Call `supabase.auth.signInWithPassword` / `supabase.auth.signUp` directly from the client. Root-level errors (invalid credentials, rate limits, etc.) surface via `setError("root", ...)`.
-- **`components/GoogleButton.tsx`** — shared OAuth button (`supabase.auth.signInWithOAuth({ provider: "google" })`), text-only (no Google "G" mark — lucide has no brand icons and inline SVG is disallowed project-wide).
 - **Pages**: `src/app/login/page.tsx`, `src/app/signup/page.tsx`.
+
+## Removed
+
+- **Google OAuth**: a `GoogleButton` component (`supabase.auth.signInWithOAuth({ provider: "google" })`) was built but removed — the provider is disabled by default in a fresh Supabase project (`external.google: false`) and wasn't enabled/working end-to-end. Email/password is the only sign-in method for now; revisit if/when the Google provider is actually configured in the Supabase dashboard.
 
 ## Known external dependencies (not code issues)
 
-- **Google OAuth is disabled by default** in a fresh Supabase project (`external.google: false`). The `GoogleButton` code path is complete but the button will error until the provider is enabled in Supabase dashboard → Authentication → Providers.
 - **Signup email rate limiting**: Supabase's built-in email sender is a low-volume dev/test sender (roughly 2–4 emails/hour on free tier). Heavy signup testing will trip "email rate limit exceeded." Fix before real launch by adding a custom SMTP provider under Authentication → Emails → SMTP Settings.
 
 ## Explicitly out of scope
 
 - The "Create your group" screen (next roadmap step, not part of this auth slice).
 - "Forgot password" — rendered as static text in the design, no route/action wired yet.
-- Enabling the Google provider inside the Supabase dashboard — external console step, not something app code can do.

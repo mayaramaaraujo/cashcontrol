@@ -4,12 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Loader2, Lock, Mail } from "lucide-react";
+import { Loader2, Lock, Mail, User } from "lucide-react";
 import { Button } from "@/shared/components/Button";
 import { Input } from "@/shared/components/Input";
 import { createClient } from "@/shared/lib/supabase/client";
 import { signupSchema, type SignupFormValues } from "@/features/auth/types";
-import { GoogleButton } from "@/features/auth/components/GoogleButton";
 
 export function SignupForm() {
   const router = useRouter();
@@ -25,7 +24,10 @@ export function SignupForm() {
     const { error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      options: {
+        data: { full_name: values.name },
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
     });
 
     if (error) {
@@ -40,6 +42,15 @@ export function SignupForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
       <div className="flex flex-col gap-3">
+        <Input
+          icon={User}
+          placeholder="Your name"
+          invalid={!!errors.name}
+          {...register("name")}
+        />
+        {errors.name ? (
+          <p className="text-xs font-medium text-danger">{errors.name.message}</p>
+        ) : null}
         <Input
           icon={Mail}
           type="email"
@@ -67,16 +78,6 @@ export function SignupForm() {
         {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
         Create account
       </Button>
-
-      <div className="mt-5 flex items-center gap-3">
-        <div className="h-px flex-1 bg-surface-border" />
-        <span className="text-xs font-bold tracking-wide text-text-dim">OR</span>
-        <div className="h-px flex-1 bg-surface-border" />
-      </div>
-
-      <div className="mt-4">
-        <GoogleButton />
-      </div>
 
       <p className="mt-4 text-center text-xs text-text-dim">
         Already have an account?{" "}

@@ -9,7 +9,6 @@ import { Button } from "@/shared/components/Button";
 import { Input } from "@/shared/components/Input";
 import { createClient } from "@/shared/lib/supabase/client";
 import { loginSchema, type LoginFormValues } from "@/features/auth/types";
-import { GoogleButton } from "@/features/auth/components/GoogleButton";
 
 export function LoginForm() {
   const router = useRouter();
@@ -64,16 +63,6 @@ export function LoginForm() {
         {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
         Sign in
       </Button>
-
-      <div className="mt-5 flex items-center gap-3">
-        <div className="h-px flex-1 bg-surface-border" />
-        <span className="text-xs font-bold tracking-wide text-text-dim">OR</span>
-        <div className="h-px flex-1 bg-surface-border" />
-      </div>
-
-      <div className="mt-4">
-        <GoogleButton />
-      </div>
 
       <p className="mt-4 text-center text-xs text-text-dim">
         Don&apos;t have an account?{" "}

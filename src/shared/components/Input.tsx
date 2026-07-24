@@ -25,7 +25,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       ) : null}
       <input
         ref={ref}
-        className={`min-w-0 flex-1 text-sm font-medium text-text-primary placeholder:text-text-faint ${className}`}
+        // text-base (16px), not text-sm: iOS Safari auto-zooms the viewport
+        // on focus for any input with a font-size under 16px.
+        className={`min-w-0 flex-1 text-base font-medium text-text-primary placeholder:text-text-faint outline-none ${className}`}
         {...props}
       />
     </div>
