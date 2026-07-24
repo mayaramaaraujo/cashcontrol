@@ -6,13 +6,19 @@ export const metadata: Metadata = {
   title: "Sign in — CashControl",
 };
 
-export default function LoginPage() {
+interface LoginPageProps {
+  searchParams: Promise<{ next?: string }>;
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { next } = await searchParams;
+
   return (
     <AuthShell
       title="CashControl"
       subtitle="Track what everyone brings in and what's owed. One shared picture, every month."
     >
-      <LoginForm />
+      <LoginForm next={next} />
     </AuthShell>
   );
 }

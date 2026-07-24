@@ -30,7 +30,7 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
+  const isPublicRoute = PUBLIC_ROUTES.includes(pathname) || pathname.startsWith("/join/");
 
   if (!user && !isPublicRoute) {
     return NextResponse.redirect(new URL("/login", request.url));

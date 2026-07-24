@@ -9,7 +9,10 @@ interface AuthShellProps {
 
 export function AuthShell({ title, subtitle, children }: AuthShellProps) {
   return (
-    <div className="flex flex-1 flex-col px-8 py-16">
+    <div
+      className="flex flex-1 flex-col px-8 pb-16"
+      style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 4rem)" }}
+    >
       <div className="flex size-14 items-center justify-center rounded-xl bg-linear-to-br from-primary to-primary-darker shadow-glow-primary">
         <Users className="size-7 text-text-primary" />
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState, useTransition, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown, Home, Receipt, History, Users, Calendar, ArrowUp, ArrowDown } from "lucide-react";
@@ -50,9 +50,24 @@ export function AppChrome({ groupName, members, currentMemberId, children }: App
 
   const [showMonthPicker, setShowMonthPicker] = useState(false);
   const [showAddChoice, setShowAddChoice] = useState(false);
+  const [, startTransition] = useTransition();
+  const [pendingTab, setPendingTab] = useState<Tab | null>(null);
 
   const activeTab = (NAV_ITEMS.find((item) => pathname.startsWith(`/${item.value}`))?.value ??
     "home") as Tab;
+
+  // Once the new route has actually rendered, activeTab (derived from
+  // pathname) already matches pendingTab, so it stops being shown as
+  // pending here — no need to explicitly clear the state.
+  const displayedPendingTab = pendingTab && pendingTab !== activeTab ? pendingTab : null;
+
+  function navigateTab(tab: Tab) {
+    if (tab === activeTab) return;
+    setPendingTab(tab);
+    startTransition(() => {
+      router.push(`/${tab}`);
+    });
+  }
 
   const now = new Date();
   const defaultMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -87,7 +102,10 @@ export function AppChrome({ groupName, members, currentMemberId, children }: App
 
   return (
     <div className="min-h-screen">
-      <div className="fixed inset-x-0 top-0 z-20 flex items-center justify-between bg-linear-to-b from-bg-base from-80% to-transparent px-5 pt-6 pb-3">
+      <div
+        className="fixed inset-x-0 top-0 z-20 flex items-center justify-between bg-linear-to-b from-bg-base from-80% to-transparent px-5 pb-3"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 1.5rem)" }}
+      >
         <div className="min-w-0">
           <button
             type="button"
@@ -118,12 +136,18 @@ export function AppChrome({ groupName, members, currentMemberId, children }: App
         </Link>
       </div>
 
-      <main className="px-5 pt-24 pb-28">{children}</main>
+      <main
+        className="px-5 pb-28"
+        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
+      >
+        {children}
+      </main>
 
       <BottomNav
         items={NAV_ITEMS}
         value={activeTab}
-        onChange={(tab) => router.push(`/${tab}`)}
+        pendingValue={displayedPendingTab}
+        onChange={navigateTab}
         onAddClick={() => setShowAddChoice(true)}
       />
 

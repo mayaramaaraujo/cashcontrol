@@ -21,7 +21,7 @@ Backend and screens for signing users in and out. Ships email/password auth, ses
 
 - **`types.ts`** — `loginSchema` / `signupSchema` (zod v4, `z.email()`) and their inferred types. Single source of truth for validation shape. `signupSchema` requires `name`, passed to `supabase.auth.signUp` as `options.data.full_name` (Supabase auth user metadata) — `src/features/groups/api/actions.ts`'s `deriveDisplayName` reads it back when a signed-up user creates/joins a group.
 - **`components/AuthShell.tsx`** — shared chrome for both screens (gradient icon badge, heading, subtitle, terms footer). Justified as shared since both Login and Signup use it.
-- **`components/LoginForm.tsx`** / **`components/SignupForm.tsx`** — `react-hook-form` + `zodResolver`, built on the existing `Input`/`Button` primitives. Call `supabase.auth.signInWithPassword` / `supabase.auth.signUp` directly from the client. Root-level errors (invalid credentials, rate limits, etc.) surface via `setError("root", ...)`.
+- **`components/LoginForm.tsx`** / **`components/SignupForm.tsx`** — `react-hook-form` + `zodResolver`, built on the existing `Input`/`Button` primitives. Call `supabase.auth.signInWithPassword` / `supabase.auth.signUp` directly from the client. Root-level errors (invalid credentials, rate limits, etc.) surface via `setError("root", ...)`. Both accept an optional `next` prop (a same-origin path only — validated client-side before use) read from `?next=` by `src/app/login/page.tsx` / `src/app/signup/page.tsx`, so `/join/[code]` can send someone through auth and land them back on the invite.
 - **Pages**: `src/app/login/page.tsx`, `src/app/signup/page.tsx`.
 
 ## Removed

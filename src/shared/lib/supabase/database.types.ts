@@ -224,8 +224,22 @@ export type Database = {
         }
       }
       delete_own_account: { Args: never; Returns: undefined }
+      get_group_by_invite_code: {
+        Args: { p_invite_code: string }
+        Returns: { id: string; name: string }[]
+        SetofOptions: {
+          from: "*"
+          to: "groups"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       is_active_group_member: { Args: { p_group_id: string }; Returns: boolean }
       is_group_admin: { Args: { p_group_id: string }; Returns: boolean }
+      join_group_by_code: {
+        Args: { p_display_name: string; p_invite_code: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

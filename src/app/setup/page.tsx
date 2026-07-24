@@ -12,7 +12,10 @@ export default async function SetupPage() {
   }
 
   return (
-    <div className="min-h-screen px-8 pt-20 pb-9">
+    <div
+      className="min-h-screen px-8 pb-9"
+      style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 5rem)" }}
+    >
       <h1 className="font-display text-2xl font-bold tracking-tight text-text-primary">
         Create your group
       </h1>

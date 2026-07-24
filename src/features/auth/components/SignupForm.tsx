@@ -10,8 +10,14 @@ import { Input } from "@/shared/components/Input";
 import { createClient } from "@/shared/lib/supabase/client";
 import { signupSchema, type SignupFormValues } from "@/features/auth/types";
 
-export function SignupForm() {
+interface SignupFormProps {
+  /** Where to land after signing up (e.g. an invite link). Only a same-origin path is honored. */
+  next?: string;
+}
+
+export function SignupForm({ next }: SignupFormProps) {
   const router = useRouter();
+  const destination = next?.startsWith("/") && !next.startsWith("//") ? next : "/";
   const {
     register,
     handleSubmit,
@@ -35,7 +41,7 @@ export function SignupForm() {
       return;
     }
 
-    router.replace("/");
+    router.replace(destination);
     router.refresh();
   }
 
@@ -81,7 +87,10 @@ export function SignupForm() {
 
       <p className="mt-4 text-center text-xs text-text-dim">
         Already have an account?{" "}
-        <Link href="/login" className="font-semibold text-primary-light">
+        <Link
+          href={next ? `/login?next=${encodeURIComponent(next)}` : "/login"}
+          className="font-semibold text-primary-light"
+        >
           Sign in
         </Link>
       </p>

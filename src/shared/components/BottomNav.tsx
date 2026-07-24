@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, type LucideIcon } from "lucide-react";
+import { Loader2, Plus, type LucideIcon } from "lucide-react";
 
 export interface BottomNavItem<T extends string> {
   value: T;
@@ -11,6 +11,8 @@ export interface BottomNavItem<T extends string> {
 interface BottomNavProps<T extends string> {
   items: BottomNavItem<T>[];
   value: T;
+  /** Item currently mid-navigation (tapped, not yet rendered) — shows a spinner in its place. */
+  pendingValue?: T | null;
   onChange: (value: T) => void;
   onAddClick: () => void;
   addIcon?: LucideIcon;
@@ -19,6 +21,7 @@ interface BottomNavProps<T extends string> {
 export function BottomNav<T extends string>({
   items,
   value,
+  pendingValue = null,
   onChange,
   onAddClick,
   addIcon: AddIcon = Plus,
@@ -34,7 +37,13 @@ export function BottomNav<T extends string>({
     >
       <div className="mx-auto flex max-w-md items-center justify-between gap-1">
         {leftItems.map((item) => (
-          <NavButton key={item.value} item={item} active={item.value === value} onChange={onChange} />
+          <NavButton
+            key={item.value}
+            item={item}
+            active={item.value === value}
+            pending={item.value === pendingValue}
+            onChange={onChange}
+          />
         ))}
 
         <button
@@ -47,7 +56,13 @@ export function BottomNav<T extends string>({
         </button>
 
         {rightItems.map((item) => (
-          <NavButton key={item.value} item={item} active={item.value === value} onChange={onChange} />
+          <NavButton
+            key={item.value}
+            item={item}
+            active={item.value === value}
+            pending={item.value === pendingValue}
+            onChange={onChange}
+          />
         ))}
       </div>
     </nav>
@@ -57,10 +72,12 @@ export function BottomNav<T extends string>({
 function NavButton<T extends string>({
   item,
   active,
+  pending,
   onChange,
 }: {
   item: BottomNavItem<T>;
   active: boolean;
+  pending: boolean;
   onChange: (value: T) => void;
 }) {
   const Icon = item.icon;
@@ -69,11 +86,11 @@ function NavButton<T extends string>({
       type="button"
       onClick={() => onChange(item.value)}
       aria-current={active ? "page" : undefined}
-      className={`flex flex-1 flex-col items-center gap-1 rounded-md py-1.5 ${
-        active ? "bg-primary/15 text-primary-light" : "text-text-dim"
+      className={`flex flex-1 flex-col items-center gap-1 rounded-md py-1.5 transition-colors ${
+        active || pending ? "bg-primary/15 text-primary-light" : "text-text-dim"
       }`}
     >
-      <Icon className="size-5" />
+      {pending ? <Loader2 className="size-5 animate-spin" /> : <Icon className="size-5" />}
       <span className="text-xs font-semibold">{item.label}</span>
     </button>
   );

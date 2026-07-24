@@ -89,3 +89,27 @@ export async function inviteByEmail(
 
   revalidatePath("/people");
 }
+
+export async function joinGroupByCode(
+  inviteCode: string,
+): Promise<{ error: string } | undefined> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "Not authenticated" };
+  }
+
+  const { error } = await supabase.rpc("join_group_by_code", {
+    p_invite_code: inviteCode,
+    p_display_name: deriveDisplayName(user),
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  redirect("/home");
+}
