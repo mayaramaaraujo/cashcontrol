@@ -10,15 +10,20 @@ import { BottomNav, type BottomNavItem } from "@/shared/components/BottomNav";
 import type { GroupMember } from "@/features/groups/types";
 import { BillSheet } from "@/features/bills/components/BillSheet";
 import { AddIncomeSheet } from "@/features/income/components/AddIncomeSheet";
+import { LOCALE_INTL_TAG } from "@/shared/lib/i18n/config";
+import { useTranslation } from "@/shared/lib/i18n/context";
+import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
 type Tab = "home" | "bills" | "history" | "people";
 
-const NAV_ITEMS: BottomNavItem<Tab>[] = [
-  { value: "home", label: "Home", icon: Home },
-  { value: "bills", label: "Bills", icon: Receipt },
-  { value: "history", label: "History", icon: History },
-  { value: "people", label: "People", icon: Users },
-];
+function navItems(dict: Dictionary): BottomNavItem<Tab>[] {
+  return [
+    { value: "home", label: dict.nav.home, icon: Home },
+    { value: "bills", label: dict.nav.bills, icon: Receipt },
+    { value: "history", label: dict.nav.history, icon: History },
+    { value: "people", label: dict.nav.people, icon: Users },
+  ];
+}
 
 function getInitials(name: string) {
   const parts = name.trim().split(/\s+/);
@@ -26,12 +31,12 @@ function getInitials(name: string) {
   return (parts[0][0] + parts[1][0]).toUpperCase();
 }
 
-function getMonthOptions() {
+function getMonthOptions(intlLocale: string) {
   const now = new Date();
   return Array.from({ length: 6 }, (_, i) => {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    const label = d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+    const label = d.toLocaleDateString(intlLocale, { month: "short", year: "numeric" });
     return { value, label };
   });
 }
@@ -47,6 +52,8 @@ export function AppChrome({ groupName, members, currentMemberId, children }: App
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { dict, locale } = useTranslation();
+  const NAV_ITEMS = navItems(dict);
 
   const [showMonthPicker, setShowMonthPicker] = useState(false);
   const [showAddChoice, setShowAddChoice] = useState(false);
@@ -72,7 +79,7 @@ export function AppChrome({ groupName, members, currentMemberId, children }: App
   const now = new Date();
   const defaultMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
   const selectedMonth = searchParams.get("month") ?? defaultMonth;
-  const monthOptions = getMonthOptions();
+  const monthOptions = getMonthOptions(LOCALE_INTL_TAG[locale]);
   const monthLabel =
     monthOptions.find((m) => m.value === selectedMonth)?.label ??
     monthOptions[0].label;
@@ -149,9 +156,10 @@ export function AppChrome({ groupName, members, currentMemberId, children }: App
         pendingValue={displayedPendingTab}
         onChange={navigateTab}
         onAddClick={() => setShowAddChoice(true)}
+        addLabel={dict.nav.add}
       />
 
-      <Sheet open={showMonthPicker} onClose={() => setShowMonthPicker(false)} title="Select month">
+      <Sheet open={showMonthPicker} onClose={() => setShowMonthPicker(false)} title={dict.monthPicker.title}>
         <div className="flex max-h-85 flex-col gap-1.5 overflow-y-auto">
           {monthOptions.map((option) => (
             <button
@@ -182,7 +190,7 @@ export function AppChrome({ groupName, members, currentMemberId, children }: App
           <span className="flex size-11 items-center justify-center rounded-2xl bg-primary/15">
             <ArrowUp className="size-5 text-primary-light" />
           </span>
-          <span className="font-display text-base font-semibold text-text-primary">Add income</span>
+          <span className="font-display text-base font-semibold text-text-primary">{dict.addChoice.addIncome}</span>
         </button>
         <button
           type="button"
@@ -192,7 +200,7 @@ export function AppChrome({ groupName, members, currentMemberId, children }: App
           <span className="flex size-11 items-center justify-center rounded-2xl bg-positive/15">
             <ArrowDown className="size-5 text-positive" />
           </span>
-          <span className="font-display text-base font-semibold text-text-primary">Add bill</span>
+          <span className="font-display text-base font-semibold text-text-primary">{dict.addChoice.addBill}</span>
         </button>
       </Sheet>
 

@@ -1,6 +1,7 @@
 import { Avatar, type AvatarColorIndex } from "@/shared/components/Avatar";
 import { getInitials, formatCurrency } from "@/shared/lib/utils";
 import type { GroupMember } from "@/features/groups/types";
+import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
 export interface MemberRow {
   member: GroupMember;
@@ -10,11 +11,12 @@ export interface MemberRow {
 
 interface MembersListProps {
   rows: MemberRow[];
+  dict: Dictionary;
 }
 
-function roleLabel(member: GroupMember) {
-  if (member.status === "invited") return "Invited";
-  return member.role === "admin" ? "Admin" : "Member";
+function roleLabel(member: GroupMember, dict: Dictionary) {
+  if (member.status === "invited") return dict.people.invited;
+  return member.role === "admin" ? dict.people.admin : dict.people.member;
 }
 
 function roleColorClass(member: GroupMember, isYou: boolean) {
@@ -23,10 +25,10 @@ function roleColorClass(member: GroupMember, isYou: boolean) {
   return "text-neutral-accent";
 }
 
-export function MembersList({ rows }: MembersListProps) {
+export function MembersList({ rows, dict }: MembersListProps) {
   return (
     <div>
-      <p className="mt-6 mb-3 font-display text-base font-semibold text-text-primary">Members</p>
+      <p className="mt-6 mb-3 font-display text-base font-semibold text-text-primary">{dict.people.members}</p>
       <div className="flex flex-col gap-2">
         {rows.map(({ member, isYou, monthTotal }) => (
           <div
@@ -46,16 +48,16 @@ export function MembersList({ rows }: MembersListProps) {
                 </span>
                 {isYou ? (
                   <span className="shrink-0 rounded-sm bg-primary/16 px-1.5 py-0.5 text-xs font-bold text-primary-light">
-                    YOU
+                    {dict.people.you}
                   </span>
                 ) : null}
               </div>
               <p className="mt-0.5 text-xs text-text-subtle">
-                {member.status === "invited" ? "Invitation sent" : `€${formatCurrency(monthTotal)} this month`}
+                {member.status === "invited" ? dict.people.invitationSent : dict.people.thisMonth(formatCurrency(monthTotal))}
               </p>
             </div>
             <span className={`shrink-0 text-xs font-semibold ${roleColorClass(member, isYou)}`}>
-              {roleLabel(member)}
+              {roleLabel(member, dict)}
             </span>
           </div>
         ))}

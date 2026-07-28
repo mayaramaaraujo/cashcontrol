@@ -4,6 +4,8 @@ import { getCurrentGroup } from "@/shared/lib/supabase/get-current-group";
 import { createClient } from "@/shared/lib/supabase/server";
 import { AuthShell } from "@/features/auth/components/AuthShell";
 import { JoinGroupCard } from "@/features/groups/components/JoinGroupCard";
+import { getLocale } from "@/shared/lib/i18n/server";
+import { getDictionary } from "@/shared/lib/i18n/dictionaries";
 
 // Mirrors shared/components/Button's primary/outline + md-size classes —
 // can't reuse Button directly since it renders a <button>, and nesting a
@@ -26,6 +28,8 @@ export default async function JoinPage({ params }: JoinPageProps) {
     redirect("/home");
   }
 
+  const dict = getDictionary(await getLocale());
+
   const supabase = await createClient();
   const [{ data: group }, userRes] = await Promise.all([
     supabase.rpc("get_group_by_invite_code", { p_invite_code: code }).maybeSingle(),
@@ -34,9 +38,9 @@ export default async function JoinPage({ params }: JoinPageProps) {
 
   if (!group) {
     return (
-      <AuthShell title="Invite not found" subtitle="This invite link is invalid or has expired.">
+      <AuthShell title={dict.join.notFoundTitle} subtitle={dict.join.notFoundSubtitle} termsNotice={dict.auth.termsNotice}>
         <Link href="/login" className={`${LINK_BUTTON_PRIMARY} mt-2`}>
-          Back to sign in
+          {dict.join.backToSignIn}
         </Link>
       </AuthShell>
     );
@@ -45,15 +49,16 @@ export default async function JoinPage({ params }: JoinPageProps) {
   if (!userRes.data.user) {
     return (
       <AuthShell
-        title={`Join ${group.name}`}
-        subtitle="Sign in or create an account, then you'll be added to the group automatically."
+        title={dict.join.joinGroupTitle(group.name)}
+        subtitle={dict.join.signInSubtitle}
+        termsNotice={dict.auth.termsNotice}
       >
         <div className="flex flex-col gap-3">
           <Link href={`/login?next=/join/${code}`} className={LINK_BUTTON_PRIMARY}>
-            Sign in
+            {dict.join.signIn}
           </Link>
           <Link href={`/signup?next=/join/${code}`} className={LINK_BUTTON_OUTLINE}>
-            Create account
+            {dict.join.createAccount}
           </Link>
         </div>
       </AuthShell>

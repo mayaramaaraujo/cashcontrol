@@ -8,16 +8,11 @@ import { filterBills, type BillFilter } from "@/features/bills/lib";
 import { BILL_CATEGORY_COLORS, type Bill, type BillCategory } from "@/features/bills/types";
 import { BillSheet } from "@/features/bills/components/BillSheet";
 import { PaidToggle } from "@/features/bills/components/PaidToggle";
+import { useTranslation } from "@/shared/lib/i18n/context";
 
 interface BillsListProps {
   bills: Bill[];
 }
-
-const FILTERS: { value: BillFilter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "fixed", label: "Fixed" },
-  { value: "variable", label: "Variable" },
-];
 
 const DOT_BG_CLASSES: Record<string, string> = {
   primary: "bg-primary",
@@ -33,8 +28,15 @@ function categoryDotClass(category: string) {
 }
 
 export function BillsList({ bills }: BillsListProps) {
+  const { dict } = useTranslation();
   const [filter, setFilter] = useState<BillFilter>("all");
   const [editingBillId, setEditingBillId] = useState<string | null>(null);
+
+  const FILTERS: { value: BillFilter; label: string }[] = [
+    { value: "all", label: dict.bills.filterAll },
+    { value: "fixed", label: dict.bills.filterFixed },
+    { value: "variable", label: dict.bills.filterVariable },
+  ];
 
   const visible = filterBills(bills, filter);
   const editingBill = bills.find((b) => b.id === editingBillId);
@@ -42,7 +44,7 @@ export function BillsList({ bills }: BillsListProps) {
   if (bills.length === 0) {
     return (
       <p className="mt-6 rounded-2xl border border-surface-border bg-surface-1 p-6 text-center text-sm text-text-subtle">
-        No bills yet — add one to get started.
+        {dict.bills.noBillsYet}
       </p>
     );
   }
@@ -73,7 +75,8 @@ export function BillsList({ bills }: BillsListProps) {
               <div className="min-w-0">
                 <span className="text-sm font-semibold text-text-primary">{bill.name}</span>
                 <p className="mt-0.5 flex items-center gap-1 truncate text-xs text-text-subtle">
-                  {bill.category} · due {bill.dueDay}
+                  {dict.categories.bill[bill.category as BillCategory] ?? bill.category} ·{" "}
+                  {dict.bills.due(bill.dueDay)}
                   {bill.repeatMonthly ? <Repeat className="size-3" /> : null}
                 </p>
               </div>

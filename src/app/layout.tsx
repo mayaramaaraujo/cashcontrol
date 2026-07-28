@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Sora, Manrope } from "next/font/google";
+import { LOCALE_INTL_TAG } from "@/shared/lib/i18n/config";
+import { getLocale } from "@/shared/lib/i18n/server";
+import { I18nProvider } from "@/shared/lib/i18n/context";
 import "./globals.css";
 
 const sora = Sora({
@@ -33,17 +36,21 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
   return (
     <html
-      lang="en"
+      lang={LOCALE_INTL_TAG[locale]}
       className={`${sora.variable} ${manrope.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-bg-base text-text-primary">{children}</body>
+      <body className="min-h-full flex flex-col bg-bg-base text-text-primary">
+        <I18nProvider locale={locale}>{children}</I18nProvider>
+      </body>
     </html>
   );
 }

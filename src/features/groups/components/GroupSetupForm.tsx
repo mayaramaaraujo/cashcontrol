@@ -1,14 +1,18 @@
 "use client";
 
+import { useMemo } from "react";
 import { Loader2, Home } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/shared/components/Button";
 import { Input } from "@/shared/components/Input";
 import { createGroup } from "@/features/groups/api/actions";
-import { createGroupSchema, type CreateGroupValues } from "@/features/groups/types";
+import { createGroupSchemaFor, type CreateGroupValues } from "@/features/groups/types";
+import { useTranslation } from "@/shared/lib/i18n/context";
 
 export function GroupSetupForm() {
+  const { dict } = useTranslation();
+  const createGroupSchema = useMemo(() => createGroupSchemaFor(dict), [dict]);
   const {
     register,
     handleSubmit,
@@ -27,7 +31,7 @@ export function GroupSetupForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex flex-col">
       <Input
         icon={Home}
-        placeholder="e.g. Casa Ferrari"
+        placeholder={dict.setup.namePlaceholder}
         invalid={!!errors.name}
         {...register("name")}
       />
@@ -37,7 +41,7 @@ export function GroupSetupForm() {
 
       <Button type="submit" fullWidth disabled={isSubmitting} className="mt-6">
         {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
-        Go to dashboard
+        {dict.setup.cta}
       </Button>
 
       {errors.root ? (

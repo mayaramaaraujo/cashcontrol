@@ -9,6 +9,9 @@ import { InviteByEmailForm } from "@/features/groups/components/InviteByEmailFor
 import { MembersList } from "@/features/groups/components/MembersList";
 import { LogoutButton } from "@/features/auth/components/LogoutButton";
 import { DeleteAccountButton } from "@/features/auth/components/DeleteAccountButton";
+import { LanguageSwitcher } from "@/shared/components/LanguageSwitcher";
+import { getLocale } from "@/shared/lib/i18n/server";
+import { getDictionary } from "@/shared/lib/i18n/dictionaries";
 
 function monthRange(month: string) {
   const [year, monthNum] = month.split("-").map(Number);
@@ -31,6 +34,8 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
   const now = new Date();
   const month = monthParam ?? `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
   const { start, end } = monthRange(month);
+
+  const dict = getDictionary(await getLocale());
 
   const supabase = await createClient();
   const headersList = await headers();
@@ -71,9 +76,14 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
     <div>
       <InviteLinkCard inviteUrl={inviteUrl} />
       <InviteByEmailForm />
-      <MembersList rows={rows} />
+      <MembersList rows={rows} dict={dict} />
 
-      <div className="mt-10 flex items-center justify-between border-t border-surface-border pt-5">
+      <div className="mt-8 flex items-center justify-between">
+        <p className="text-xs font-semibold text-text-subtle">{dict.people.language}</p>
+        <LanguageSwitcher />
+      </div>
+
+      <div className="mt-6 flex items-center justify-between border-t border-surface-border pt-5">
         <LogoutButton />
         <DeleteAccountButton />
       </div>

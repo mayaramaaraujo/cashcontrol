@@ -11,5 +11,6 @@ Design-system primitives shared across features, built on the tokens in `src/app
 - **BottomNav** — fixed app-shell nav with a center FAB
 - **ProgressBar** — thin rounded track with a filled bar (`percent` 0-100, optional `color` override)
 - **Switch** — small toggle (track + sliding knob), e.g. the bill sheet's "Repeat every month" row
+- **LanguageSwitcher** — segmented EN/PT-BR toggle backed by `useTranslation()` from `@/shared/lib/i18n/context`
 
 **Before adding a new component here or in a feature's `components/` folder, check this list (and the feature's own folder) for something that already does the job.** See the "Reuse before creating" rule in `AGENTS.md`.

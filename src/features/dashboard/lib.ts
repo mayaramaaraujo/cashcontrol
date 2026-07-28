@@ -1,8 +1,9 @@
 import type { AvatarColorIndex } from "@/shared/components/Avatar";
 import { formatCurrency } from "@/shared/lib/utils";
 import type { GroupMember } from "@/features/groups/types";
-import type { IncomeEntry } from "@/features/income/types";
-import type { Bill } from "@/features/bills/types";
+import type { IncomeEntry, IncomeCategory } from "@/features/income/types";
+import type { Bill, BillCategory } from "@/features/bills/types";
+import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
 export type SummaryMode = "income" | "bills" | "left";
 
@@ -17,6 +18,7 @@ export function computeHero(
   entries: IncomeEntry[],
   bills: Bill[],
   activeMemberCount: number,
+  dict: Dictionary,
 ): Record<SummaryMode, HeroData> {
   const incomeTotal = entries.reduce((sum, e) => sum + e.amount, 0);
   const billsTotal = bills.reduce((sum, b) => sum + b.amount, 0);
@@ -27,22 +29,22 @@ export function computeHero(
 
   return {
     income: {
-      label: "COMBINED INCOME",
+      label: dict.home.combinedIncome,
       value: incomeTotal,
       colorClass: "text-text-primary",
-      sub: `${activeMemberCount} ${activeMemberCount === 1 ? "person" : "people"} contributing this month`,
+      sub: dict.home.contributing(activeMemberCount),
     },
     bills: {
-      label: "TOTAL BILLS",
+      label: dict.home.totalBills,
       value: billsTotal,
       colorClass: "text-text-primary",
-      sub: `€${formatCurrency(billsPaid)} paid · €${formatCurrency(billsPending)} pending`,
+      sub: dict.home.billsPaidPending(formatCurrency(billsPaid), formatCurrency(billsPending)),
     },
     left: {
-      label: "LEFT AFTER BILLS",
+      label: dict.home.leftAfterBills,
       value: Math.abs(left),
       colorClass: leftPositive ? "text-positive" : "text-danger",
-      sub: leftPositive ? "On track for this month" : "Bills exceed income this month",
+      sub: leftPositive ? dict.home.onTrack : dict.home.billsExceedIncome,
     },
   };
 }
@@ -86,22 +88,24 @@ export interface ActivityItem {
 export function buildIncomeActivity(
   entries: IncomeEntry[],
   members: GroupMember[],
+  dict: Dictionary,
+  intlLocale: string,
 ): ActivityItem[] {
   const memberById = new Map(members.map((m) => [m.id, m]));
 
   return entries.map((entry) => {
     const member = memberById.get(entry.memberId);
-    const dateLabel = new Date(entry.entryDate).toLocaleDateString("en-US", {
+    const dateLabel = new Date(entry.entryDate).toLocaleDateString(intlLocale, {
       month: "short",
       day: "numeric",
     });
-    const parts = [member?.displayName ?? "Member", dateLabel];
+    const parts = [member?.displayName ?? dict.home.member, dateLabel];
     if (entry.note) parts.push(entry.note);
 
     return {
       id: entry.id,
       isIncome: true,
-      title: entry.category,
+      title: dict.categories.income[entry.category as IncomeCategory] ?? entry.category,
       sub: parts.join(" · "),
       amount: entry.amount,
       amountColorClass: "text-positive",
@@ -110,16 +114,20 @@ export function buildIncomeActivity(
   });
 }
 
-export function buildBillActivity(bills: Bill[], month: string): ActivityItem[] {
-  return bills.map((bill) => ({
-    id: bill.id,
-    isIncome: false,
-    title: bill.name,
-    sub: `${bill.category} · due day ${bill.dueDay}${bill.paid ? " · paid" : " · pending"}`,
-    amount: bill.amount,
-    amountColorClass: bill.paid ? "text-text-subtle" : "text-warning",
-    date: `${month}-${String(bill.dueDay).padStart(2, "0")}`,
-  }));
+export function buildBillActivity(bills: Bill[], month: string, dict: Dictionary): ActivityItem[] {
+  return bills.map((bill) => {
+    const category = dict.categories.bill[bill.category as BillCategory] ?? bill.category;
+    const status = bill.paid ? dict.home.dueDayPaid : dict.home.dueDayPending;
+    return {
+      id: bill.id,
+      isIncome: false,
+      title: bill.name,
+      sub: `${category} · ${dict.home.dueDayLabel(bill.dueDay)} · ${status}`,
+      amount: bill.amount,
+      amountColorClass: bill.paid ? "text-text-subtle" : "text-warning",
+      date: `${month}-${String(bill.dueDay).padStart(2, "0")}`,
+    };
+  });
 }
 
 export function mergeActivity(income: ActivityItem[], bills: ActivityItem[]): ActivityItem[] {

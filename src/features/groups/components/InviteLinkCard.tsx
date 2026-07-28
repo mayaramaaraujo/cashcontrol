@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslation } from "@/shared/lib/i18n/context";
 
 interface InviteLinkCardProps {
   inviteUrl: string;
 }
 
 export function InviteLinkCard({ inviteUrl }: InviteLinkCardProps) {
+  const { dict } = useTranslation();
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
@@ -17,7 +19,7 @@ export function InviteLinkCard({ inviteUrl }: InviteLinkCardProps) {
 
   return (
     <div className="rounded-2xl border border-surface-border bg-surface-1 p-4">
-      <p className="mb-2.5 text-xs text-text-subtle">Invite link · anyone can join &amp; add income</p>
+      <p className="mb-2.5 text-xs text-text-subtle">{dict.people.inviteLinkLabel}</p>
       <div className="flex h-11 items-center gap-2.5 rounded-lg border border-surface-border bg-black/25 py-1.5 pr-1.5 pl-3.5">
         <span className="min-w-0 flex-1 truncate text-xs font-semibold text-text-tertiary">
           {inviteUrl}
@@ -29,7 +31,7 @@ export function InviteLinkCard({ inviteUrl }: InviteLinkCardProps) {
             copied ? "bg-positive/20 text-positive" : "bg-surface-3 text-text-primary"
           }`}
         >
-          {copied ? "Copied!" : "Copy"}
+          {copied ? dict.people.copied : dict.people.copy}
         </button>
       </div>
     </div>

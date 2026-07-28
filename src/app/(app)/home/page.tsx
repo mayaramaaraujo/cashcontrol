@@ -14,6 +14,9 @@ import {
 import { HeroSection } from "@/features/dashboard/components/HeroSection";
 import { MemberStrip } from "@/features/dashboard/components/MemberStrip";
 import { ActivitySection } from "@/features/dashboard/components/ActivitySection";
+import { getLocale } from "@/shared/lib/i18n/server";
+import { getDictionary } from "@/shared/lib/i18n/dictionaries";
+import { LOCALE_INTL_TAG } from "@/shared/lib/i18n/config";
 
 function monthRange(month: string) {
   const [year, monthNum] = month.split("-").map(Number);
@@ -36,6 +39,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const now = new Date();
   const month = monthParam ?? `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
   const { start, end } = monthRange(month);
+
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
 
   const supabase = await createClient();
 
@@ -92,23 +98,21 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   const hasAnyActivity = (anyEntriesRes.count ?? 0) > 0 || bills.length > 0;
 
-  const hero = computeHero(entries, bills, members.length);
+  const hero = computeHero(entries, bills, members.length, dict);
   const memberStrip = computeMemberStrip(members, entries);
-  const incomeItems = buildIncomeActivity(entries, members);
-  const billItems = buildBillActivity(bills, month);
+  const incomeItems = buildIncomeActivity(entries, members, dict, LOCALE_INTL_TAG[locale]);
+  const billItems = buildBillActivity(bills, month, dict);
 
   return (
     <div>
       <HeroSection hero={hero} />
-      <MemberStrip members={memberStrip} />
+      <MemberStrip members={memberStrip} addLabel={dict.home.add} byPersonLabel={dict.home.byPerson} />
 
       {hasAnyActivity ? (
-        <ActivitySection incomeItems={incomeItems} billItems={billItems} />
+        <ActivitySection incomeItems={incomeItems} billItems={billItems} dict={dict} />
       ) : (
         <div className="mt-8 flex flex-col items-center gap-3 rounded-2xl border border-surface-border bg-surface-1 p-6 text-center">
-          <p className="text-sm text-text-subtle">
-            No activity yet — add your first income or bill using the button below.
-          </p>
+          <p className="text-sm text-text-subtle">{dict.home.noActivity}</p>
           <span className="flex size-10 items-center justify-center rounded-xl bg-primary/15">
             <Plus className="size-5 text-primary-light" />
           </span>

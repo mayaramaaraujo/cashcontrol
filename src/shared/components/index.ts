@@ -7,3 +7,4 @@ export { Sheet } from "./Sheet";
 export { BottomNav, type BottomNavItem } from "./BottomNav";
 export { ProgressBar } from "./ProgressBar";
 export { Switch } from "./Switch";
+export { LanguageSwitcher } from "./LanguageSwitcher";

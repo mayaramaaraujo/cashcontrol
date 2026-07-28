@@ -6,13 +6,15 @@ import type { MemberStripEntry } from "@/features/dashboard/lib";
 
 interface MemberStripProps {
   members: MemberStripEntry[];
+  byPersonLabel: string;
+  addLabel: string;
 }
 
-export function MemberStrip({ members }: MemberStripProps) {
+export function MemberStrip({ members, byPersonLabel, addLabel }: MemberStripProps) {
   return (
     <div>
       <p className="mb-3 mt-6 font-display text-base font-semibold text-text-primary">
-        By person
+        {byPersonLabel}
       </p>
       <div className="flex gap-2.5 overflow-x-auto pb-0.5">
         {members.map((member) => (
@@ -32,7 +34,7 @@ export function MemberStrip({ members }: MemberStripProps) {
           className="flex w-24 shrink-0 flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-surface-4 bg-surface-1"
         >
           <Plus className="size-4 text-primary-light" />
-          <span className="text-xs font-semibold text-text-tertiary">Add</span>
+          <span className="text-xs font-semibold text-text-tertiary">{addLabel}</span>
         </Link>
       </div>
     </div>

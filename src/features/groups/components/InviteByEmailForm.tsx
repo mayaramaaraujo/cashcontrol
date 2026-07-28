@@ -1,14 +1,18 @@
 "use client";
 
+import { useMemo } from "react";
 import { Mail } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/shared/components/Input";
 import { Button } from "@/shared/components/Button";
 import { inviteByEmail } from "@/features/groups/api/actions";
-import { inviteByEmailSchema, type InviteByEmailValues } from "@/features/groups/types";
+import { createInviteByEmailSchema, type InviteByEmailValues } from "@/features/groups/types";
+import { useTranslation } from "@/shared/lib/i18n/context";
 
 export function InviteByEmailForm() {
+  const { dict } = useTranslation();
+  const inviteByEmailSchema = useMemo(() => createInviteByEmailSchema(dict), [dict]);
   const {
     register,
     handleSubmit,
@@ -32,13 +36,13 @@ export function InviteByEmailForm() {
         <div className="flex-1">
           <Input
             icon={Mail}
-            placeholder="Invite by email"
+            placeholder={dict.people.inviteByEmailPlaceholder}
             invalid={!!errors.email}
             {...register("email")}
           />
         </div>
         <Button type="submit" disabled={isSubmitting}>
-          Add
+          {dict.people.add}
         </Button>
       </div>
       {errors.email ? (

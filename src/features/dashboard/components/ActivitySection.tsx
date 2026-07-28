@@ -5,20 +5,21 @@ import { ArrowUp, ArrowDown } from "lucide-react";
 import { Chip } from "@/shared/components/Chip";
 import { formatCurrency } from "@/shared/lib/utils";
 import { mergeActivity, type ActivityItem, type ActivityFilter } from "@/features/dashboard/lib";
+import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
 interface ActivitySectionProps {
   incomeItems: ActivityItem[];
   billItems: ActivityItem[];
+  dict: Dictionary;
 }
 
-const FILTERS: { value: ActivityFilter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "income", label: "Income" },
-  { value: "bills", label: "Bills" },
-];
-
-export function ActivitySection({ incomeItems, billItems }: ActivitySectionProps) {
+export function ActivitySection({ incomeItems, billItems, dict }: ActivitySectionProps) {
   const [filter, setFilter] = useState<ActivityFilter>("all");
+  const FILTERS: { value: ActivityFilter; label: string }[] = [
+    { value: "all", label: dict.home.filterAll },
+    { value: "income", label: dict.home.filterIncome },
+    { value: "bills", label: dict.home.filterBills },
+  ];
 
   const filtered =
     filter === "income" ? incomeItems : filter === "bills" ? billItems : mergeActivity(incomeItems, billItems);
@@ -27,7 +28,7 @@ export function ActivitySection({ incomeItems, billItems }: ActivitySectionProps
   return (
     <div>
       <div className="mt-6 mb-3 flex items-center justify-between">
-        <p className="font-display text-base font-semibold text-text-primary">Activity</p>
+        <p className="font-display text-base font-semibold text-text-primary">{dict.home.activity}</p>
         <div className="flex gap-1.5">
           {FILTERS.map((f) => (
             <Chip key={f.value} selected={filter === f.value} onClick={() => setFilter(f.value)}>
@@ -39,7 +40,7 @@ export function ActivitySection({ incomeItems, billItems }: ActivitySectionProps
 
       {visible.length === 0 ? (
         <p className="rounded-2xl border border-surface-border bg-surface-1 p-4 text-center text-sm text-text-subtle">
-          Nothing here for this filter yet.
+          {dict.home.nothingForFilter}
         </p>
       ) : (
         <div className="flex flex-col gap-2">

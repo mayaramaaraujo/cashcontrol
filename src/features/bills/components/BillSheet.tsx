@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import type * as z from "zod";
 import { Loader2, Calendar } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,12 +13,13 @@ import { Chip, type ChipAccent } from "@/shared/components/Chip";
 import { Switch } from "@/shared/components/Switch";
 import { addBill, updateBill, deleteBill } from "@/features/bills/api/actions";
 import {
-  billSchema,
+  createBillSchema,
   BILL_CATEGORIES,
   BILL_CATEGORY_COLORS,
   type BillValues,
   type Bill,
 } from "@/features/bills/types";
+import { useTranslation } from "@/shared/lib/i18n/context";
 
 interface BillSheetProps {
   open: boolean;
@@ -26,7 +27,7 @@ interface BillSheetProps {
   bill?: Bill;
 }
 
-type BillFormInput = z.input<typeof billSchema>;
+type BillFormInput = z.input<ReturnType<typeof createBillSchema>>;
 
 const DEFAULT_VALUES: BillFormInput = {
   name: "",
@@ -49,6 +50,8 @@ function billToValues(bill: Bill): BillFormInput {
 }
 
 export function BillSheet({ open, onClose, bill }: BillSheetProps) {
+  const { dict } = useTranslation();
+  const billSchema = useMemo(() => createBillSchema(dict), [dict]);
   const {
     register,
     control,
@@ -85,11 +88,11 @@ export function BillSheet({ open, onClose, bill }: BillSheetProps) {
   }
 
   return (
-    <Sheet open={open} onClose={onClose} title={bill ? "Edit bill" : "Add bill"}>
+    <Sheet open={open} onClose={onClose} title={bill ? dict.bills.sheet.editTitle : dict.bills.sheet.addTitle}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <div>
           <Input
-            placeholder="Bill name (e.g. Rent)"
+            placeholder={dict.bills.sheet.namePlaceholder}
             invalid={!!errors.name}
             {...register("name")}
           />
@@ -121,7 +124,7 @@ export function BillSheet({ open, onClose, bill }: BillSheetProps) {
               inputMode="numeric"
               min={1}
               max={31}
-              placeholder="Due day"
+              placeholder={dict.bills.sheet.dueDayPlaceholder}
               invalid={!!errors.dueDay}
               className="text-xs font-semibold"
               {...register("dueDay")}
@@ -140,8 +143,8 @@ export function BillSheet({ open, onClose, bill }: BillSheetProps) {
               value={field.value ? "fixed" : "variable"}
               onChange={(value) => field.onChange(value === "fixed")}
               options={[
-                { value: "fixed", label: "Fixed" },
-                { value: "variable", label: "Variable" },
+                { value: "fixed", label: dict.bills.sheet.fixed },
+                { value: "variable", label: dict.bills.sheet.variable },
               ]}
             />
           )}
@@ -152,7 +155,7 @@ export function BillSheet({ open, onClose, bill }: BillSheetProps) {
           name="category"
           render={({ field }) => (
             <div>
-              <p className="mb-2 text-xs font-semibold text-text-subtle">Category</p>
+              <p className="mb-2 text-xs font-semibold text-text-subtle">{dict.bills.sheet.category}</p>
               <div className="flex flex-wrap gap-2">
                 {BILL_CATEGORIES.map((category) => (
                   <Chip
@@ -162,7 +165,7 @@ export function BillSheet({ open, onClose, bill }: BillSheetProps) {
                     selected={field.value === category}
                     onClick={() => field.onChange(category)}
                   >
-                    {category}
+                    {dict.categories.bill[category]}
                   </Chip>
                 ))}
               </div>
@@ -175,7 +178,7 @@ export function BillSheet({ open, onClose, bill }: BillSheetProps) {
           name="repeatMonthly"
           render={({ field }) => (
             <div className="flex items-center justify-between rounded-lg border border-surface-border bg-surface-2 px-4 py-3.5">
-              <span className="text-sm font-medium text-text-primary">Repeat every month</span>
+              <span className="text-sm font-medium text-text-primary">{dict.bills.sheet.repeatMonthly}</span>
               <Switch checked={field.value} onCheckedChange={field.onChange} />
             </div>
           )}
@@ -183,7 +186,7 @@ export function BillSheet({ open, onClose, bill }: BillSheetProps) {
 
         <Button type="submit" fullWidth disabled={isSubmitting} className="mt-2">
           {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
-          {bill ? "Save changes" : "Save bill"}
+          {bill ? dict.bills.sheet.saveChanges : dict.bills.sheet.saveBill}
         </Button>
 
         {bill ? (
@@ -194,7 +197,7 @@ export function BillSheet({ open, onClose, bill }: BillSheetProps) {
             disabled={isSubmitting}
             onClick={onDelete}
           >
-            Delete bill
+            {dict.bills.sheet.deleteBill}
           </Button>
         ) : null}
 

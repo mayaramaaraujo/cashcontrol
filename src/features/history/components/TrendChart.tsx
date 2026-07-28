@@ -1,10 +1,12 @@
 import type { TrendPoint } from "@/features/history/lib";
+import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
 interface TrendChartProps {
   trend: TrendPoint[];
+  dict: Dictionary;
 }
 
-export function TrendChart({ trend }: TrendChartProps) {
+export function TrendChart({ trend, dict }: TrendChartProps) {
   const hasActivity = trend.some((point) => point.total > 0);
 
   return (
@@ -28,9 +30,7 @@ export function TrendChart({ trend }: TrendChartProps) {
           ))}
         </div>
       ) : (
-        <p className="py-6 text-center text-sm text-text-subtle">
-          No income logged in the last 6 months yet.
-        </p>
+        <p className="py-6 text-center text-sm text-text-subtle">{dict.history.noIncomeSixMonths}</p>
       )}
     </div>
   );

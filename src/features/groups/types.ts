@@ -1,4 +1,6 @@
 import * as z from "zod";
+import { en } from "@/shared/lib/i18n/dictionaries/en";
+import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
 export type Group = {
   id: string;
@@ -20,14 +22,24 @@ export type GroupMember = {
   createdAt: string;
 };
 
-export const createGroupSchema = z.object({
-  name: z.string().min(1, "Group name is required"),
-});
+export function createGroupSchemaFor(dict: Dictionary) {
+  return z.object({
+    name: z.string().min(1, dict.setup.validation.nameRequired),
+  });
+}
+
+/** Default English schema, used for server-side re-validation in Server Actions. */
+export const createGroupSchema = createGroupSchemaFor(en);
 
 export type CreateGroupValues = z.infer<typeof createGroupSchema>;
 
-export const inviteByEmailSchema = z.object({
-  email: z.email("Enter a valid email address"),
-});
+export function createInviteByEmailSchema(dict: Dictionary) {
+  return z.object({
+    email: z.email(dict.join.email.inviteRequired),
+  });
+}
+
+/** Default English schema, used for server-side re-validation in Server Actions. */
+export const inviteByEmailSchema = createInviteByEmailSchema(en);
 
 export type InviteByEmailValues = z.infer<typeof inviteByEmailSchema>;

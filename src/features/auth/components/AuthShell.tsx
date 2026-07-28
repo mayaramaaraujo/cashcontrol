@@ -4,10 +4,11 @@ import { Users } from "lucide-react";
 interface AuthShellProps {
   title: string;
   subtitle: string;
+  termsNotice: string;
   children: ReactNode;
 }
 
-export function AuthShell({ title, subtitle, children }: AuthShellProps) {
+export function AuthShell({ title, subtitle, termsNotice, children }: AuthShellProps) {
   return (
     <div
       className="flex flex-1 flex-col px-8 pb-16"
@@ -24,9 +25,7 @@ export function AuthShell({ title, subtitle, children }: AuthShellProps) {
 
       <div className="mt-9 flex flex-1 flex-col">{children}</div>
 
-      <p className="mt-4 text-center text-xs leading-relaxed text-text-faintest">
-        By continuing you agree to our Terms and Privacy Policy.
-      </p>
+      <p className="mt-4 text-center text-xs leading-relaxed text-text-faintest">{termsNotice}</p>
     </div>
   );
 }

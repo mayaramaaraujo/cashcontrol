@@ -1,4 +1,6 @@
 import * as z from "zod";
+import { en } from "@/shared/lib/i18n/dictionaries/en";
+import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
 export type IncomeEntry = {
   id: string;
@@ -31,11 +33,16 @@ export const INCOME_CATEGORY_COLORS: Record<IncomeCategory, string> = {
   Other: "neutral-accent",
 };
 
-export const addIncomeSchema = z.object({
-  memberId: z.uuid(),
-  category: z.enum(INCOME_CATEGORIES),
-  amount: z.coerce.number().positive("Enter an amount greater than 0"),
-  note: z.string().optional(),
-});
+export function createAddIncomeSchema(dict: Dictionary) {
+  return z.object({
+    memberId: z.uuid(),
+    category: z.enum(INCOME_CATEGORIES),
+    amount: z.coerce.number().positive(dict.income.validation.amountPositive),
+    note: z.string().optional(),
+  });
+}
+
+/** Default English schema, used for server-side re-validation in Server Actions. */
+export const addIncomeSchema = createAddIncomeSchema(en);
 
 export type AddIncomeValues = z.infer<typeof addIncomeSchema>;

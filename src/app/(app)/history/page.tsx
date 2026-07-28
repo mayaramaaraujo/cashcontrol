@@ -12,6 +12,9 @@ import {
 import { TrendChart } from "@/features/history/components/TrendChart";
 import { CategoryBreakdown } from "@/features/history/components/CategoryBreakdown";
 import { EarlierMonths } from "@/features/history/components/EarlierMonths";
+import { getLocale } from "@/shared/lib/i18n/server";
+import { getDictionary } from "@/shared/lib/i18n/dictionaries";
+import { LOCALE_INTL_TAG } from "@/shared/lib/i18n/config";
 
 interface HistoryPageProps {
   searchParams: Promise<{ month?: string }>;
@@ -26,6 +29,10 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
   const { month: monthParam } = await searchParams;
   const now = new Date();
   const month = monthParam ?? `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
+  const intlLocale = LOCALE_INTL_TAG[locale];
 
   const months = lastSixMonths(month);
   const rangeStart = `${months[0]}-01`;
@@ -46,14 +53,18 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
     entryDate: row.entry_date,
   }));
 
-  const trend = computeTrend(entries, months, month);
+  const trend = computeTrend(entries, months, month, intlLocale);
   const categoryBreakdown = computeCategoryBreakdown(entries, month);
 
   return (
     <div>
-      <TrendChart trend={trend} />
-      <CategoryBreakdown monthLabel={monthLabel(month, true)} rows={categoryBreakdown} />
-      <EarlierMonths months={earlierMonths(trend)} />
+      <TrendChart trend={trend} dict={dict} />
+      <CategoryBreakdown
+        monthLabel={monthLabel(month, true, intlLocale)}
+        rows={categoryBreakdown}
+        dict={dict}
+      />
+      <EarlierMonths months={earlierMonths(trend, intlLocale)} dict={dict} />
     </div>
   );
 }

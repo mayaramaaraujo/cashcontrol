@@ -16,6 +16,7 @@ interface BottomNavProps<T extends string> {
   onChange: (value: T) => void;
   onAddClick: () => void;
   addIcon?: LucideIcon;
+  addLabel?: string;
 }
 
 export function BottomNav<T extends string>({
@@ -25,6 +26,7 @@ export function BottomNav<T extends string>({
   onChange,
   onAddClick,
   addIcon: AddIcon = Plus,
+  addLabel = "Add",
 }: BottomNavProps<T>) {
   const mid = Math.ceil(items.length / 2);
   const leftItems = items.slice(0, mid);
@@ -49,7 +51,7 @@ export function BottomNav<T extends string>({
         <button
           type="button"
           onClick={onAddClick}
-          aria-label="Add"
+          aria-label={addLabel}
           className="-mt-4 mx-1 flex size-14 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-primary to-primary-dark shadow-glow-primary"
         >
           <AddIcon className="size-6 text-text-primary" />

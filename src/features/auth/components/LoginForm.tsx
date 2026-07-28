@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,7 +9,8 @@ import { Loader2, Lock, Mail } from "lucide-react";
 import { Button } from "@/shared/components/Button";
 import { Input } from "@/shared/components/Input";
 import { createClient } from "@/shared/lib/supabase/client";
-import { loginSchema, type LoginFormValues } from "@/features/auth/types";
+import { createLoginSchema, type LoginFormValues } from "@/features/auth/types";
+import { useTranslation } from "@/shared/lib/i18n/context";
 
 interface LoginFormProps {
   /** Where to land after signing in (e.g. an invite link). Only a same-origin path is honored. */
@@ -17,6 +19,8 @@ interface LoginFormProps {
 
 export function LoginForm({ next }: LoginFormProps) {
   const router = useRouter();
+  const { dict } = useTranslation();
+  const loginSchema = useMemo(() => createLoginSchema(dict), [dict]);
   const destination = next?.startsWith("/") && !next.startsWith("//") ? next : "/";
   const {
     register,
@@ -44,14 +48,14 @@ export function LoginForm({ next }: LoginFormProps) {
         <Input
           icon={Mail}
           type="email"
-          placeholder="you@email.com"
+          placeholder={dict.auth.emailPlaceholder}
           invalid={!!errors.email}
           {...register("email")}
         />
         <Input
           icon={Lock}
           type="password"
-          placeholder="••••••••"
+          placeholder={dict.auth.passwordPlaceholder}
           invalid={!!errors.password}
           {...register("password")}
         />
@@ -62,21 +66,21 @@ export function LoginForm({ next }: LoginFormProps) {
       ) : null}
 
       <p className="mt-2 text-right text-xs font-semibold text-primary-light">
-        Forgot password?
+        {dict.auth.forgotPassword}
       </p>
 
       <Button type="submit" fullWidth disabled={isSubmitting} className="mt-4">
         {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
-        Sign in
+        {dict.auth.signIn}
       </Button>
 
       <p className="mt-4 text-center text-xs text-text-dim">
-        Don&apos;t have an account?{" "}
+        {dict.auth.noAccount}{" "}
         <Link
           href={next ? `/signup?next=${encodeURIComponent(next)}` : "/signup"}
           className="font-semibold text-primary-light"
         >
-          Sign up
+          {dict.auth.signUp}
         </Link>
       </p>
     </form>

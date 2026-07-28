@@ -15,10 +15,10 @@ export function lastSixMonths(month: string): string[] {
   });
 }
 
-export function monthLabel(month: string, withYear = false): string {
+export function monthLabel(month: string, withYear = false, intlLocale = "en-US"): string {
   const [year, monthNum] = month.split("-").map(Number);
   const d = new Date(Date.UTC(year, monthNum - 1, 1));
-  return d.toLocaleDateString("en-US", { month: "short", year: withYear ? "numeric" : undefined });
+  return d.toLocaleDateString(intlLocale, { month: "short", year: withYear ? "numeric" : undefined });
 }
 
 export interface TrendPoint {
@@ -29,7 +29,12 @@ export interface TrendPoint {
   isCurrent: boolean;
 }
 
-export function computeTrend(entries: MonthEntry[], months: string[], currentMonth: string): TrendPoint[] {
+export function computeTrend(
+  entries: MonthEntry[],
+  months: string[],
+  currentMonth: string,
+  intlLocale = "en-US",
+): TrendPoint[] {
   const totalsByMonth = new Map<string, number>();
   for (const entry of entries) {
     const month = entry.entryDate.slice(0, 7);
@@ -41,7 +46,7 @@ export function computeTrend(entries: MonthEntry[], months: string[], currentMon
 
   return months.map((month, i) => ({
     month,
-    label: monthLabel(month),
+    label: monthLabel(month, false, intlLocale),
     total: totals[i],
     percentOfMax: Math.round((totals[i] / max) * 100),
     isCurrent: month === currentMonth,
@@ -55,10 +60,10 @@ export interface EarlierMonth {
 }
 
 /** The trend's non-current months, most recent first, with year-qualified labels. */
-export function earlierMonths(trend: TrendPoint[]): EarlierMonth[] {
+export function earlierMonths(trend: TrendPoint[], intlLocale = "en-US"): EarlierMonth[] {
   return trend
     .filter((point) => !point.isCurrent)
-    .map((point) => ({ month: point.month, label: monthLabel(point.month, true), total: point.total }))
+    .map((point) => ({ month: point.month, label: monthLabel(point.month, true, intlLocale), total: point.total }))
     .reverse();
 }
 

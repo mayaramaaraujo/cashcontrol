@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,7 +9,8 @@ import { Loader2, Lock, Mail, MailCheck, User } from "lucide-react";
 import { Button } from "@/shared/components/Button";
 import { Input } from "@/shared/components/Input";
 import { createClient } from "@/shared/lib/supabase/client";
-import { signupSchema, type SignupFormValues } from "@/features/auth/types";
+import { createSignupSchema, type SignupFormValues } from "@/features/auth/types";
+import { useTranslation } from "@/shared/lib/i18n/context";
 
 interface SignupFormProps {
   /** Where to land after signing up (e.g. an invite link). Only a same-origin path is honored. */
@@ -18,6 +19,8 @@ interface SignupFormProps {
 
 export function SignupForm({ next }: SignupFormProps) {
   const router = useRouter();
+  const { dict } = useTranslation();
+  const signupSchema = useMemo(() => createSignupSchema(dict), [dict]);
   const [confirmationSentTo, setConfirmationSentTo] = useState<string | null>(null);
   const destination = next?.startsWith("/") && !next.startsWith("//") ? next : "/";
   const {
@@ -63,8 +66,8 @@ export function SignupForm({ next }: SignupFormProps) {
       <div className="flex flex-col items-center text-center">
         <MailCheck className="size-10 text-primary-light" />
         <p className="mt-4 text-sm leading-relaxed text-text-subtle">
-          We sent a confirmation link to <span className="font-semibold text-text-primary">{confirmationSentTo}</span>.
-          Click it to activate your account and sign in.
+          {dict.auth.confirmationSentBefore}{" "}
+          <span className="font-semibold text-text-primary">{confirmationSentTo}</span>. {dict.auth.confirmationSentAfter}
         </p>
       </div>
     );
@@ -75,7 +78,7 @@ export function SignupForm({ next }: SignupFormProps) {
       <div className="flex flex-col gap-3">
         <Input
           icon={User}
-          placeholder="Your name"
+          placeholder={dict.auth.namePlaceholder}
           invalid={!!errors.name}
           {...register("name")}
         />
@@ -85,14 +88,14 @@ export function SignupForm({ next }: SignupFormProps) {
         <Input
           icon={Mail}
           type="email"
-          placeholder="you@email.com"
+          placeholder={dict.auth.emailPlaceholder}
           invalid={!!errors.email}
           {...register("email")}
         />
         <Input
           icon={Lock}
           type="password"
-          placeholder="••••••••"
+          placeholder={dict.auth.passwordPlaceholder}
           invalid={!!errors.password}
           {...register("password")}
         />
@@ -107,16 +110,16 @@ export function SignupForm({ next }: SignupFormProps) {
 
       <Button type="submit" fullWidth disabled={isSubmitting} className="mt-5">
         {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
-        Create account
+        {dict.auth.createAccount}
       </Button>
 
       <p className="mt-4 text-center text-xs text-text-dim">
-        Already have an account?{" "}
+        {dict.auth.haveAccount}{" "}
         <Link
           href={next ? `/login?next=${encodeURIComponent(next)}` : "/login"}
           className="font-semibold text-primary-light"
         >
-          Sign in
+          {dict.auth.signIn}
         </Link>
       </p>
     </form>

@@ -1,10 +1,13 @@
 import { ProgressBar } from "@/shared/components/ProgressBar";
 import { formatCurrency } from "@/shared/lib/utils";
 import type { CategoryBreakdownRow } from "@/features/history/lib";
+import type { IncomeCategory } from "@/features/income/types";
+import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
 interface CategoryBreakdownProps {
   monthLabel: string;
   rows: CategoryBreakdownRow[];
+  dict: Dictionary;
 }
 
 const ACCENT_BG_CLASSES: Record<string, string> = {
@@ -16,15 +19,15 @@ const ACCENT_BG_CLASSES: Record<string, string> = {
   "neutral-accent": "bg-neutral-accent",
 };
 
-export function CategoryBreakdown({ monthLabel, rows }: CategoryBreakdownProps) {
+export function CategoryBreakdown({ monthLabel, rows, dict }: CategoryBreakdownProps) {
   return (
     <div>
       <p className="mt-6 mb-3 font-display text-base font-semibold text-text-primary">
-        {monthLabel} · by category
+        {dict.history.byCategory(monthLabel)}
       </p>
       {rows.length === 0 ? (
         <p className="rounded-2xl border border-surface-border bg-surface-1 p-6 text-center text-sm text-text-subtle">
-          No income logged this month yet.
+          {dict.history.noIncomeThisMonth}
         </p>
       ) : (
         <div className="flex flex-col gap-3.5 rounded-2xl border border-surface-border bg-surface-1 p-4">
@@ -33,7 +36,7 @@ export function CategoryBreakdown({ monthLabel, rows }: CategoryBreakdownProps) 
               <div className="mb-1.5 flex items-center justify-between">
                 <span className="flex items-center gap-2 text-xs font-semibold text-text-secondary">
                   <span className={`size-2 rounded-sm ${ACCENT_BG_CLASSES[row.accent] ?? "bg-neutral-accent"}`} />
-                  {row.category}
+                  {dict.categories.income[row.category as IncomeCategory] ?? row.category}
                 </span>
                 <span className="text-xs font-semibold text-text-tertiary">
                   €{formatCurrency(row.amount)}

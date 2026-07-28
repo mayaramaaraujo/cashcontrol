@@ -5,8 +5,10 @@ import { Loader2, Trash2 } from "lucide-react";
 import { Button } from "@/shared/components/Button";
 import { Sheet } from "@/shared/components/Sheet";
 import { deleteAccount } from "@/features/auth/api/actions";
+import { useTranslation } from "@/shared/lib/i18n/context";
 
 export function DeleteAccountButton() {
+  const { dict } = useTranslation();
   const [open, setOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,14 +31,11 @@ export function DeleteAccountButton() {
         className="flex items-center gap-1.5 text-xs font-semibold text-danger"
       >
         <Trash2 className="size-3.5" />
-        Delete account
+        {dict.people.deleteAccount}
       </button>
 
-      <Sheet open={open} onClose={() => setOpen(false)} title="Delete account?">
-        <p className="text-sm text-text-subtle">
-          This permanently deletes your account and removes you from any groups you belong to.
-          This can&apos;t be undone.
-        </p>
+      <Sheet open={open} onClose={() => setOpen(false)} title={dict.people.deleteAccountTitle}>
+        <p className="text-sm text-text-subtle">{dict.people.deleteAccountBody}</p>
         {error ? <p className="mt-3 text-xs font-medium text-danger">{error}</p> : null}
         <Button
           variant="danger"
@@ -46,7 +45,7 @@ export function DeleteAccountButton() {
           className="mt-5"
         >
           {isDeleting ? <Loader2 className="size-4 animate-spin" /> : null}
-          Yes, delete my account
+          {dict.people.confirmDelete}
         </Button>
       </Sheet>
     </>

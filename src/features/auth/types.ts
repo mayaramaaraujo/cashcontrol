@@ -1,16 +1,21 @@
 import * as z from "zod";
+import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
-export const loginSchema = z.object({
-  email: z.email("Enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
-});
+export function createLoginSchema(dict: Dictionary) {
+  return z.object({
+    email: z.email(dict.auth.validation.emailInvalid),
+    password: z.string().min(1, dict.auth.validation.passwordRequired),
+  });
+}
 
-export type LoginFormValues = z.infer<typeof loginSchema>;
+export type LoginFormValues = z.infer<ReturnType<typeof createLoginSchema>>;
 
-export const signupSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.email("Enter a valid email address"),
-  password: z.string().min(8, "Must be at least 8 characters"),
-});
+export function createSignupSchema(dict: Dictionary) {
+  return z.object({
+    name: z.string().min(1, dict.auth.validation.nameRequired),
+    email: z.email(dict.auth.validation.emailInvalid),
+    password: z.string().min(8, dict.auth.validation.passwordMinLength),
+  });
+}
 
-export type SignupFormValues = z.infer<typeof signupSchema>;
+export type SignupFormValues = z.infer<ReturnType<typeof createSignupSchema>>;

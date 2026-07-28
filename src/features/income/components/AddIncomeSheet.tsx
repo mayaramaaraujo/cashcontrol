@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import type * as z from "zod";
 import { Loader2 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,8 +12,9 @@ import { Avatar, type AvatarColorIndex } from "@/shared/components/Avatar";
 import { Chip, type ChipAccent } from "@/shared/components/Chip";
 import { getInitials } from "@/shared/lib/utils";
 import { addEntry } from "@/features/income/api/actions";
-import { addIncomeSchema, INCOME_CATEGORIES, INCOME_CATEGORY_COLORS } from "@/features/income/types";
+import { createAddIncomeSchema, INCOME_CATEGORIES, INCOME_CATEGORY_COLORS } from "@/features/income/types";
 import type { GroupMember } from "@/features/groups/types";
+import { useTranslation } from "@/shared/lib/i18n/context";
 
 interface AddIncomeSheetProps {
   open: boolean;
@@ -22,10 +23,12 @@ interface AddIncomeSheetProps {
   defaultMemberId: string;
 }
 
-type AddIncomeFormInput = z.input<typeof addIncomeSchema>;
-type AddIncomeValues = z.output<typeof addIncomeSchema>;
+type AddIncomeFormInput = z.input<ReturnType<typeof createAddIncomeSchema>>;
+type AddIncomeValues = z.output<ReturnType<typeof createAddIncomeSchema>>;
 
 export function AddIncomeSheet({ open, onClose, members, defaultMemberId }: AddIncomeSheetProps) {
+  const { dict } = useTranslation();
+  const addIncomeSchema = useMemo(() => createAddIncomeSchema(dict), [dict]);
   const {
     register,
     control,
@@ -64,7 +67,7 @@ export function AddIncomeSheet({ open, onClose, members, defaultMemberId }: AddI
   }
 
   return (
-    <Sheet open={open} onClose={onClose} title="Add income">
+    <Sheet open={open} onClose={onClose} title={dict.income.addTitle}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-1">
         <div>
           <Input
@@ -87,7 +90,7 @@ export function AddIncomeSheet({ open, onClose, members, defaultMemberId }: AddI
           name="memberId"
           render={({ field }) => (
             <div className="mt-3">
-              <p className="mb-2 text-xs font-semibold text-text-subtle">Who earned this?</p>
+              <p className="mb-2 text-xs font-semibold text-text-subtle">{dict.income.whoEarned}</p>
               <div className="flex gap-2 overflow-x-auto pb-0.5">
                 {members.map((member) => (
                   <button
@@ -118,7 +121,7 @@ export function AddIncomeSheet({ open, onClose, members, defaultMemberId }: AddI
           name="category"
           render={({ field }) => (
             <div className="mt-3">
-              <p className="mb-2 text-xs font-semibold text-text-subtle">Category</p>
+              <p className="mb-2 text-xs font-semibold text-text-subtle">{dict.income.category}</p>
               <div className="flex flex-wrap gap-2">
                 {INCOME_CATEGORIES.map((category) => (
                   <Chip
@@ -128,7 +131,7 @@ export function AddIncomeSheet({ open, onClose, members, defaultMemberId }: AddI
                     selected={field.value === category}
                     onClick={() => field.onChange(category)}
                   >
-                    {category}
+                    {dict.categories.income[category]}
                   </Chip>
                 ))}
               </div>
@@ -136,11 +139,11 @@ export function AddIncomeSheet({ open, onClose, members, defaultMemberId }: AddI
           )}
         />
 
-        <Input placeholder="Add a note (optional)" className="mt-3.5" {...register("note")} />
+        <Input placeholder={dict.income.notePlaceholder} className="mt-3.5" {...register("note")} />
 
         <Button type="submit" fullWidth disabled={isSubmitting} className="mt-4">
           {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
-          Save income
+          {dict.income.saveIncome}
         </Button>
 
         {errors.root ? (
