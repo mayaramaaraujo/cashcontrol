@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/shared/lib/supabase/server";
 import { getCurrentGroup } from "@/shared/lib/supabase/get-current-group";
-import { resend, EMAIL_FROM, EMAIL_SENDING_ENABLED } from "@/shared/lib/resend";
+import { getResendClient, EMAIL_FROM, EMAIL_SENDING_ENABLED } from "@/shared/lib/resend";
 import {
   createGroupSchema,
   inviteByEmailSchema,
@@ -104,7 +104,7 @@ export async function inviteByEmail(
 
       // Best-effort: the group_members row is already saved, so a failed
       // email send shouldn't roll back the invite or block the request.
-      await resend.emails.send({
+      await getResendClient().emails.send({
         from: EMAIL_FROM,
         to: email,
         subject: `You're invited to join ${currentGroup.groupName} on CashControl`,
