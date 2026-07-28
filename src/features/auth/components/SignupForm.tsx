@@ -1,10 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Loader2, Lock, Mail, User } from "lucide-react";
+import { Loader2, Lock, Mail, MailCheck, User } from "lucide-react";
 import { Button } from "@/shared/components/Button";
 import { Input } from "@/shared/components/Input";
 import { createClient } from "@/shared/lib/supabase/client";
@@ -17,6 +18,7 @@ interface SignupFormProps {
 
 export function SignupForm({ next }: SignupFormProps) {
   const router = useRouter();
+  const [confirmationSentTo, setConfirmationSentTo] = useState<string | null>(null);
   const destination = next?.startsWith("/") && !next.startsWith("//") ? next : "/";
   const {
     register,
@@ -27,12 +29,15 @@ export function SignupForm({ next }: SignupFormProps) {
 
   async function onSubmit(values: SignupFormValues) {
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+    const redirectTo = new URL("/auth/callback", window.location.origin);
+    if (next) redirectTo.searchParams.set("next", next);
+
+    const { data, error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
       options: {
         data: { full_name: values.name },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: redirectTo.toString(),
       },
     });
 
@@ -41,8 +46,28 @@ export function SignupForm({ next }: SignupFormProps) {
       return;
     }
 
+    // With email confirmation required, signUp doesn't return a session —
+    // the account only becomes active once the user clicks the confirmation
+    // link, which lands on /auth/callback and creates the session there.
+    if (!data.session) {
+      setConfirmationSentTo(values.email);
+      return;
+    }
+
     router.replace(destination);
     router.refresh();
+  }
+
+  if (confirmationSentTo) {
+    return (
+      <div className="flex flex-col items-center text-center">
+        <MailCheck className="size-10 text-primary-light" />
+        <p className="mt-4 text-sm leading-relaxed text-text-subtle">
+          We sent a confirmation link to <span className="font-semibold text-text-primary">{confirmationSentTo}</span>.
+          Click it to activate your account and sign in.
+        </p>
+      </div>
+    );
   }
 
   return (

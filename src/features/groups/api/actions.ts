@@ -2,9 +2,11 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/shared/lib/supabase/server";
 import { getCurrentGroup } from "@/shared/lib/supabase/get-current-group";
+import { resend, EMAIL_FROM, EMAIL_SENDING_ENABLED } from "@/shared/lib/resend";
 import {
   createGroupSchema,
   inviteByEmailSchema,
@@ -85,6 +87,30 @@ export async function inviteByEmail(
 
   if (error) {
     return { error: error.message };
+  }
+
+  if (EMAIL_SENDING_ENABLED) {
+    const { data: group } = await supabase
+      .from("groups")
+      .select("invite_code")
+      .eq("id", currentGroup.groupId)
+      .single();
+
+    if (group?.invite_code) {
+      const headersList = await headers();
+      const host = headersList.get("host") ?? "";
+      const protocol = host.startsWith("localhost") ? "http" : "https";
+      const inviteUrl = `${protocol}://${host}/join/${group.invite_code}`;
+
+      // Best-effort: the group_members row is already saved, so a failed
+      // email send shouldn't roll back the invite or block the request.
+      await resend.emails.send({
+        from: EMAIL_FROM,
+        to: email,
+        subject: `You're invited to join ${currentGroup.groupName} on CashControl`,
+        html: `<p>You've been invited to join <strong>${currentGroup.groupName}</strong> on CashControl.</p><p><a href="${inviteUrl}">Accept the invite</a></p>`,
+      });
+    }
   }
 
   revalidatePath("/people");
