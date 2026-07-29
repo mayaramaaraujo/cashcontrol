@@ -1,10 +1,12 @@
 import { createClient } from "./server";
+import { DEFAULT_CURRENCY, isCurrency, type Currency } from "@/shared/lib/currency";
 
 export type CurrentGroup = {
   groupId: string;
   groupName: string;
   memberId: string;
   role: "admin" | "member";
+  currency: Currency;
 };
 
 export async function getCurrentGroup(): Promise<CurrentGroup | null> {
@@ -18,7 +20,7 @@ export async function getCurrentGroup(): Promise<CurrentGroup | null> {
 
   const { data } = await supabase
     .from("group_members")
-    .select("id, role, groups(id, name)")
+    .select("id, role, groups(id, name, currency)")
     .eq("user_id", user.id)
     .eq("status", "active")
     .maybeSingle();
@@ -30,5 +32,6 @@ export async function getCurrentGroup(): Promise<CurrentGroup | null> {
     groupName: data.groups.name,
     memberId: data.id,
     role: data.role as "admin" | "member",
+    currency: isCurrency(data.groups.currency) ? data.groups.currency : DEFAULT_CURRENCY,
   };
 }

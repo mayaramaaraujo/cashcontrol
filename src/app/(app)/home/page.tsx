@@ -61,7 +61,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       .order("entry_date", { ascending: false }),
     supabase
       .from("bills")
-      .select("id, group_id, name, category, amount, due_day, fixed, paid, repeat_monthly, created_at")
+      .select("id, group_id, name, category, amount, due_day, fixed, paid, paid_at, repeat_monthly, created_at")
       .eq("group_id", currentGroup.groupId)
       .order("due_day", { ascending: true }),
     supabase
@@ -92,24 +92,38 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     dueDay: row.due_day,
     fixed: row.fixed,
     paid: row.paid,
+    paidAt: row.paid_at,
     repeatMonthly: row.repeat_monthly,
     createdAt: row.created_at,
   }));
 
   const hasAnyActivity = (anyEntriesRes.count ?? 0) > 0 || bills.length > 0;
 
-  const hero = computeHero(entries, bills, members.length, dict);
+  const hero = computeHero(entries, bills, members.length, dict, currentGroup.currency);
   const memberStrip = computeMemberStrip(members, entries);
   const incomeItems = buildIncomeActivity(entries, members, dict, LOCALE_INTL_TAG[locale]);
   const billItems = buildBillActivity(bills, month, dict);
 
   return (
     <div>
-      <HeroSection hero={hero} />
-      <MemberStrip members={memberStrip} addLabel={dict.home.add} byPersonLabel={dict.home.byPerson} />
+      <HeroSection hero={hero} currency={currentGroup.currency} />
+      <MemberStrip
+        members={memberStrip}
+        addLabel={dict.home.add}
+        byPersonLabel={dict.home.byPerson}
+        currency={currentGroup.currency}
+      />
 
       {hasAnyActivity ? (
-        <ActivitySection incomeItems={incomeItems} billItems={billItems} />
+        <ActivitySection
+          incomeItems={incomeItems}
+          billItems={billItems}
+          entries={entries}
+          bills={bills}
+          members={members}
+          currentMemberId={currentGroup.memberId}
+          currency={currentGroup.currency}
+        />
       ) : (
         <div className="mt-8 flex flex-col items-center gap-3 rounded-2xl border border-surface-border bg-surface-1 p-6 text-center">
           <p className="text-sm text-text-subtle">{dict.home.noActivity}</p>

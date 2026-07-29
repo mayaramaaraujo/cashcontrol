@@ -27,8 +27,8 @@ export default async function BillsPage() {
 
   return (
     <div>
-      <BillsSummary summary={summary} dict={dict} />
-      <BillsList bills={bills} />
+      <BillsSummary summary={summary} dict={dict} currency={currentGroup.currency} />
+      <BillsList bills={bills} currency={currentGroup.currency} />
     </div>
   );
 }

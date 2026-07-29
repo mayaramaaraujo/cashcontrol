@@ -63,8 +63,13 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
         monthLabel={monthLabel(month, true, intlLocale)}
         rows={categoryBreakdown}
         dict={dict}
+        currency={currentGroup.currency}
       />
-      <EarlierMonths months={earlierMonths(trend, intlLocale)} dict={dict} />
+      <EarlierMonths
+        months={earlierMonths(trend, intlLocale)}
+        dict={dict}
+        currency={currentGroup.currency}
+      />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/shared/lib/supabase/server";
 import { getCurrentGroup } from "@/shared/lib/supabase/get-current-group";
 import { getResendClient, EMAIL_FROM, EMAIL_SENDING_ENABLED } from "@/shared/lib/resend";
+import { isCurrency, type Currency } from "@/shared/lib/currency";
 import {
   createGroupSchema,
   inviteByEmailSchema,
@@ -138,4 +139,27 @@ export async function joinGroupByCode(
   }
 
   redirect("/home");
+}
+
+export async function updateGroupCurrency(currency: Currency): Promise<{ error: string } | undefined> {
+  if (!isCurrency(currency)) {
+    return { error: "Invalid currency" };
+  }
+
+  const currentGroup = await getCurrentGroup();
+  if (!currentGroup) {
+    return { error: "Not in a group" };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("groups")
+    .update({ currency })
+    .eq("id", currentGroup.groupId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/", "layout");
 }

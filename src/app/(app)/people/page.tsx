@@ -7,8 +7,10 @@ import type { MemberRow } from "@/features/groups/components/MembersList";
 import { InviteLinkCard } from "@/features/groups/components/InviteLinkCard";
 import { InviteByEmailForm } from "@/features/groups/components/InviteByEmailForm";
 import { MembersList } from "@/features/groups/components/MembersList";
+import { CurrencySwitcher } from "@/features/groups/components/CurrencySwitcher";
 import { LogoutButton } from "@/features/auth/components/LogoutButton";
 import { DeleteAccountButton } from "@/features/auth/components/DeleteAccountButton";
+import { NotificationToggle } from "@/features/notifications/components/NotificationToggle";
 import { LanguageSwitcher } from "@/shared/components/LanguageSwitcher";
 import { getLocale } from "@/shared/lib/i18n/server";
 import { getDictionary } from "@/shared/lib/i18n/dictionaries";
@@ -76,12 +78,19 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
     <div>
       <InviteLinkCard inviteUrl={inviteUrl} />
       <InviteByEmailForm />
-      <MembersList rows={rows} dict={dict} />
+      <MembersList rows={rows} dict={dict} currency={currentGroup.currency} />
 
       <div className="mt-8 flex items-center justify-between">
         <p className="text-xs font-semibold text-text-subtle">{dict.people.language}</p>
         <LanguageSwitcher />
       </div>
+
+      <div className="mt-4 flex items-center justify-between">
+        <p className="text-xs font-semibold text-text-subtle">{dict.people.currency}</p>
+        <CurrencySwitcher currency={currentGroup.currency} />
+      </div>
+
+      <NotificationToggle />
 
       <div className="mt-6 flex items-center justify-between border-t border-surface-border pt-5">
         <LogoutButton />

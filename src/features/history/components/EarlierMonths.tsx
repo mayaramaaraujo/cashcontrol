@@ -1,13 +1,15 @@
 import { formatCurrency } from "@/shared/lib/utils";
+import { CURRENCY_SYMBOL, type Currency } from "@/shared/lib/currency";
 import type { EarlierMonth } from "@/features/history/lib";
 import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
 interface EarlierMonthsProps {
   months: EarlierMonth[];
   dict: Dictionary;
+  currency: Currency;
 }
 
-export function EarlierMonths({ months, dict }: EarlierMonthsProps) {
+export function EarlierMonths({ months, dict, currency }: EarlierMonthsProps) {
   return (
     <div>
       <p className="mt-6 mb-3 font-display text-base font-semibold text-text-primary">
@@ -26,7 +28,7 @@ export function EarlierMonths({ months, dict }: EarlierMonthsProps) {
             >
               <span className="text-sm font-semibold text-text-primary">{point.label}</span>
               <span className="font-display text-sm font-bold text-text-primary">
-                €{formatCurrency(point.total)}
+                {CURRENCY_SYMBOL[currency]}{formatCurrency(point.total, currency)}
               </span>
             </div>
           ))}

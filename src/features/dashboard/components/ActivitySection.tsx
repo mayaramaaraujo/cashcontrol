@@ -4,17 +4,38 @@ import { useState } from "react";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { Chip } from "@/shared/components/Chip";
 import { formatCurrency } from "@/shared/lib/utils";
+import { CURRENCY_SYMBOL, type Currency } from "@/shared/lib/currency";
 import { mergeActivity, type ActivityItem, type ActivityFilter } from "@/features/dashboard/lib";
 import { useTranslation } from "@/shared/lib/i18n/context";
+import { IncomeSheet } from "@/features/income/components/IncomeSheet";
+import { BillSheet } from "@/features/bills/components/BillSheet";
+import type { IncomeEntry } from "@/features/income/types";
+import type { Bill } from "@/features/bills/types";
+import type { GroupMember } from "@/features/groups/types";
 
 interface ActivitySectionProps {
   incomeItems: ActivityItem[];
   billItems: ActivityItem[];
+  entries: IncomeEntry[];
+  bills: Bill[];
+  members: GroupMember[];
+  currentMemberId: string;
+  currency: Currency;
 }
 
-export function ActivitySection({ incomeItems, billItems }: ActivitySectionProps) {
+export function ActivitySection({
+  incomeItems,
+  billItems,
+  entries,
+  bills,
+  members,
+  currentMemberId,
+  currency,
+}: ActivitySectionProps) {
   const { dict } = useTranslation();
   const [filter, setFilter] = useState<ActivityFilter>("all");
+  const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
+  const [editingBillId, setEditingBillId] = useState<string | null>(null);
   const FILTERS: { value: ActivityFilter; label: string }[] = [
     { value: "all", label: dict.home.filterAll },
     { value: "income", label: dict.home.filterIncome },
@@ -24,6 +45,8 @@ export function ActivitySection({ incomeItems, billItems }: ActivitySectionProps
   const filtered =
     filter === "income" ? incomeItems : filter === "bills" ? billItems : mergeActivity(incomeItems, billItems);
   const visible = filtered.slice(0, 8);
+  const editingEntry = entries.find((e) => e.id === editingEntryId);
+  const editingBill = bills.find((b) => b.id === editingBillId);
 
   return (
     <div>
@@ -45,9 +68,13 @@ export function ActivitySection({ incomeItems, billItems }: ActivitySectionProps
       ) : (
         <div className="flex flex-col gap-2">
           {visible.map((item) => (
-            <div
+            <button
               key={item.id}
-              className="flex items-center gap-3 rounded-2xl border border-surface-border bg-surface-1 p-3"
+              type="button"
+              onClick={() =>
+                item.isIncome ? setEditingEntryId(item.id) : setEditingBillId(item.id)
+              }
+              className="flex w-full items-center gap-3 rounded-2xl border border-surface-border bg-surface-1 p-3 text-left"
             >
               <span
                 className={`flex size-9 shrink-0 items-center justify-center rounded-xl ${
@@ -65,12 +92,27 @@ export function ActivitySection({ incomeItems, billItems }: ActivitySectionProps
                 <p className="mt-0.5 truncate text-xs text-text-subtle">{item.sub}</p>
               </div>
               <span className={`font-display text-sm font-bold ${item.amountColorClass}`}>
-                {item.isIncome ? "+" : "−"}€{formatCurrency(item.amount)}
+                {item.isIncome ? "+" : "−"}{CURRENCY_SYMBOL[currency]}{formatCurrency(item.amount, currency)}
               </span>
-            </div>
+            </button>
           ))}
         </div>
       )}
+
+      <IncomeSheet
+        open={!!editingEntryId}
+        entry={editingEntry}
+        members={members}
+        defaultMemberId={currentMemberId}
+        currency={currency}
+        onClose={() => setEditingEntryId(null)}
+      />
+      <BillSheet
+        open={!!editingBillId}
+        bill={editingBill}
+        currency={currency}
+        onClose={() => setEditingBillId(null)}
+      />
     </div>
   );
 }

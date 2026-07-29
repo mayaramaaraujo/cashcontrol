@@ -11,6 +11,7 @@ export type Bill = {
   dueDay: number;
   fixed: boolean;
   paid: boolean;
+  paidAt: string | null;
   repeatMonthly: boolean;
   createdAt: string;
 };

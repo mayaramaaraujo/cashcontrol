@@ -1,6 +1,8 @@
-/** Formats a number as the design's currency string, e.g. 1234 -> "1.234" (de-DE grouping, no symbol — the € sign is rendered separately). */
-export function formatCurrency(amount: number): string {
-  return amount.toLocaleString("de-DE");
+import { currencyGroupingLocale, type Currency } from "@/shared/lib/currency";
+
+/** Formats a number as the design's currency string, e.g. 1234 -> "1.234" (grouping only, no symbol — the symbol is rendered separately). */
+export function formatCurrency(amount: number, currency: Currency): string {
+  return amount.toLocaleString(currencyGroupingLocale(currency));
 }
 
 /** Uppercase initial(s) for an avatar, e.g. "Elena" -> "E". */

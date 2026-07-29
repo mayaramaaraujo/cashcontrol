@@ -1,5 +1,6 @@
 import { ProgressBar } from "@/shared/components/ProgressBar";
 import { formatCurrency } from "@/shared/lib/utils";
+import { CURRENCY_SYMBOL, type Currency } from "@/shared/lib/currency";
 import type { CategoryBreakdownRow } from "@/features/history/lib";
 import type { IncomeCategory } from "@/features/income/types";
 import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
@@ -8,6 +9,7 @@ interface CategoryBreakdownProps {
   monthLabel: string;
   rows: CategoryBreakdownRow[];
   dict: Dictionary;
+  currency: Currency;
 }
 
 const ACCENT_BG_CLASSES: Record<string, string> = {
@@ -19,7 +21,7 @@ const ACCENT_BG_CLASSES: Record<string, string> = {
   "neutral-accent": "bg-neutral-accent",
 };
 
-export function CategoryBreakdown({ monthLabel, rows, dict }: CategoryBreakdownProps) {
+export function CategoryBreakdown({ monthLabel, rows, dict, currency }: CategoryBreakdownProps) {
   return (
     <div>
       <p className="mt-6 mb-3 font-display text-base font-semibold text-text-primary">
@@ -39,7 +41,7 @@ export function CategoryBreakdown({ monthLabel, rows, dict }: CategoryBreakdownP
                   {dict.categories.income[row.category as IncomeCategory] ?? row.category}
                 </span>
                 <span className="text-xs font-semibold text-text-tertiary">
-                  €{formatCurrency(row.amount)}
+                  {CURRENCY_SYMBOL[currency]}{formatCurrency(row.amount, currency)}
                 </span>
               </div>
               <ProgressBar

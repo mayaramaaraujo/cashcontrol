@@ -11,22 +11,48 @@ import { Button } from "@/shared/components/Button";
 import { Avatar, type AvatarColorIndex } from "@/shared/components/Avatar";
 import { Chip, type ChipAccent } from "@/shared/components/Chip";
 import { getInitials } from "@/shared/lib/utils";
-import { addEntry } from "@/features/income/api/actions";
-import { createAddIncomeSchema, INCOME_CATEGORIES, INCOME_CATEGORY_COLORS } from "@/features/income/types";
+import { CURRENCY_SYMBOL, type Currency } from "@/shared/lib/currency";
+import { addEntry, updateEntry, deleteEntry } from "@/features/income/api/actions";
+import {
+  createAddIncomeSchema,
+  INCOME_CATEGORIES,
+  INCOME_CATEGORY_COLORS,
+  type IncomeEntry,
+} from "@/features/income/types";
 import type { GroupMember } from "@/features/groups/types";
 import { useTranslation } from "@/shared/lib/i18n/context";
 
-interface AddIncomeSheetProps {
+interface IncomeSheetProps {
   open: boolean;
   onClose: () => void;
   members: GroupMember[];
   defaultMemberId: string;
+  entry?: IncomeEntry;
+  currency: Currency;
 }
 
-type AddIncomeFormInput = z.input<ReturnType<typeof createAddIncomeSchema>>;
-type AddIncomeValues = z.output<ReturnType<typeof createAddIncomeSchema>>;
+type IncomeFormInput = z.input<ReturnType<typeof createAddIncomeSchema>>;
+type IncomeFormValues = z.output<ReturnType<typeof createAddIncomeSchema>>;
 
-export function AddIncomeSheet({ open, onClose, members, defaultMemberId }: AddIncomeSheetProps) {
+function entryToValues(entry: IncomeEntry): IncomeFormInput {
+  return {
+    memberId: entry.memberId,
+    category: entry.category as IncomeFormInput["category"],
+    amount: entry.amount,
+    note: entry.note ?? "",
+  };
+}
+
+function defaultValues(defaultMemberId: string): IncomeFormInput {
+  return {
+    memberId: defaultMemberId,
+    category: INCOME_CATEGORIES[0],
+    amount: 0,
+    note: "",
+  };
+}
+
+export function IncomeSheet({ open, onClose, members, defaultMemberId, entry, currency }: IncomeSheetProps) {
   const { dict } = useTranslation();
   const addIncomeSchema = useMemo(() => createAddIncomeSchema(dict), [dict]);
   const {
@@ -36,29 +62,29 @@ export function AddIncomeSheet({ open, onClose, members, defaultMemberId }: AddI
     reset,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<AddIncomeFormInput, unknown, AddIncomeValues>({
+  } = useForm<IncomeFormInput, unknown, IncomeFormValues>({
     resolver: zodResolver(addIncomeSchema),
-    defaultValues: {
-      memberId: defaultMemberId,
-      category: INCOME_CATEGORIES[0],
-      amount: 0,
-      note: "",
-    },
+    defaultValues: entry ? entryToValues(entry) : defaultValues(defaultMemberId),
   });
 
   useEffect(() => {
     if (open) {
-      reset({
-        memberId: defaultMemberId,
-        category: INCOME_CATEGORIES[0],
-        amount: 0,
-        note: "",
-      });
+      reset(entry ? entryToValues(entry) : defaultValues(defaultMemberId));
     }
-  }, [open, defaultMemberId, reset]);
+  }, [open, entry, defaultMemberId, reset]);
 
-  async function onSubmit(values: AddIncomeValues) {
-    const result = await addEntry(values);
+  async function onSubmit(values: IncomeFormValues) {
+    const result = entry ? await updateEntry(entry.id, values) : await addEntry(values);
+    if (result?.error) {
+      setError("root", { message: result.error });
+      return;
+    }
+    onClose();
+  }
+
+  async function onDelete() {
+    if (!entry) return;
+    const result = await deleteEntry(entry.id);
     if (result?.error) {
       setError("root", { message: result.error });
       return;
@@ -67,11 +93,11 @@ export function AddIncomeSheet({ open, onClose, members, defaultMemberId }: AddI
   }
 
   return (
-    <Sheet open={open} onClose={onClose} title={dict.income.addTitle}>
+    <Sheet open={open} onClose={onClose} title={entry ? dict.income.editTitle : dict.income.addTitle}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-1">
         <div>
           <Input
-            leadingText="€"
+            leadingText={CURRENCY_SYMBOL[currency]}
             type="number"
             step="0.01"
             inputMode="decimal"
@@ -143,8 +169,21 @@ export function AddIncomeSheet({ open, onClose, members, defaultMemberId }: AddI
 
         <Button type="submit" fullWidth disabled={isSubmitting} className="mt-4">
           {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
-          {dict.income.saveIncome}
+          {entry ? dict.income.saveChanges : dict.income.saveIncome}
         </Button>
+
+        {entry ? (
+          <Button
+            type="button"
+            variant="danger"
+            fullWidth
+            disabled={isSubmitting}
+            onClick={onDelete}
+            className="mt-2"
+          >
+            {dict.income.deleteEntry}
+          </Button>
+        ) : null}
 
         {errors.root ? (
           <p className="mt-2 text-center text-xs font-medium text-danger">{errors.root.message}</p>

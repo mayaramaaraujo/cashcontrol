@@ -9,7 +9,8 @@ import { Sheet } from "@/shared/components/Sheet";
 import { BottomNav, type BottomNavItem } from "@/shared/components/BottomNav";
 import type { GroupMember } from "@/features/groups/types";
 import { BillSheet } from "@/features/bills/components/BillSheet";
-import { AddIncomeSheet } from "@/features/income/components/AddIncomeSheet";
+import { IncomeSheet } from "@/features/income/components/IncomeSheet";
+import type { Currency } from "@/shared/lib/currency";
 import { LOCALE_INTL_TAG } from "@/shared/lib/i18n/config";
 import { useTranslation } from "@/shared/lib/i18n/context";
 import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
@@ -45,10 +46,11 @@ interface AppChromeProps {
   groupName: string;
   members: GroupMember[];
   currentMemberId: string;
+  currency: Currency;
   children: ReactNode;
 }
 
-export function AppChrome({ groupName, members, currentMemberId, children }: AppChromeProps) {
+export function AppChrome({ groupName, members, currentMemberId, currency, children }: AppChromeProps) {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -204,13 +206,18 @@ export function AppChrome({ groupName, members, currentMemberId, children }: App
         </button>
       </Sheet>
 
-      <AddIncomeSheet
+      <IncomeSheet
         open={searchParams.get("sheet") === "income"}
         onClose={closeSheet}
         members={members}
         defaultMemberId={currentMemberId}
+        currency={currency}
       />
-      <BillSheet open={searchParams.get("sheet") === "bill"} onClose={closeSheet} />
+      <BillSheet
+        open={searchParams.get("sheet") === "bill"}
+        onClose={closeSheet}
+        currency={currency}
+      />
     </div>
   );
 }

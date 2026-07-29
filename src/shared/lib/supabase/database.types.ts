@@ -39,6 +39,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      bill_reminders_sent: {
+        Row: {
+          bill_id: string
+          cycle_month: string
+          id: string
+          reminder_type: string
+          sent_at: string
+          user_id: string
+        }
+        Insert: {
+          bill_id: string
+          cycle_month: string
+          id?: string
+          reminder_type: string
+          sent_at?: string
+          user_id: string
+        }
+        Update: {
+          bill_id?: string
+          cycle_month?: string
+          id?: string
+          reminder_type?: string
+          sent_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bill_reminders_sent_bill_id_fkey"
+            columns: ["bill_id"]
+            isOneToOne: false
+            referencedRelation: "bills"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bills: {
         Row: {
           amount: number
@@ -50,6 +85,7 @@ export type Database = {
           id: string
           name: string
           paid: boolean
+          paid_at: string | null
           repeat_monthly: boolean
         }
         Insert: {
@@ -62,6 +98,7 @@ export type Database = {
           id?: string
           name: string
           paid?: boolean
+          paid_at?: string | null
           repeat_monthly?: boolean
         }
         Update: {
@@ -74,6 +111,7 @@ export type Database = {
           id?: string
           name?: string
           paid?: boolean
+          paid_at?: string | null
           repeat_monthly?: boolean
         }
         Relationships: [
@@ -134,6 +172,7 @@ export type Database = {
         Row: {
           created_at: string
           created_by: string
+          currency: string
           id: string
           invite_code: string
           name: string
@@ -141,6 +180,7 @@ export type Database = {
         Insert: {
           created_at?: string
           created_by: string
+          currency?: string
           id?: string
           invite_code: string
           name: string
@@ -148,6 +188,7 @@ export type Database = {
         Update: {
           created_at?: string
           created_by?: string
+          currency?: string
           id?: string
           invite_code?: string
           name?: string
@@ -202,6 +243,33 @@ export type Database = {
           },
         ]
       }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -226,13 +294,10 @@ export type Database = {
       delete_own_account: { Args: never; Returns: undefined }
       get_group_by_invite_code: {
         Args: { p_invite_code: string }
-        Returns: { id: string; name: string }[]
-        SetofOptions: {
-          from: "*"
-          to: "groups"
-          isOneToOne: false
-          isSetofReturn: true
-        }
+        Returns: {
+          id: string
+          name: string
+        }[]
       }
       is_active_group_member: { Args: { p_group_id: string }; Returns: boolean }
       is_group_admin: { Args: { p_group_id: string }; Returns: boolean }

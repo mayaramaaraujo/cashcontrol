@@ -26,7 +26,7 @@ export const en = {
     totalBills: "TOTAL BILLS",
     leftAfterBills: "LEFT AFTER BILLS",
     contributing: (count: number) => `${count} ${count === 1 ? "person" : "people"} contributing this month`,
-    billsPaidPending: (paid: string, pending: string) => `€${paid} paid · €${pending} pending`,
+    billsPaidPending: (paid: string, pending: string) => `${paid} paid · ${pending} pending`,
     onTrack: "On track for this month",
     billsExceedIncome: "Bills exceed income this month",
     member: "Member",
@@ -45,6 +45,8 @@ export const en = {
     due: (day: number) => `due ${day}`,
     markPaid: "Mark as paid",
     markUnpaid: "Mark as unpaid",
+    overdue: "Overdue",
+    dueSoon: "Due soon",
     sheet: {
       addTitle: "Add bill",
       editTitle: "Edit bill",
@@ -65,10 +67,13 @@ export const en = {
   },
   income: {
     addTitle: "Add income",
+    editTitle: "Edit income",
     whoEarned: "Who earned this?",
     category: "Category",
     notePlaceholder: "Add a note (optional)",
     saveIncome: "Save income",
+    saveChanges: "Save changes",
+    deleteEntry: "Delete income",
     validation: {
       amountPositive: "Enter an amount greater than 0",
     },
@@ -85,7 +90,7 @@ export const en = {
     you: "YOU",
     invited: "Invited",
     invitationSent: "Invitation sent",
-    thisMonth: (amount: string) => `€${amount} this month`,
+    thisMonth: (amount: string) => `${amount} this month`,
     admin: "Admin",
     member: "Member",
     inviteLinkLabel: "Invite link · anyone can join & add income",
@@ -100,6 +105,12 @@ export const en = {
       "This permanently deletes your account and removes you from any groups you belong to. This can't be undone.",
     confirmDelete: "Yes, delete my account",
     language: "Language",
+    currency: "Currency",
+  },
+  notifications: {
+    title: "Push notifications",
+    description: "Get notified when a bill is due soon or overdue.",
+    permissionDenied: "Notifications are blocked in your browser settings.",
   },
   auth: {
     appTitle: "CashControl",

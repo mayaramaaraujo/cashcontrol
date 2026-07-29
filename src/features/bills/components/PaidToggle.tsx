@@ -3,6 +3,7 @@
 import { useTransition } from "react";
 import { Check } from "lucide-react";
 import { toggleBillPaid } from "@/features/bills/api/actions";
+import { getBillDueInfo } from "@/features/bills/lib";
 import type { Bill } from "@/features/bills/types";
 import { useTranslation } from "@/shared/lib/i18n/context";
 
@@ -13,15 +14,16 @@ interface PaidToggleProps {
 export function PaidToggle({ bill }: PaidToggleProps) {
   const { dict } = useTranslation();
   const [isPending, startTransition] = useTransition();
+  const isPaid = getBillDueInfo(bill).isPaidThisCycle;
 
   return (
     <button
       type="button"
-      aria-label={bill.paid ? dict.bills.markUnpaid : dict.bills.markPaid}
+      aria-label={isPaid ? dict.bills.markUnpaid : dict.bills.markPaid}
       disabled={isPending}
-      onClick={() => startTransition(() => toggleBillPaid(bill.id, !bill.paid))}
+      onClick={() => startTransition(() => toggleBillPaid(bill.id, !isPaid))}
       className={`flex size-6 shrink-0 items-center justify-center rounded-md border transition-colors disabled:opacity-50 ${
-        bill.paid ? "border-positive bg-positive text-white" : "border-surface-4 bg-transparent text-transparent"
+        isPaid ? "border-positive bg-positive text-white" : "border-surface-4 bg-transparent text-transparent"
       }`}
     >
       <Check className="size-3.5" />

@@ -28,7 +28,7 @@ export const ptBR: Dictionary = {
     totalBills: "TOTAL DE CONTAS",
     leftAfterBills: "SOBRA APÓS CONTAS",
     contributing: (count: number) => `${count} ${count === 1 ? "pessoa" : "pessoas"} contribuindo este mês`,
-    billsPaidPending: (paid: string, pending: string) => `€${paid} pago · €${pending} pendente`,
+    billsPaidPending: (paid: string, pending: string) => `${paid} pago · ${pending} pendente`,
     onTrack: "Tudo certo para este mês",
     billsExceedIncome: "As contas superam a renda este mês",
     member: "Membro",
@@ -47,6 +47,8 @@ export const ptBR: Dictionary = {
     due: (day: number) => `vence dia ${day}`,
     markPaid: "Marcar como paga",
     markUnpaid: "Marcar como não paga",
+    overdue: "Atrasada",
+    dueSoon: "Vence em breve",
     sheet: {
       addTitle: "Adicionar conta",
       editTitle: "Editar conta",
@@ -67,10 +69,13 @@ export const ptBR: Dictionary = {
   },
   income: {
     addTitle: "Adicionar renda",
+    editTitle: "Editar renda",
     whoEarned: "Quem recebeu?",
     category: "Categoria",
     notePlaceholder: "Adicionar uma nota (opcional)",
     saveIncome: "Salvar renda",
+    saveChanges: "Salvar alterações",
+    deleteEntry: "Excluir renda",
     validation: {
       amountPositive: "Digite um valor maior que 0",
     },
@@ -87,7 +92,7 @@ export const ptBR: Dictionary = {
     you: "VOCÊ",
     invited: "Convidado",
     invitationSent: "Convite enviado",
-    thisMonth: (amount: string) => `€${amount} este mês`,
+    thisMonth: (amount: string) => `${amount} este mês`,
     admin: "Admin",
     member: "Membro",
     inviteLinkLabel: "Link de convite · qualquer pessoa pode entrar e adicionar renda",
@@ -102,6 +107,12 @@ export const ptBR: Dictionary = {
       "Isso exclui permanentemente sua conta e te remove de todos os grupos dos quais você participa. Essa ação não pode ser desfeita.",
     confirmDelete: "Sim, excluir minha conta",
     language: "Idioma",
+    currency: "Moeda",
+  },
+  notifications: {
+    title: "Notificações push",
+    description: "Seja avisado quando uma conta estiver prestes a vencer ou atrasada.",
+    permissionDenied: "As notificações estão bloqueadas nas configurações do seu navegador.",
   },
   auth: {
     appTitle: "CashControl",

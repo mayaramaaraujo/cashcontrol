@@ -5,6 +5,11 @@ import { createClient } from "@/shared/lib/supabase/server";
 import { getCurrentGroup } from "@/shared/lib/supabase/get-current-group";
 import { addIncomeSchema, type AddIncomeValues } from "@/features/income/types";
 
+function revalidateIncome() {
+  revalidatePath("/home");
+  revalidatePath("/history");
+}
+
 export async function addEntry(values: AddIncomeValues): Promise<{ error: string } | undefined> {
   const parsed = addIncomeSchema.parse(values);
 
@@ -26,6 +31,40 @@ export async function addEntry(values: AddIncomeValues): Promise<{ error: string
     return { error: error.message };
   }
 
-  revalidatePath("/home");
-  revalidatePath("/history");
+  revalidateIncome();
+}
+
+export async function updateEntry(
+  entryId: string,
+  values: AddIncomeValues,
+): Promise<{ error: string } | undefined> {
+  const parsed = addIncomeSchema.parse(values);
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("income_entries")
+    .update({
+      member_id: parsed.memberId,
+      category: parsed.category,
+      amount: parsed.amount,
+      note: parsed.note || null,
+    })
+    .eq("id", entryId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidateIncome();
+}
+
+export async function deleteEntry(entryId: string): Promise<{ error: string } | undefined> {
+  const supabase = await createClient();
+  const { error } = await supabase.from("income_entries").delete().eq("id", entryId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidateIncome();
 }

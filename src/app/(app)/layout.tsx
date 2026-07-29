@@ -26,6 +26,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       groupName={currentGroup.groupName}
       members={members}
       currentMemberId={currentGroup.memberId}
+      currency={currentGroup.currency}
     >
       {children}
     </AppChrome>

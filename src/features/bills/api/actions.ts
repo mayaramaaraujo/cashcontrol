@@ -75,7 +75,10 @@ export async function deleteBill(billId: string): Promise<{ error: string } | un
 
 export async function toggleBillPaid(billId: string, paid: boolean): Promise<void> {
   const supabase = await createClient();
-  await supabase.from("bills").update({ paid }).eq("id", billId);
+  await supabase
+    .from("bills")
+    .update({ paid, paid_at: paid ? new Date().toISOString() : null })
+    .eq("id", billId);
 
   revalidateBills();
 }

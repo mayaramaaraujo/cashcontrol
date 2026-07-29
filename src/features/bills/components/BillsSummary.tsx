@@ -1,15 +1,18 @@
 import { ProgressBar } from "@/shared/components/ProgressBar";
 import { formatCurrency } from "@/shared/lib/utils";
+import { CURRENCY_SYMBOL, type Currency } from "@/shared/lib/currency";
 import type { BillsSummary as BillsSummaryData } from "@/features/bills/lib";
 import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
 interface BillsSummaryProps {
   summary: BillsSummaryData;
   dict: Dictionary;
+  currency: Currency;
 }
 
-export function BillsSummary({ summary, dict }: BillsSummaryProps) {
+export function BillsSummary({ summary, dict, currency }: BillsSummaryProps) {
   const { paidTotal, pendingTotal, percentPaid } = summary;
+  const symbol = CURRENCY_SYMBOL[currency];
 
   return (
     <div>
@@ -17,13 +20,13 @@ export function BillsSummary({ summary, dict }: BillsSummaryProps) {
         <div className="rounded-2xl border border-surface-border bg-surface-1 p-4">
           <p className="text-xs font-semibold text-text-subtle">{dict.bills.paid}</p>
           <p className="mt-1.5 font-display text-xl font-bold text-positive">
-            €{formatCurrency(paidTotal)}
+            {symbol}{formatCurrency(paidTotal, currency)}
           </p>
         </div>
         <div className="rounded-2xl border border-surface-border bg-surface-1 p-4">
           <p className="text-xs font-semibold text-text-subtle">{dict.bills.pending}</p>
           <p className="mt-1.5 font-display text-xl font-bold text-warning">
-            €{formatCurrency(pendingTotal)}
+            {symbol}{formatCurrency(pendingTotal, currency)}
           </p>
         </div>
       </div>

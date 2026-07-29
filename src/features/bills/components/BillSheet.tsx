@@ -20,11 +20,13 @@ import {
   type Bill,
 } from "@/features/bills/types";
 import { useTranslation } from "@/shared/lib/i18n/context";
+import { CURRENCY_SYMBOL, type Currency } from "@/shared/lib/currency";
 
 interface BillSheetProps {
   open: boolean;
   onClose: () => void;
   bill?: Bill;
+  currency: Currency;
 }
 
 type BillFormInput = z.input<ReturnType<typeof createBillSchema>>;
@@ -49,7 +51,7 @@ function billToValues(bill: Bill): BillFormInput {
   };
 }
 
-export function BillSheet({ open, onClose, bill }: BillSheetProps) {
+export function BillSheet({ open, onClose, bill, currency }: BillSheetProps) {
   const { dict } = useTranslation();
   const billSchema = useMemo(() => createBillSchema(dict), [dict]);
   const {
@@ -104,7 +106,7 @@ export function BillSheet({ open, onClose, bill }: BillSheetProps) {
         <div className="flex gap-2.5">
           <div className="flex-1">
             <Input
-              leadingText="€"
+              leadingText={CURRENCY_SYMBOL[currency]}
               type="number"
               step="0.01"
               inputMode="decimal"
