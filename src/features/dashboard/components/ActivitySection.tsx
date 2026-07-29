@@ -5,15 +5,15 @@ import { ArrowUp, ArrowDown } from "lucide-react";
 import { Chip } from "@/shared/components/Chip";
 import { formatCurrency } from "@/shared/lib/utils";
 import { mergeActivity, type ActivityItem, type ActivityFilter } from "@/features/dashboard/lib";
-import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
+import { useTranslation } from "@/shared/lib/i18n/context";
 
 interface ActivitySectionProps {
   incomeItems: ActivityItem[];
   billItems: ActivityItem[];
-  dict: Dictionary;
 }
 
-export function ActivitySection({ incomeItems, billItems, dict }: ActivitySectionProps) {
+export function ActivitySection({ incomeItems, billItems }: ActivitySectionProps) {
+  const { dict } = useTranslation();
   const [filter, setFilter] = useState<ActivityFilter>("all");
   const FILTERS: { value: ActivityFilter; label: string }[] = [
     { value: "all", label: dict.home.filterAll },

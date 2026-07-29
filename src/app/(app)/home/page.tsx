@@ -109,7 +109,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <MemberStrip members={memberStrip} addLabel={dict.home.add} byPersonLabel={dict.home.byPerson} />
 
       {hasAnyActivity ? (
-        <ActivitySection incomeItems={incomeItems} billItems={billItems} dict={dict} />
+        <ActivitySection incomeItems={incomeItems} billItems={billItems} />
       ) : (
         <div className="mt-8 flex flex-col items-center gap-3 rounded-2xl border border-surface-border bg-surface-1 p-6 text-center">
           <p className="text-sm text-text-subtle">{dict.home.noActivity}</p>
