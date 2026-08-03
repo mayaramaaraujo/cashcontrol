@@ -9,3 +9,4 @@ export { BottomNav, type BottomNavItem } from "./BottomNav";
 export { ProgressBar } from "./ProgressBar";
 export { Switch } from "./Switch";
 export { LanguageSwitcher } from "./LanguageSwitcher";
+export { LogoMark } from "./LogoMark";

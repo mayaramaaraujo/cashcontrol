@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="cc-bg" x1="10" y1="5" x2="90" y2="95" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#c264af" />
+      <stop offset="1" stop-color="#8a3f7d" />
+    </linearGradient>
+  </defs>
+
+  <rect width="100" height="100" rx="22" fill="url(#cc-bg)" />
+
+  <!-- ascending bar chart accent -->
+  <rect x="63" y="28" width="6" height="12" rx="2" fill="#ffffff" opacity="0.35" />
+  <rect x="71" y="22" width="6" height="18" rx="2" fill="#ffffff" opacity="0.45" />
+  <rect x="79" y="15" width="6" height="25" rx="2" fill="#ffffff" opacity="0.55" />
+
+  <!-- card peeking out -->
+  <rect x="22" y="32" width="32" height="21" rx="4" fill="#f4e9f1" transform="rotate(-11 38 42.5)" />
+  <rect x="26" y="37" width="9" height="7" rx="1.5" fill="#c264af" opacity="0.55" transform="rotate(-11 38 42.5)" />
+
+  <!-- cash bill peeking out -->
+  <rect x="42" y="28" width="30" height="20" rx="3" fill="#ffffff" transform="rotate(9 57 38)" />
+  <text
+    x="57"
+    y="43.5"
+    transform="rotate(9 57 38)"
+    text-anchor="middle"
+    font-family="Arial, sans-serif"
+    font-size="15"
+    font-weight="800"
+    fill="#8a3f7d"
+  >$</text>
+
+  <!-- wallet body -->
+  <rect x="19" y="52" width="62" height="30" rx="8" fill="#8a3f7d" />
+  <!-- wallet flap -->
+  <rect x="19" y="48" width="62" height="21" rx="8" fill="#9c4f8f" />
+  <rect x="19" y="58" width="62" height="11" fill="#9c4f8f" />
+  <!-- clasp -->
+  <circle cx="70" cy="63" r="4.5" fill="#ffffff" />
+</svg>

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Users } from "lucide-react";
+import { LogoMark } from "@/shared/components/LogoMark";
 
 interface AuthShellProps {
   title: string;
@@ -14,9 +14,7 @@ export function AuthShell({ title, subtitle, termsNotice, children }: AuthShellP
       className="flex flex-1 flex-col px-8 pb-16"
       style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 4rem)" }}
     >
-      <div className="flex size-14 items-center justify-center rounded-xl bg-linear-to-br from-primary to-primary-darker shadow-glow-primary">
-        <Users className="size-7 text-text-primary" />
-      </div>
+      <LogoMark className="size-14 rounded-xl shadow-glow-primary" />
 
       <h1 className="mt-8 font-display text-3xl font-bold tracking-tight text-text-primary">
         {title}
