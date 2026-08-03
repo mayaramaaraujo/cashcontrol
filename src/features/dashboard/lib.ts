@@ -124,11 +124,14 @@ export function buildBillActivity(bills: Bill[], month: string, dict: Dictionary
   return bills.map((bill) => {
     const category = dict.categories.bill[bill.category as BillCategory] ?? bill.category;
     const status = bill.paid ? dict.home.dueDayPaid : dict.home.dueDayPending;
+    const sub = bill.repeatMonthly
+      ? `${category} · ${dict.home.dueDayLabel(bill.dueDay)} · ${status}`
+      : `${category} · ${status}`;
     return {
       id: bill.id,
       isIncome: false,
       title: bill.name,
-      sub: `${category} · ${dict.home.dueDayLabel(bill.dueDay)} · ${status}`,
+      sub,
       amount: bill.amount,
       amountColorClass: bill.paid ? "text-text-subtle" : "text-warning",
       date: `${month}-${String(bill.dueDay).padStart(2, "0")}`,

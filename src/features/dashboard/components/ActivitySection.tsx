@@ -42,9 +42,8 @@ export function ActivitySection({
     { value: "bills", label: dict.home.filterBills },
   ];
 
-  const filtered =
+  const visible =
     filter === "income" ? incomeItems : filter === "bills" ? billItems : mergeActivity(incomeItems, billItems);
-  const visible = filtered.slice(0, 8);
   const editingEntry = entries.find((e) => e.id === editingEntryId);
   const editingBill = bills.find((b) => b.id === editingBillId);
 

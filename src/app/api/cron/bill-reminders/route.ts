@@ -26,13 +26,12 @@ export async function GET(request: Request) {
 
   const supabase = getAdminClient();
 
-  // Non-repeating unpaid bills, plus every repeating bill (whose `paid`
-  // flag may be stale from a previous cycle) — getBillDueInfo resolves the
-  // real per-cycle status for each below.
+  // Only repeating bills have an ongoing due-date cycle to remind about —
+  // a non-repeating bill is a one-off expense, not a recurring obligation.
   const { data: billRows, error: billsError } = await supabase
     .from("bills")
     .select(BILL_COLUMNS)
-    .or("paid.eq.false,repeat_monthly.eq.true");
+    .eq("repeat_monthly", true);
 
   if (billsError) {
     return Response.json({ error: billsError.message }, { status: 500 });

@@ -79,9 +79,13 @@ export function BillsList({ bills, currency }: BillsListProps) {
                 <div className="min-w-0">
                   <span className="text-sm font-semibold text-text-primary">{bill.name}</span>
                   <p className="mt-0.5 flex items-center gap-1 truncate text-xs text-text-subtle">
-                    {dict.categories.bill[bill.category as BillCategory] ?? bill.category} ·{" "}
-                    {dict.bills.due(bill.dueDay)}
-                    {bill.repeatMonthly ? <Repeat className="size-3" /> : null}
+                    {dict.categories.bill[bill.category as BillCategory] ?? bill.category}
+                    {bill.repeatMonthly ? (
+                      <>
+                        {" "}· {dict.bills.due(bill.dueDay)}
+                        <Repeat className="size-3" />
+                      </>
+                    ) : null}
                   </p>
                 </div>
               </button>
