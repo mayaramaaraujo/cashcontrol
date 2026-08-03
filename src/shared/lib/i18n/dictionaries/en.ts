@@ -47,6 +47,8 @@ export const en = {
     markUnpaid: "Mark as unpaid",
     overdue: "Overdue",
     dueSoon: "Due soon",
+    byCategory: (month: string) => `${month} · spent by category`,
+    noPaidBillsThisMonth: "No paid bills this month yet.",
     sheet: {
       addTitle: "Add expense",
       editTitle: "Edit expense",

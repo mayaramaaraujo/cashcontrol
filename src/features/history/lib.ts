@@ -1,4 +1,5 @@
 import { INCOME_CATEGORY_COLORS, type IncomeCategory } from "@/features/income/types";
+import type { CategoryBreakdownRow } from "@/shared/components/CategoryBreakdown";
 
 export interface MonthEntry {
   category: string;
@@ -65,13 +66,6 @@ export function earlierMonths(trend: TrendPoint[], intlLocale = "en-US"): Earlie
     .filter((point) => !point.isCurrent)
     .map((point) => ({ month: point.month, label: monthLabel(point.month, true, intlLocale), total: point.total }))
     .reverse();
-}
-
-export interface CategoryBreakdownRow {
-  category: string;
-  accent: string;
-  amount: number;
-  percent: number;
 }
 
 export function computeCategoryBreakdown(entries: MonthEntry[], month: string): CategoryBreakdownRow[] {

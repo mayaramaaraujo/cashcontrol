@@ -11,6 +11,7 @@ Design-system primitives shared across features, built on the tokens in `src/app
 - **Sheet** — bottom sheet modal (portal, Escape-to-close, backdrop click, scroll lock)
 - **BottomNav** — fixed app-shell nav with a center FAB
 - **ProgressBar** — thin rounded track with a filled bar (`percent` 0-100, optional `color` override)
+- **CategoryBreakdown** — colored dot + name + amount + `ProgressBar` per category, sorted rows with an empty state; feature passes in `title`, `emptyMessage`, `categoryLabel` translator, and `currency`. Used by History (income) and Bills (paid spend) pages.
 - **Switch** — small toggle (track + sliding knob), e.g. the bill sheet's "Repeat every month" row
 - **LanguageSwitcher** — segmented EN/PT-BR toggle backed by `useTranslation()` from `@/shared/lib/i18n/context`
 

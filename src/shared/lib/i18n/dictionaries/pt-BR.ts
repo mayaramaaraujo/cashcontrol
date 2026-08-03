@@ -49,6 +49,8 @@ export const ptBR: Dictionary = {
     markUnpaid: "Marcar como não paga",
     overdue: "Atrasada",
     dueSoon: "Vence em breve",
+    byCategory: (month: string) => `${month} · gasto por categoria`,
+    noPaidBillsThisMonth: "Nenhuma conta paga este mês ainda.",
     sheet: {
       addTitle: "Adicionar gastos",
       editTitle: "Editar gasto",

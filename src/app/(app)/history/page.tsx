@@ -10,11 +10,12 @@ import {
   type MonthEntry,
 } from "@/features/history/lib";
 import { TrendChart } from "@/features/history/components/TrendChart";
-import { CategoryBreakdown } from "@/features/history/components/CategoryBreakdown";
+import { CategoryBreakdown } from "@/shared/components/CategoryBreakdown";
 import { EarlierMonths } from "@/features/history/components/EarlierMonths";
 import { getLocale } from "@/shared/lib/i18n/server";
 import { getDictionary } from "@/shared/lib/i18n/dictionaries";
 import { LOCALE_INTL_TAG } from "@/shared/lib/i18n/config";
+import type { IncomeCategory } from "@/features/income/types";
 
 interface HistoryPageProps {
   searchParams: Promise<{ month?: string }>;
@@ -60,9 +61,10 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
     <div>
       <TrendChart trend={trend} dict={dict} />
       <CategoryBreakdown
-        monthLabel={monthLabel(month, true, intlLocale)}
+        title={dict.history.byCategory(monthLabel(month, true, intlLocale))}
         rows={categoryBreakdown}
-        dict={dict}
+        emptyMessage={dict.history.noIncomeThisMonth}
+        categoryLabel={(category) => dict.categories.income[category as IncomeCategory] ?? category}
         currency={currentGroup.currency}
       />
       <EarlierMonths

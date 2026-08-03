@@ -1,5 +1,6 @@
 import type { Database } from "@/shared/lib/supabase/database.types";
-import type { Bill } from "@/features/bills/types";
+import { BILL_CATEGORY_COLORS, type Bill, type BillCategory } from "@/features/bills/types";
+import type { CategoryBreakdownRow } from "@/shared/components/CategoryBreakdown";
 
 export const BILL_COLUMNS =
   "id, group_id, name, category, amount, due_day, fixed, paid, paid_at, repeat_monthly, created_at" as const;
@@ -93,6 +94,26 @@ export function computeBillsSummary(bills: Bill[]): BillsSummary {
   const percentPaid = total === 0 ? 0 : Math.round((paidTotal / total) * 100);
 
   return { paidTotal, pendingTotal, percentPaid };
+}
+
+/** Paid bills for the current cycle, grouped by category, sorted descending. */
+export function computeCategoryBreakdown(bills: Bill[]): CategoryBreakdownRow[] {
+  const paidBills = bills.filter((b) => getBillDueInfo(b).isPaidThisCycle);
+  const total = paidBills.reduce((sum, b) => sum + b.amount, 0);
+
+  const totalsByCategory = new Map<string, number>();
+  for (const bill of paidBills) {
+    totalsByCategory.set(bill.category, (totalsByCategory.get(bill.category) ?? 0) + bill.amount);
+  }
+
+  return Array.from(totalsByCategory.entries())
+    .sort(([, a], [, b]) => b - a)
+    .map(([category, amount]) => ({
+      category,
+      accent: BILL_CATEGORY_COLORS[category as BillCategory] ?? "neutral-accent",
+      amount,
+      percent: total === 0 ? 0 : Math.round((amount / total) * 100),
+    }));
 }
 
 export type BillFilter = "all" | "fixed" | "variable";
