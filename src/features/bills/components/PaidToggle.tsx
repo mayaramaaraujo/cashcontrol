@@ -22,7 +22,7 @@ export function PaidToggle({ bill }: PaidToggleProps) {
       aria-label={isPaid ? dict.bills.markUnpaid : dict.bills.markPaid}
       disabled={isPending}
       onClick={() => startTransition(() => toggleBillPaid(bill.id, !isPaid))}
-      className={`flex size-6 shrink-0 items-center justify-center rounded-md border transition-colors disabled:opacity-50 ${
+      className={`flex size-6 shrink-0 items-center justify-center rounded-xs border transition-colors disabled:opacity-50 ${
         isPaid ? "border-positive bg-positive text-white" : "border-surface-4 bg-transparent text-transparent"
       }`}
     >

@@ -35,7 +35,7 @@ export function MembersList({ rows, dict, currency }: MembersListProps) {
         {rows.map(({ member, isYou, monthTotal }) => (
           <div
             key={member.id}
-            className="flex items-center gap-3 rounded-2xl border border-surface-border bg-surface-1 p-3.5"
+            className="flex items-center gap-3 rounded-lg border border-surface-border bg-surface-1 p-3.5"
           >
             <Avatar
               initials={getInitials(member.displayName)}
@@ -49,7 +49,7 @@ export function MembersList({ rows, dict, currency }: MembersListProps) {
                   {member.displayName}
                 </span>
                 {isYou ? (
-                  <span className="shrink-0 rounded-sm bg-primary/16 px-1.5 py-0.5 text-xs font-bold text-primary-light">
+                  <span className="shrink-0 rounded bg-primary/16 px-1.5 py-0.5 text-xs font-bold text-primary-light">
                     {dict.people.you}
                   </span>
                 ) : null}

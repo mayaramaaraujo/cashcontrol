@@ -38,6 +38,7 @@ export function createAddIncomeSchema(dict: Dictionary) {
     memberId: z.uuid(),
     category: z.enum(INCOME_CATEGORIES),
     amount: z.coerce.number().positive(dict.income.validation.amountPositive),
+    entryDate: z.iso.date(dict.income.validation.dateRequired),
     note: z.string().optional(),
   });
 }

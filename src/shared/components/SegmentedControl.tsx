@@ -30,7 +30,7 @@ export function SegmentedControl<T extends string>({
             type="button"
             aria-pressed={active}
             onClick={() => onChange(option.value)}
-            className={`h-10 flex-1 rounded-md text-sm font-bold transition-colors ${
+            className={`h-10 flex-1 rounded-sm text-sm font-bold transition-colors ${
               active
                 ? (option.activeClassName ?? "bg-primary text-text-primary")
                 : "text-text-muted"

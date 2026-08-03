@@ -55,7 +55,7 @@ export function BillsList({ bills, currency }: BillsListProps) {
     <div>
       <div className="mt-6 flex gap-1.5">
         {FILTERS.map((f) => (
-          <Chip key={f.value} selected={filter === f.value} onClick={() => setFilter(f.value)}>
+          <Chip key={f.value} accent="neutral" selected={filter === f.value} onClick={() => setFilter(f.value)}>
             {f.label}
           </Chip>
         ))}
@@ -67,7 +67,7 @@ export function BillsList({ bills, currency }: BillsListProps) {
           return (
             <div
               key={bill.id}
-              className="flex items-center gap-3 rounded-2xl border border-surface-border bg-surface-1 p-3.5"
+              className="flex items-center gap-3 rounded-lg border border-surface-border bg-surface-1 p-3.5"
             >
               <PaidToggle bill={bill} />
               <button

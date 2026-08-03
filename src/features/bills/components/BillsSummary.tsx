@@ -17,21 +17,21 @@ export function BillsSummary({ summary, dict, currency }: BillsSummaryProps) {
   return (
     <div>
       <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-2xl border border-surface-border bg-surface-1 p-4">
-          <p className="text-xs font-semibold text-text-subtle">{dict.bills.paid}</p>
+        <div className="rounded-lg border border-surface-border bg-surface-1 p-3.5">
+          <p className="text-xs text-text-subtle">{dict.bills.paid}</p>
           <p className="mt-1.5 font-display text-xl font-bold text-positive">
             {symbol}{formatCurrency(paidTotal, currency)}
           </p>
         </div>
-        <div className="rounded-2xl border border-surface-border bg-surface-1 p-4">
-          <p className="text-xs font-semibold text-text-subtle">{dict.bills.pending}</p>
+        <div className="rounded-lg border border-surface-border bg-surface-1 p-3.5">
+          <p className="text-xs text-text-subtle">{dict.bills.pending}</p>
           <p className="mt-1.5 font-display text-xl font-bold text-warning">
             {symbol}{formatCurrency(pendingTotal, currency)}
           </p>
         </div>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-2.5">
         <ProgressBar percent={percentPaid} color="bg-gradient-to-r from-positive to-positive-dark" />
         <p className="mt-2 text-xs text-text-subtle">{dict.bills.percentPaid(percentPaid)}</p>
       </div>

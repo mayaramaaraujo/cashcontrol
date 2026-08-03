@@ -22,7 +22,7 @@ export function MemberStrip({ members, byPersonLabel, addLabel, currency }: Memb
         {members.map((member) => (
           <div
             key={member.id}
-            className="w-32 shrink-0 rounded-2xl border border-surface-border bg-surface-2 p-3.5"
+            className="w-32 shrink-0 rounded-xl border border-surface-border bg-surface-2 p-3.5"
           >
             <Avatar initials={member.name.charAt(0).toUpperCase()} colorIndex={member.colorIndex} size="sm" />
             <p className="mt-2.5 truncate text-xs text-text-muted">{member.name}</p>

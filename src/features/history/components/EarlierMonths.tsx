@@ -24,7 +24,7 @@ export function EarlierMonths({ months, dict, currency }: EarlierMonthsProps) {
           {months.map((point) => (
             <div
               key={point.month}
-              className="flex items-center justify-between rounded-2xl border border-surface-border bg-surface-1 p-3.5"
+              className="flex items-center justify-between rounded-lg border border-surface-border bg-surface-1 p-3.5"
             >
               <span className="text-sm font-semibold text-text-primary">{point.label}</span>
               <span className="font-display text-sm font-bold text-text-primary">

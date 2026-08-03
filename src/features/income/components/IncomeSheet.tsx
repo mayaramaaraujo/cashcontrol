@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { Sheet } from "@/shared/components/Sheet";
 import { Input } from "@/shared/components/Input";
+import { DatePicker } from "@/shared/components/DatePicker";
 import { Button } from "@/shared/components/Button";
 import { Avatar, type AvatarColorIndex } from "@/shared/components/Avatar";
 import { Chip, type ChipAccent } from "@/shared/components/Chip";
@@ -34,11 +35,16 @@ interface IncomeSheetProps {
 type IncomeFormInput = z.input<ReturnType<typeof createAddIncomeSchema>>;
 type IncomeFormValues = z.output<ReturnType<typeof createAddIncomeSchema>>;
 
+function todayDate(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
 function entryToValues(entry: IncomeEntry): IncomeFormInput {
   return {
     memberId: entry.memberId,
     category: entry.category as IncomeFormInput["category"],
     amount: entry.amount,
+    entryDate: entry.entryDate,
     note: entry.note ?? "",
   };
 }
@@ -48,6 +54,7 @@ function defaultValues(defaultMemberId: string): IncomeFormInput {
     memberId: defaultMemberId,
     category: INCOME_CATEGORIES[0],
     amount: 0,
+    entryDate: todayDate(),
     note: "",
   };
 }
@@ -103,7 +110,7 @@ export function IncomeSheet({ open, onClose, members, defaultMemberId, entry, cu
             inputMode="decimal"
             placeholder="0"
             invalid={!!errors.amount}
-            className="font-display font-bold"
+            className="font-display text-2xl font-bold"
             {...register("amount")}
           />
           {errors.amount ? (
@@ -123,7 +130,7 @@ export function IncomeSheet({ open, onClose, members, defaultMemberId, entry, cu
                     key={member.id}
                     type="button"
                     onClick={() => field.onChange(member.id)}
-                    className={`flex shrink-0 items-center gap-2 rounded-lg border py-2 pr-3.5 pl-2 text-sm font-semibold transition-colors ${
+                    className={`flex shrink-0 items-center gap-2 rounded-md border py-2 pr-3.5 pl-2 text-sm font-semibold transition-colors ${
                       field.value === member.id
                         ? "border-primary bg-primary/15 text-text-primary"
                         : "border-surface-border bg-surface-2 text-text-muted"
@@ -161,6 +168,20 @@ export function IncomeSheet({ open, onClose, members, defaultMemberId, entry, cu
                   </Chip>
                 ))}
               </div>
+            </div>
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="entryDate"
+          render={({ field }) => (
+            <div className="mt-3">
+              <p className="mb-2 text-xs font-semibold text-text-subtle">{dict.income.date}</p>
+              <DatePicker value={field.value} onChange={field.onChange} invalid={!!errors.entryDate} />
+              {errors.entryDate ? (
+                <p className="mt-2 text-xs font-medium text-danger">{errors.entryDate.message}</p>
+              ) : null}
             </div>
           )}
         />

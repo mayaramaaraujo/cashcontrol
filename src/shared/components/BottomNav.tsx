@@ -34,7 +34,7 @@ export function BottomNav<T extends string>({
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-surface-border bg-bg-base/90 px-3 pt-2 backdrop-blur-md"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-surface-border bg-bg-base/90 px-3.5 pt-2.5 backdrop-blur-md"
       style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 10px)" }}
     >
       <div className="mx-auto flex max-w-md items-center justify-between gap-1">
@@ -52,7 +52,7 @@ export function BottomNav<T extends string>({
           type="button"
           onClick={onAddClick}
           aria-label={addLabel}
-          className="-mt-4 mx-1 flex size-14 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-primary to-primary-dark shadow-glow-primary"
+          className="-mt-3.5 mx-1 flex size-12 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-primary to-primary-dark shadow-glow-primary"
         >
           <AddIcon className="size-6 text-text-primary" />
         </button>

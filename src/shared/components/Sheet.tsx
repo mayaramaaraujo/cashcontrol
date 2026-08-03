@@ -53,7 +53,7 @@ export function Sheet({ open, onClose, title, children }: SheetProps) {
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="animate-sheet-in absolute inset-x-0 bottom-0 mx-auto max-h-[90vh] w-full max-w-md overflow-y-auto rounded-t-3xl border-t border-surface-border bg-bg-sheet px-5 pt-3 pb-10"
+        className="animate-sheet-in absolute inset-x-0 bottom-0 mx-auto max-h-[90vh] w-full max-w-md overflow-y-auto rounded-t-3xl border-t border-surface-border bg-bg-sheet px-5 pt-3 pb-8"
       >
         <div className="mx-auto mb-4 h-1.5 w-9 rounded-full bg-surface-4" />
         {title ? (

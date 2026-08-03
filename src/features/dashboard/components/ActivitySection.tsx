@@ -74,10 +74,10 @@ export function ActivitySection({
               onClick={() =>
                 item.isIncome ? setEditingEntryId(item.id) : setEditingBillId(item.id)
               }
-              className="flex w-full items-center gap-3 rounded-2xl border border-surface-border bg-surface-1 p-3 text-left"
+              className="flex w-full items-center gap-3 rounded-lg border border-surface-border bg-surface-1 p-3 text-left"
             >
               <span
-                className={`flex size-9 shrink-0 items-center justify-center rounded-xl ${
+                className={`flex size-9 shrink-0 items-center justify-center rounded-sm ${
                   item.isIncome ? "bg-positive/14" : "bg-warning/14"
                 }`}
               >

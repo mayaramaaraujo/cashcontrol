@@ -24,6 +24,7 @@ export async function addEntry(values: AddIncomeValues): Promise<{ error: string
     member_id: parsed.memberId,
     category: parsed.category,
     amount: parsed.amount,
+    entry_date: parsed.entryDate,
     note: parsed.note || null,
   });
 
@@ -47,6 +48,7 @@ export async function updateEntry(
       member_id: parsed.memberId,
       category: parsed.category,
       amount: parsed.amount,
+      entry_date: parsed.entryDate,
       note: parsed.note || null,
     })
     .eq("id", entryId);

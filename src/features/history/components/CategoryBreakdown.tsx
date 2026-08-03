@@ -32,12 +32,12 @@ export function CategoryBreakdown({ monthLabel, rows, dict, currency }: Category
           {dict.history.noIncomeThisMonth}
         </p>
       ) : (
-        <div className="flex flex-col gap-3.5 rounded-2xl border border-surface-border bg-surface-1 p-4">
+        <div className="flex flex-col gap-3.5 rounded-xl border border-surface-border bg-surface-1 p-4">
           {rows.map((row) => (
             <div key={row.category}>
               <div className="mb-1.5 flex items-center justify-between">
                 <span className="flex items-center gap-2 text-xs font-semibold text-text-secondary">
-                  <span className={`size-2 rounded-sm ${ACCENT_BG_CLASSES[row.accent] ?? "bg-neutral-accent"}`} />
+                  <span className={`size-2 rounded ${ACCENT_BG_CLASSES[row.accent] ?? "bg-neutral-accent"}`} />
                   {dict.categories.income[row.category as IncomeCategory] ?? row.category}
                 </span>
                 <span className="text-xs font-semibold text-text-tertiary">

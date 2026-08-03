@@ -37,7 +37,8 @@ const DEFAULT_VALUES: BillFormInput = {
   dueDay: 1,
   fixed: true,
   category: BILL_CATEGORIES[0],
-  repeatMonthly: true,
+  repeatMonthly: false,
+  paid: false,
 };
 
 function billToValues(bill: Bill): BillFormInput {
@@ -48,6 +49,7 @@ function billToValues(bill: Bill): BillFormInput {
     fixed: bill.fixed,
     category: bill.category as BillValues["category"],
     repeatMonthly: bill.repeatMonthly,
+    paid: bill.paid,
   };
 }
 
@@ -145,8 +147,8 @@ export function BillSheet({ open, onClose, bill, currency }: BillSheetProps) {
               value={field.value ? "fixed" : "variable"}
               onChange={(value) => field.onChange(value === "fixed")}
               options={[
-                { value: "fixed", label: dict.bills.sheet.fixed },
-                { value: "variable", label: dict.bills.sheet.variable },
+                { value: "fixed", label: dict.bills.sheet.fixed, activeClassName: "bg-primary/22 text-text-primary" },
+                { value: "variable", label: dict.bills.sheet.variable, activeClassName: "bg-positive/22 text-text-primary" },
               ]}
             />
           )}
@@ -186,6 +188,17 @@ export function BillSheet({ open, onClose, bill, currency }: BillSheetProps) {
           )}
         />
 
+        <Controller
+          control={control}
+          name="paid"
+          render={({ field }) => (
+            <div className="flex items-center justify-between rounded-lg border border-surface-border bg-surface-2 px-4 py-3.5">
+              <span className="text-sm font-medium text-text-primary">{dict.bills.sheet.paid}</span>
+              <Switch checked={field.value} onCheckedChange={field.onChange} />
+            </div>
+          )}
+        />
+
         <Button type="submit" fullWidth disabled={isSubmitting} className="mt-2">
           {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
           {bill ? dict.bills.sheet.saveChanges : dict.bills.sheet.saveBill}
@@ -195,6 +208,7 @@ export function BillSheet({ open, onClose, bill, currency }: BillSheetProps) {
           <Button
             type="button"
             variant="danger"
+            size="sm"
             fullWidth
             disabled={isSubmitting}
             onClick={onDelete}

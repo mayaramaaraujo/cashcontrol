@@ -27,6 +27,8 @@ export async function addBill(values: BillValues): Promise<{ error: string } | u
     due_day: parsed.dueDay,
     fixed: parsed.fixed,
     repeat_monthly: parsed.repeatMonthly,
+    paid: parsed.paid,
+    paid_at: parsed.paid ? new Date().toISOString() : null,
   });
 
   if (error) {
@@ -52,6 +54,8 @@ export async function updateBill(
       due_day: parsed.dueDay,
       fixed: parsed.fixed,
       repeat_monthly: parsed.repeatMonthly,
+      paid: parsed.paid,
+      paid_at: parsed.paid ? new Date().toISOString() : null,
     })
     .eq("id", billId);
 

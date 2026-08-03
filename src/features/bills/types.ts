@@ -21,6 +21,8 @@ export const BILL_CATEGORIES = [
   "Utilities",
   "Insurance",
   "Subscriptions",
+  "Groceries",
+  "Fuel",
   "Other",
 ] as const;
 
@@ -31,6 +33,8 @@ export const BILL_CATEGORY_COLORS: Record<BillCategory, string> = {
   Utilities: "positive-dark",
   Insurance: "violet",
   Subscriptions: "warning",
+  Groceries: "avatar-2",
+  Fuel: "avatar-4",
   Other: "neutral-accent",
 };
 
@@ -42,6 +46,7 @@ export function createBillSchema(dict: Dictionary) {
     fixed: z.boolean(),
     category: z.enum(BILL_CATEGORIES),
     repeatMonthly: z.boolean(),
+    paid: z.boolean(),
   });
 }
 

@@ -3,7 +3,7 @@
 import { useState, useTransition, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ChevronDown, Home, Receipt, History, Users, Calendar, ArrowUp, ArrowDown } from "lucide-react";
+import { ChevronDown, Home, Receipt, History, Users, ArrowUp, ArrowDown } from "lucide-react";
 import { Avatar, type AvatarColorIndex } from "@/shared/components/Avatar";
 import { Sheet } from "@/shared/components/Sheet";
 import { BottomNav, type BottomNavItem } from "@/shared/components/BottomNav";
@@ -168,16 +168,13 @@ export function AppChrome({ groupName, members, currentMemberId, currency, child
               key={option.value}
               type="button"
               onClick={() => setMonth(option.value)}
-              className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold ${
+              className={`flex items-center justify-between rounded-md px-3.5 py-3 text-sm font-semibold ${
                 option.value === selectedMonth
                   ? "bg-primary/15 text-primary-light"
                   : "text-text-primary"
               }`}
             >
-              <span className="flex items-center gap-2">
-                <Calendar className="size-4" />
-                {option.label}
-              </span>
+              {option.label}
             </button>
           ))}
         </div>
@@ -187,9 +184,9 @@ export function AppChrome({ groupName, members, currentMemberId, currency, child
         <button
           type="button"
           onClick={() => openSheet("income")}
-          className="mb-2.5 flex w-full items-center gap-3.5 rounded-2xl border border-surface-border bg-surface-3 p-3.5"
+          className="mb-2.5 flex w-full items-center gap-3.5 rounded-lg border border-surface-border bg-surface-3 p-3.5"
         >
-          <span className="flex size-11 items-center justify-center rounded-2xl bg-primary/15">
+          <span className="flex size-11 items-center justify-center rounded-md bg-primary/15">
             <ArrowUp className="size-5 text-primary-light" />
           </span>
           <span className="font-display text-base font-semibold text-text-primary">{dict.addChoice.addIncome}</span>
@@ -197,9 +194,9 @@ export function AppChrome({ groupName, members, currentMemberId, currency, child
         <button
           type="button"
           onClick={() => openSheet("bill")}
-          className="flex w-full items-center gap-3.5 rounded-2xl border border-surface-border bg-surface-3 p-3.5"
+          className="flex w-full items-center gap-3.5 rounded-lg border border-surface-border bg-surface-3 p-3.5"
         >
-          <span className="flex size-11 items-center justify-center rounded-2xl bg-positive/15">
+          <span className="flex size-11 items-center justify-center rounded-md bg-positive/15">
             <ArrowDown className="size-5 text-positive" />
           </span>
           <span className="font-display text-base font-semibold text-text-primary">{dict.addChoice.addBill}</span>

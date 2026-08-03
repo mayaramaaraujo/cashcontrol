@@ -13,7 +13,7 @@ export const ptBR: Dictionary = {
   },
   addChoice: {
     addIncome: "Adicionar renda",
-    addBill: "Adicionar conta",
+    addBill: "Adicionar gastos",
   },
   home: {
     byPerson: "Por pessoa",
@@ -50,17 +50,18 @@ export const ptBR: Dictionary = {
     overdue: "Atrasada",
     dueSoon: "Vence em breve",
     sheet: {
-      addTitle: "Adicionar conta",
-      editTitle: "Editar conta",
-      namePlaceholder: "Nome da conta (ex: Aluguel)",
+      addTitle: "Adicionar gastos",
+      editTitle: "Editar gasto",
+      namePlaceholder: "Nome do gasto (ex: Aluguel)",
       dueDayPlaceholder: "Dia do vencimento",
       fixed: "Fixa",
       variable: "Variável",
       category: "Categoria",
       repeatMonthly: "Repetir todo mês",
-      saveBill: "Salvar conta",
+      paid: "Já está pago",
+      saveBill: "Salvar gasto",
       saveChanges: "Salvar alterações",
-      deleteBill: "Excluir conta",
+      deleteBill: "Excluir gasto",
     },
     validation: {
       nameRequired: "O nome da conta é obrigatório",
@@ -72,12 +73,14 @@ export const ptBR: Dictionary = {
     editTitle: "Editar renda",
     whoEarned: "Quem recebeu?",
     category: "Categoria",
+    date: "Data",
     notePlaceholder: "Adicionar uma nota (opcional)",
     saveIncome: "Salvar renda",
     saveChanges: "Salvar alterações",
     deleteEntry: "Excluir renda",
     validation: {
       amountPositive: "Digite um valor maior que 0",
+      dateRequired: "Escolha uma data",
     },
   },
   history: {
@@ -170,6 +173,8 @@ export const ptBR: Dictionary = {
       Utilities: "Utilidades",
       Insurance: "Seguro",
       Subscriptions: "Assinaturas",
+      Groceries: "Mercado",
+      Fuel: "Combustível",
       Other: "Outros",
     },
     income: {

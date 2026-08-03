@@ -11,7 +11,7 @@ export const en = {
   },
   addChoice: {
     addIncome: "Add income",
-    addBill: "Add bill",
+    addBill: "Add expense",
   },
   home: {
     byPerson: "By person",
@@ -48,17 +48,18 @@ export const en = {
     overdue: "Overdue",
     dueSoon: "Due soon",
     sheet: {
-      addTitle: "Add bill",
-      editTitle: "Edit bill",
-      namePlaceholder: "Bill name (e.g. Rent)",
+      addTitle: "Add expense",
+      editTitle: "Edit expense",
+      namePlaceholder: "Expense name (e.g. Rent)",
       dueDayPlaceholder: "Due day",
       fixed: "Fixed",
       variable: "Variable",
       category: "Category",
       repeatMonthly: "Repeat every month",
-      saveBill: "Save bill",
+      paid: "Already paid",
+      saveBill: "Save expense",
       saveChanges: "Save changes",
-      deleteBill: "Delete bill",
+      deleteBill: "Delete expense",
     },
     validation: {
       nameRequired: "Bill name is required",
@@ -70,12 +71,14 @@ export const en = {
     editTitle: "Edit income",
     whoEarned: "Who earned this?",
     category: "Category",
+    date: "Date",
     notePlaceholder: "Add a note (optional)",
     saveIncome: "Save income",
     saveChanges: "Save changes",
     deleteEntry: "Delete income",
     validation: {
       amountPositive: "Enter an amount greater than 0",
+      dateRequired: "Pick a date",
     },
   },
   history: {
@@ -168,6 +171,8 @@ export const en = {
       Utilities: "Utilities",
       Insurance: "Insurance",
       Subscriptions: "Subscriptions",
+      Groceries: "Groceries",
+      Fuel: "Fuel",
       Other: "Other",
     },
     income: {
