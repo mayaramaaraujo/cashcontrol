@@ -43,6 +43,15 @@ export function HeroSection({ hero, currency }: HeroSectionProps) {
           </p>
         </div>
       </div>
+
+      <div className="relative mt-4 border-t border-surface-border pt-4">
+        <p className="text-xs font-semibold tracking-wide text-primary-muted">
+          {hero.available.label}
+        </p>
+        <p className={`mt-1 font-display text-xl font-bold ${hero.available.colorClass}`}>
+          {symbol}{formatCurrency(hero.available.value, currency)}
+        </p>
+      </div>
     </div>
   );
 }

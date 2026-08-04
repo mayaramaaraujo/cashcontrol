@@ -6,7 +6,7 @@ import type { IncomeEntry, DefaultIncomeCategory } from "@/features/income/types
 import type { Bill, DefaultBillCategory } from "@/features/bills/types";
 import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
-export type SummaryMode = "income" | "bills" | "left";
+export type SummaryMode = "income" | "bills" | "left" | "available";
 
 export interface HeroData {
   label: string;
@@ -28,6 +28,8 @@ export function computeHero(
   const billsPending = billsTotal - billsPaid;
   const left = incomeTotal - billsTotal;
   const leftPositive = left >= 0;
+  const available = incomeTotal - billsPaid;
+  const availablePositive = available >= 0;
   const symbol = CURRENCY_SYMBOL[currency];
 
   return {
@@ -47,10 +49,16 @@ export function computeHero(
       ),
     },
     left: {
-      label: dict.home.leftAfterBills,
+      label: dict.home.projectedAfterBills,
       value: Math.abs(left),
       colorClass: leftPositive ? "text-positive" : "text-danger",
       sub: leftPositive ? dict.home.onTrack : dict.home.billsExceedIncome,
+    },
+    available: {
+      label: dict.home.availableToday,
+      value: Math.abs(available),
+      colorClass: availablePositive ? "text-positive" : "text-danger",
+      sub: availablePositive ? dict.home.onTrack : dict.home.billsExceedIncome,
     },
   };
 }
