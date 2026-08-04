@@ -120,7 +120,7 @@ export function AppChrome({
   const overflowCount = members.length - visibleMembers.length;
 
   return (
-    <>
+    <div className="min-h-screen">
       <div
         className="fixed inset-x-0 top-0 z-20 flex items-center justify-between bg-linear-to-b from-bg-base from-80% to-transparent px-5 pb-3"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 1.5rem)" }}
@@ -156,7 +156,7 @@ export function AppChrome({
       </div>
 
       <main
-        className="fixed inset-x-0 top-0 bottom-0 overflow-y-auto overscroll-contain px-5 pb-28"
+        className="px-5 pb-28"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
         {children}
@@ -227,6 +227,6 @@ export function AppChrome({
         currency={currency}
         categories={categoriesByType(categories, "bill")}
       />
-    </>
+    </div>
   );
 }
