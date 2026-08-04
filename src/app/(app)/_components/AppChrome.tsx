@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition, type ReactNode } from "react";
+import { useState, useTransition, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown, Home, Receipt, History, Settings, ArrowUp, ArrowDown } from "lucide-react";
@@ -72,25 +72,6 @@ export function AppChrome({
   const [, startTransition] = useTransition();
   const [pendingTab, setPendingTab] = useState<Tab | null>(null);
 
-  // iOS standalone PWAs can report a shorter viewport than the screen
-  // actually visible through `100dvh`/`vh`, leaving a gap below fixed
-  // elements. `visualViewport` reports the real visible height, so drive
-  // the shell's height from that instead of trusting CSS viewport units.
-  const [appHeight, setAppHeight] = useState<number | null>(null);
-  useEffect(() => {
-    const viewport = window.visualViewport;
-    function updateHeight() {
-      setAppHeight(viewport?.height ?? window.innerHeight);
-    }
-    updateHeight();
-    viewport?.addEventListener("resize", updateHeight);
-    window.addEventListener("resize", updateHeight);
-    return () => {
-      viewport?.removeEventListener("resize", updateHeight);
-      window.removeEventListener("resize", updateHeight);
-    };
-  }, []);
-
   const activeTab = (NAV_ITEMS.find((item) => pathname.startsWith(`/${item.value}`))?.value ??
     "home") as Tab;
 
@@ -139,10 +120,7 @@ export function AppChrome({
   const overflowCount = members.length - visibleMembers.length;
 
   return (
-    <div
-      className="fixed inset-x-0 top-0 overflow-hidden"
-      style={{ height: appHeight ? `${appHeight}px` : "100dvh" }}
-    >
+    <>
       <div
         className="fixed inset-x-0 top-0 z-20 flex items-center justify-between bg-linear-to-b from-bg-base from-80% to-transparent px-5 pb-3"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 1.5rem)" }}
@@ -178,7 +156,7 @@ export function AppChrome({
       </div>
 
       <main
-        className="h-full overflow-y-auto overscroll-contain px-5 pb-28"
+        className="fixed inset-x-0 top-0 bottom-0 overflow-y-auto overscroll-contain px-5 pb-28"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 6rem)" }}
       >
         {children}
@@ -249,6 +227,6 @@ export function AppChrome({
         currency={currency}
         categories={categoriesByType(categories, "bill")}
       />
-    </div>
+    </>
   );
 }
