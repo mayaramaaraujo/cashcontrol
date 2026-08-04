@@ -2,14 +2,6 @@ import * as z from "zod";
 import { en } from "@/shared/lib/i18n/dictionaries/en";
 import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
-export type Group = {
-  id: string;
-  name: string;
-  inviteCode: string;
-  createdBy: string;
-  createdAt: string;
-};
-
 export type GroupMember = {
   id: string;
   groupId: string;
