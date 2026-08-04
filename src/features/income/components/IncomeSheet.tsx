@@ -53,7 +53,7 @@ function defaultValues(defaultMemberId: string): IncomeFormInput {
   return {
     memberId: defaultMemberId,
     category: INCOME_CATEGORIES[0],
-    amount: 0,
+    amount: undefined,
     entryDate: todayDate(),
     note: "",
   };

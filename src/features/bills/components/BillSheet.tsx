@@ -31,15 +31,17 @@ interface BillSheetProps {
 
 type BillFormInput = z.input<ReturnType<typeof createBillSchema>>;
 
-const DEFAULT_VALUES: BillFormInput = {
-  name: "",
-  amount: 0,
-  dueDay: 1,
-  fixed: true,
-  category: BILL_CATEGORIES[0],
-  repeatMonthly: false,
-  paid: false,
-};
+function defaultValues(): BillFormInput {
+  return {
+    name: "",
+    amount: undefined,
+    dueDay: new Date().getDate(),
+    fixed: true,
+    category: BILL_CATEGORIES[0],
+    repeatMonthly: false,
+    paid: false,
+  };
+}
 
 function billToValues(bill: Bill): BillFormInput {
   return {
@@ -65,11 +67,11 @@ export function BillSheet({ open, onClose, bill, currency }: BillSheetProps) {
     formState: { errors, isSubmitting },
   } = useForm<BillFormInput, unknown, BillValues>({
     resolver: zodResolver(billSchema),
-    defaultValues: bill ? billToValues(bill) : DEFAULT_VALUES,
+    defaultValues: bill ? billToValues(bill) : defaultValues(),
   });
 
   useEffect(() => {
-    if (open) reset(bill ? billToValues(bill) : DEFAULT_VALUES);
+    if (open) reset(bill ? billToValues(bill) : defaultValues());
   }, [open, bill, reset]);
 
   async function onSubmit(values: BillValues) {
