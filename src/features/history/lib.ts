@@ -1,4 +1,3 @@
-import { INCOME_CATEGORY_COLORS, type IncomeCategory } from "@/features/income/types";
 import type { CategoryBreakdownRow } from "@/shared/components/CategoryBreakdown";
 
 export interface MonthEntry {
@@ -68,7 +67,11 @@ export function earlierMonths(trend: TrendPoint[], intlLocale = "en-US"): Earlie
     .reverse();
 }
 
-export function computeCategoryBreakdown(entries: MonthEntry[], month: string): CategoryBreakdownRow[] {
+export function computeCategoryBreakdown(
+  entries: MonthEntry[],
+  month: string,
+  colorsByCategory: Record<string, string>,
+): CategoryBreakdownRow[] {
   const monthEntries = entries.filter((e) => e.entryDate.slice(0, 7) === month);
   const total = monthEntries.reduce((sum, e) => sum + e.amount, 0);
 
@@ -81,7 +84,7 @@ export function computeCategoryBreakdown(entries: MonthEntry[], month: string): 
     .sort(([, a], [, b]) => b - a)
     .map(([category, amount]) => ({
       category,
-      accent: INCOME_CATEGORY_COLORS[category as IncomeCategory] ?? "neutral-accent",
+      accent: colorsByCategory[category] ?? "neutral-accent",
       amount,
       percent: total === 0 ? 0 : Math.round((amount / total) * 100),
     }));

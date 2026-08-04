@@ -12,6 +12,8 @@ import { BillSheet } from "@/features/bills/components/BillSheet";
 import type { IncomeEntry } from "@/features/income/types";
 import type { Bill } from "@/features/bills/types";
 import type { GroupMember } from "@/features/groups/types";
+import { categoriesByType } from "@/features/categories/lib";
+import type { Category } from "@/features/categories/types";
 
 interface ActivitySectionProps {
   incomeItems: ActivityItem[];
@@ -21,6 +23,7 @@ interface ActivitySectionProps {
   members: GroupMember[];
   currentMemberId: string;
   currency: Currency;
+  categories: Category[];
 }
 
 export function ActivitySection({
@@ -31,6 +34,7 @@ export function ActivitySection({
   members,
   currentMemberId,
   currency,
+  categories,
 }: ActivitySectionProps) {
   const { dict } = useTranslation();
   const [filter, setFilter] = useState<ActivityFilter>("all");
@@ -104,12 +108,14 @@ export function ActivitySection({
         members={members}
         defaultMemberId={currentMemberId}
         currency={currency}
+        categories={categoriesByType(categories, "income")}
         onClose={() => setEditingEntryId(null)}
       />
       <BillSheet
         open={!!editingBillId}
         bill={editingBill}
         currency={currency}
+        categories={categoriesByType(categories, "bill")}
         onClose={() => setEditingBillId(null)}
       />
     </div>

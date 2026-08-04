@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { Repeat } from "lucide-react";
-import { Chip } from "@/shared/components/Chip";
+import { Chip, CHIP_ACCENT_BG_CLASSES, type ChipAccent } from "@/shared/components/Chip";
 import { formatCurrency } from "@/shared/lib/utils";
 import { CURRENCY_SYMBOL, type Currency } from "@/shared/lib/currency";
 import { filterBills, getBillDueInfo, type BillFilter } from "@/features/bills/lib";
-import { BILL_CATEGORY_COLORS, type Bill, type BillCategory } from "@/features/bills/types";
+import { type Bill, type DefaultBillCategory } from "@/features/bills/types";
+import { colorsByCategoryName } from "@/features/categories/lib";
+import type { Category } from "@/features/categories/types";
 import { BillSheet } from "@/features/bills/components/BillSheet";
 import { PaidToggle } from "@/features/bills/components/PaidToggle";
 import { useTranslation } from "@/shared/lib/i18n/context";
@@ -14,25 +16,18 @@ import { useTranslation } from "@/shared/lib/i18n/context";
 interface BillsListProps {
   bills: Bill[];
   currency: Currency;
+  categories: Category[];
 }
 
-const DOT_BG_CLASSES: Record<string, string> = {
-  primary: "bg-primary",
-  "positive-dark": "bg-positive-dark",
-  violet: "bg-violet",
-  warning: "bg-warning",
-  "neutral-accent": "bg-neutral-accent",
-};
-
-function categoryDotClass(category: string) {
-  const accent = BILL_CATEGORY_COLORS[category as BillCategory];
-  return DOT_BG_CLASSES[accent] ?? "bg-neutral-accent";
-}
-
-export function BillsList({ bills, currency }: BillsListProps) {
+export function BillsList({ bills, currency, categories }: BillsListProps) {
   const { dict } = useTranslation();
   const [filter, setFilter] = useState<BillFilter>("all");
   const [editingBillId, setEditingBillId] = useState<string | null>(null);
+
+  const colorsByCategory = colorsByCategoryName(categories);
+  function categoryDotClass(category: string) {
+    return CHIP_ACCENT_BG_CLASSES[colorsByCategory[category] as ChipAccent] ?? "bg-neutral-accent";
+  }
 
   const FILTERS: { value: BillFilter; label: string }[] = [
     { value: "all", label: dict.bills.filterAll },
@@ -79,7 +74,7 @@ export function BillsList({ bills, currency }: BillsListProps) {
                 <div className="min-w-0">
                   <span className="text-sm font-semibold text-text-primary">{bill.name}</span>
                   <p className="mt-0.5 flex items-center gap-1 truncate text-xs text-text-subtle">
-                    {dict.categories.bill[bill.category as BillCategory] ?? bill.category}
+                    {dict.categories.bill[bill.category as DefaultBillCategory] ?? bill.category}
                     {bill.repeatMonthly ? (
                       <>
                         {" "}· {dict.bills.due(bill.dueDay)}
@@ -113,6 +108,7 @@ export function BillsList({ bills, currency }: BillsListProps) {
         open={!!editingBillId}
         bill={editingBill}
         currency={currency}
+        categories={categories}
         onClose={() => setEditingBillId(null)}
       />
     </div>

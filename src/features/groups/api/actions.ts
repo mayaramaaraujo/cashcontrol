@@ -114,7 +114,7 @@ export async function inviteByEmail(
     }
   }
 
-  revalidatePath("/people");
+  revalidatePath("/settings");
 }
 
 export async function joinGroupByCode(

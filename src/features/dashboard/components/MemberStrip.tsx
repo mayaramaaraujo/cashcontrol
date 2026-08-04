@@ -32,7 +32,7 @@ export function MemberStrip({ members, byPersonLabel, addLabel, currency }: Memb
           </div>
         ))}
         <Link
-          href="/people"
+          href="/settings"
           className="flex w-24 shrink-0 flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-surface-4 bg-surface-1"
         >
           <Plus className="size-4 text-primary-light" />

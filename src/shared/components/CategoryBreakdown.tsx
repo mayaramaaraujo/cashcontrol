@@ -1,4 +1,5 @@
 import { ProgressBar } from "@/shared/components/ProgressBar";
+import { CHIP_ACCENT_BG_CLASSES, type ChipAccent } from "@/shared/lib/chip-accents";
 import { formatCurrency } from "@/shared/lib/utils";
 import { CURRENCY_SYMBOL, type Currency } from "@/shared/lib/currency";
 
@@ -17,20 +18,6 @@ interface CategoryBreakdownProps {
   currency: Currency;
 }
 
-const ACCENT_BG_CLASSES: Record<string, string> = {
-  primary: "bg-primary",
-  positive: "bg-positive",
-  "positive-dark": "bg-positive-dark",
-  warning: "bg-warning",
-  violet: "bg-violet",
-  "avatar-1": "bg-avatar-1",
-  "avatar-2": "bg-avatar-2",
-  "avatar-3": "bg-avatar-3",
-  "avatar-4": "bg-avatar-4",
-  "avatar-5": "bg-avatar-5",
-  "neutral-accent": "bg-neutral-accent",
-};
-
 export function CategoryBreakdown({ title, rows, emptyMessage, categoryLabel, currency }: CategoryBreakdownProps) {
   return (
     <div>
@@ -45,7 +32,7 @@ export function CategoryBreakdown({ title, rows, emptyMessage, categoryLabel, cu
             <div key={row.category}>
               <div className="mb-1.5 flex items-center justify-between">
                 <span className="flex items-center gap-2 text-xs font-semibold text-text-secondary">
-                  <span className={`size-2 rounded ${ACCENT_BG_CLASSES[row.accent] ?? "bg-neutral-accent"}`} />
+                  <span className={`size-2 rounded ${CHIP_ACCENT_BG_CLASSES[row.accent as ChipAccent] ?? "bg-neutral-accent"}`} />
                   {categoryLabel(row.category)}
                 </span>
                 <span className="text-xs font-semibold text-text-tertiary">
@@ -54,7 +41,7 @@ export function CategoryBreakdown({ title, rows, emptyMessage, categoryLabel, cu
               </div>
               <ProgressBar
                 percent={row.percent}
-                color={ACCENT_BG_CLASSES[row.accent] ?? "bg-neutral-accent"}
+                color={CHIP_ACCENT_BG_CLASSES[row.accent as ChipAccent] ?? "bg-neutral-accent"}
               />
             </div>
           ))}

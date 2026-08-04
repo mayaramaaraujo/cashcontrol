@@ -15,7 +15,8 @@ import { EarlierMonths } from "@/features/history/components/EarlierMonths";
 import { getLocale } from "@/shared/lib/i18n/server";
 import { getDictionary } from "@/shared/lib/i18n/dictionaries";
 import { LOCALE_INTL_TAG } from "@/shared/lib/i18n/config";
-import type { IncomeCategory } from "@/features/income/types";
+import type { DefaultIncomeCategory } from "@/features/income/types";
+import { CATEGORY_COLUMNS, mapCategoryRow, colorsByCategoryName } from "@/features/categories/lib";
 
 interface HistoryPageProps {
   searchParams: Promise<{ month?: string }>;
@@ -41,21 +42,29 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
   const rangeEnd = new Date(Date.UTC(rangeEndYear, rangeEndMonth, 1)).toISOString().slice(0, 10);
 
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("income_entries")
-    .select("category, amount, entry_date")
-    .eq("group_id", currentGroup.groupId)
-    .gte("entry_date", rangeStart)
-    .lt("entry_date", rangeEnd);
+  const [{ data }, { data: categoryRows }] = await Promise.all([
+    supabase
+      .from("income_entries")
+      .select("category, amount, entry_date")
+      .eq("group_id", currentGroup.groupId)
+      .gte("entry_date", rangeStart)
+      .lt("entry_date", rangeEnd),
+    supabase
+      .from("categories")
+      .select(CATEGORY_COLUMNS)
+      .eq("group_id", currentGroup.groupId)
+      .eq("type", "income"),
+  ]);
 
   const entries: MonthEntry[] = (data ?? []).map((row) => ({
     category: row.category,
     amount: Number(row.amount),
     entryDate: row.entry_date,
   }));
+  const categories = (categoryRows ?? []).map(mapCategoryRow);
 
   const trend = computeTrend(entries, months, month, intlLocale);
-  const categoryBreakdown = computeCategoryBreakdown(entries, month);
+  const categoryBreakdown = computeCategoryBreakdown(entries, month, colorsByCategoryName(categories));
 
   return (
     <div>
@@ -64,7 +73,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
         title={dict.history.byCategory(monthLabel(month, true, intlLocale))}
         rows={categoryBreakdown}
         emptyMessage={dict.history.noIncomeThisMonth}
-        categoryLabel={(category) => dict.categories.income[category as IncomeCategory] ?? category}
+        categoryLabel={(category) => dict.categories.income[category as DefaultIncomeCategory] ?? category}
         currency={currentGroup.currency}
       />
       <EarlierMonths

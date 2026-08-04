@@ -6,7 +6,7 @@ Design-system primitives shared across features, built on the tokens in `src/app
 - **Button** — `primary` / `secondary` / `outline` / `danger` variants, `sm` / `md` sizes
 - **Input** — text input with optional leading icon or `leadingText` (e.g. a "€" currency symbol), `invalid` state
 - **DatePicker** — calendar-popup date field (built on `react-datepicker`), value/onChange in `YYYY-MM-DD`, opens a full-screen portal calendar instead of the native OS date input
-- **Chip** — toggleable pill (category/filter selection), `selected` + `accent` props
+- **Chip** — toggleable pill (category/filter selection), `selected` + `accent` props. Re-exports `ChipAccent`, `CHIP_ACCENTS` (the full list of accent tokens, e.g. for a color picker), and `CHIP_ACCENT_BG_CLASSES` (accent → solid `bg-*` class, for dots/swatches — Tailwind needs the full class name statically present, so don't build it via string interpolation) from `@/shared/lib/chip-accents`. **Import those three from `@/shared/lib/chip-accents` directly (not `./Chip`) in any Server Component or Server Action** — `Chip.tsx` is `"use client"`, so a server-side import of its *values* (not types) resolves to an opaque client reference instead of the real value
 - **SegmentedControl** — equal-width multi-option track (e.g. Income/Bills/Left)
 - **Sheet** — bottom sheet modal (portal, Escape-to-close, backdrop click, scroll lock)
 - **BottomNav** — fixed app-shell nav with a center FAB

@@ -1,5 +1,5 @@
 import type { Database } from "@/shared/lib/supabase/database.types";
-import { BILL_CATEGORY_COLORS, type Bill, type BillCategory } from "@/features/bills/types";
+import type { Bill } from "@/features/bills/types";
 import type { CategoryBreakdownRow } from "@/shared/components/CategoryBreakdown";
 
 export const BILL_COLUMNS =
@@ -97,7 +97,10 @@ export function computeBillsSummary(bills: Bill[]): BillsSummary {
 }
 
 /** Paid bills for the current cycle, grouped by category, sorted descending. */
-export function computeCategoryBreakdown(bills: Bill[]): CategoryBreakdownRow[] {
+export function computeCategoryBreakdown(
+  bills: Bill[],
+  colorsByCategory: Record<string, string>,
+): CategoryBreakdownRow[] {
   const paidBills = bills.filter((b) => getBillDueInfo(b).isPaidThisCycle);
   const total = paidBills.reduce((sum, b) => sum + b.amount, 0);
 
@@ -110,7 +113,7 @@ export function computeCategoryBreakdown(bills: Bill[]): CategoryBreakdownRow[] 
     .sort(([, a], [, b]) => b - a)
     .map(([category, amount]) => ({
       category,
-      accent: BILL_CATEGORY_COLORS[category as BillCategory] ?? "neutral-accent",
+      accent: colorsByCategory[category] ?? "neutral-accent",
       amount,
       percent: total === 0 ? 0 : Math.round((amount / total) * 100),
     }));

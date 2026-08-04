@@ -16,27 +16,19 @@ export type Bill = {
   createdAt: string;
 };
 
-export const BILL_CATEGORIES = [
-  "Housing",
-  "Utilities",
-  "Insurance",
-  "Subscriptions",
-  "Groceries",
-  "Fuel",
-  "Other",
-] as const;
-
-export type BillCategory = (typeof BILL_CATEGORIES)[number];
-
-export const BILL_CATEGORY_COLORS: Record<BillCategory, string> = {
-  Housing: "primary",
-  Utilities: "positive-dark",
-  Insurance: "violet",
-  Subscriptions: "warning",
-  Groceries: "avatar-2",
-  Fuel: "avatar-4",
-  Other: "neutral-accent",
-};
+/**
+ * The literal names seeded for every group (supabase/migrations/0008_custom_categories.sql)
+ * — kept only so `dict.categories.bill` can translate them. Not the source of truth for
+ * what categories exist; that's the `categories` table (see `@/features/categories`).
+ */
+export type DefaultBillCategory =
+  | "Housing"
+  | "Utilities"
+  | "Insurance"
+  | "Subscriptions"
+  | "Groceries"
+  | "Fuel"
+  | "Other";
 
 export function createBillSchema(dict: Dictionary) {
   return z.object({
@@ -44,7 +36,7 @@ export function createBillSchema(dict: Dictionary) {
     amount: z.coerce.number().positive(dict.bills.validation.amountPositive),
     dueDay: z.coerce.number().int().min(1).max(31),
     fixed: z.boolean(),
-    category: z.enum(BILL_CATEGORIES),
+    category: z.string().min(1, dict.bills.validation.categoryRequired),
     repeatMonthly: z.boolean(),
     paid: z.boolean(),
   });

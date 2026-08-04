@@ -3,7 +3,7 @@ export const en = {
     home: "Home",
     bills: "Bills",
     history: "History",
-    people: "People",
+    settings: "Settings",
     add: "Add",
   },
   monthPicker: {
@@ -66,6 +66,7 @@ export const en = {
     validation: {
       nameRequired: "Bill name is required",
       amountPositive: "Enter an amount greater than 0",
+      categoryRequired: "Pick a category",
     },
   },
   income: {
@@ -81,6 +82,7 @@ export const en = {
     validation: {
       amountPositive: "Enter an amount greater than 0",
       dateRequired: "Pick a date",
+      categoryRequired: "Pick a category",
     },
   },
   history: {
@@ -90,7 +92,7 @@ export const en = {
     noIncomeThisMonth: "No income logged this month yet.",
     noIncomeSixMonths: "No income logged in the last 6 months yet.",
   },
-  people: {
+  settings: {
     members: "Members",
     you: "YOU",
     invited: "Invited",
@@ -111,6 +113,13 @@ export const en = {
     confirmDelete: "Yes, delete my account",
     language: "Language",
     currency: "Currency",
+    categories: "Categories",
+    billCategories: "Bills",
+    incomeCategories: "Income",
+    addCategoryPlaceholder: "New category name",
+    categoryNameRequired: "Category name is required",
+    deleteCategory: "Delete category",
+    noCategoriesYet: "No categories yet — add one below.",
   },
   notifications: {
     title: "Push notifications",

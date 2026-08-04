@@ -9,16 +9,11 @@ import { Sheet } from "@/shared/components/Sheet";
 import { Input } from "@/shared/components/Input";
 import { Button } from "@/shared/components/Button";
 import { SegmentedControl } from "@/shared/components/SegmentedControl";
-import { Chip, type ChipAccent } from "@/shared/components/Chip";
+import { Chip } from "@/shared/components/Chip";
 import { Switch } from "@/shared/components/Switch";
 import { addBill, updateBill, deleteBill } from "@/features/bills/api/actions";
-import {
-  createBillSchema,
-  BILL_CATEGORIES,
-  BILL_CATEGORY_COLORS,
-  type BillValues,
-  type Bill,
-} from "@/features/bills/types";
+import { createBillSchema, type BillValues, type Bill, type DefaultBillCategory } from "@/features/bills/types";
+import type { Category } from "@/features/categories/types";
 import { useTranslation } from "@/shared/lib/i18n/context";
 import { CURRENCY_SYMBOL, type Currency } from "@/shared/lib/currency";
 
@@ -27,17 +22,18 @@ interface BillSheetProps {
   onClose: () => void;
   bill?: Bill;
   currency: Currency;
+  categories: Category[];
 }
 
 type BillFormInput = z.input<ReturnType<typeof createBillSchema>>;
 
-function defaultValues(): BillFormInput {
+function defaultValues(categories: Category[]): BillFormInput {
   return {
     name: "",
     amount: undefined,
     dueDay: new Date().getDate(),
     fixed: true,
-    category: BILL_CATEGORIES[0],
+    category: categories[0]?.name ?? "",
     repeatMonthly: false,
     paid: false,
   };
@@ -55,7 +51,7 @@ function billToValues(bill: Bill): BillFormInput {
   };
 }
 
-export function BillSheet({ open, onClose, bill, currency }: BillSheetProps) {
+export function BillSheet({ open, onClose, bill, currency, categories }: BillSheetProps) {
   const { dict } = useTranslation();
   const billSchema = useMemo(() => createBillSchema(dict), [dict]);
   const {
@@ -67,12 +63,12 @@ export function BillSheet({ open, onClose, bill, currency }: BillSheetProps) {
     formState: { errors, isSubmitting },
   } = useForm<BillFormInput, unknown, BillValues>({
     resolver: zodResolver(billSchema),
-    defaultValues: bill ? billToValues(bill) : defaultValues(),
+    defaultValues: bill ? billToValues(bill) : defaultValues(categories),
   });
 
   useEffect(() => {
-    if (open) reset(bill ? billToValues(bill) : defaultValues());
-  }, [open, bill, reset]);
+    if (open) reset(bill ? billToValues(bill) : defaultValues(categories));
+  }, [open, bill, categories, reset]);
 
   async function onSubmit(values: BillValues) {
     const result = bill ? await updateBill(bill.id, values) : await addBill(values);
@@ -163,15 +159,15 @@ export function BillSheet({ open, onClose, bill, currency }: BillSheetProps) {
             <div>
               <p className="mb-2 text-xs font-semibold text-text-subtle">{dict.bills.sheet.category}</p>
               <div className="flex flex-wrap gap-2">
-                {BILL_CATEGORIES.map((category) => (
+                {categories.map((category) => (
                   <Chip
-                    key={category}
+                    key={category.id}
                     type="button"
-                    accent={BILL_CATEGORY_COLORS[category] as ChipAccent}
-                    selected={field.value === category}
-                    onClick={() => field.onChange(category)}
+                    accent={category.color}
+                    selected={field.value === category.name}
+                    onClick={() => field.onChange(category.name)}
                   >
-                    {dict.categories.bill[category]}
+                    {dict.categories.bill[category.name as DefaultBillCategory] ?? category.name}
                   </Chip>
                 ))}
               </div>

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getCurrentGroup } from "@/shared/lib/supabase/get-current-group";
 import { createClient } from "@/shared/lib/supabase/server";
 import { GROUP_MEMBER_COLUMNS, mapGroupMemberRow } from "@/features/groups/lib";
+import { CATEGORY_COLUMNS, mapCategoryRow } from "@/features/categories/lib";
 import { AppChrome } from "./_components/AppChrome";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -12,14 +13,18 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }
 
   const supabase = await createClient();
-  const { data: memberRows } = await supabase
-    .from("group_members")
-    .select(GROUP_MEMBER_COLUMNS)
-    .eq("group_id", currentGroup.groupId)
-    .eq("status", "active")
-    .order("created_at", { ascending: true });
+  const [{ data: memberRows }, { data: categoryRows }] = await Promise.all([
+    supabase
+      .from("group_members")
+      .select(GROUP_MEMBER_COLUMNS)
+      .eq("group_id", currentGroup.groupId)
+      .eq("status", "active")
+      .order("created_at", { ascending: true }),
+    supabase.from("categories").select(CATEGORY_COLUMNS).eq("group_id", currentGroup.groupId),
+  ]);
 
   const members = (memberRows ?? []).map(mapGroupMemberRow);
+  const categories = (categoryRows ?? []).map(mapCategoryRow);
 
   return (
     <AppChrome
@@ -27,6 +32,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       members={members}
       currentMemberId={currentGroup.memberId}
       currency={currentGroup.currency}
+      categories={categories}
     >
       {children}
     </AppChrome>

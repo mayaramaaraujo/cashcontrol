@@ -5,7 +5,7 @@ export const ptBR: Dictionary = {
     home: "Início",
     bills: "Contas",
     history: "Histórico",
-    people: "Pessoas",
+    settings: "Ajustes",
     add: "Adicionar",
   },
   monthPicker: {
@@ -68,6 +68,7 @@ export const ptBR: Dictionary = {
     validation: {
       nameRequired: "O nome da conta é obrigatório",
       amountPositive: "Digite um valor maior que 0",
+      categoryRequired: "Escolha uma categoria",
     },
   },
   income: {
@@ -83,6 +84,7 @@ export const ptBR: Dictionary = {
     validation: {
       amountPositive: "Digite um valor maior que 0",
       dateRequired: "Escolha uma data",
+      categoryRequired: "Escolha uma categoria",
     },
   },
   history: {
@@ -92,7 +94,7 @@ export const ptBR: Dictionary = {
     noIncomeThisMonth: "Nenhuma renda registrada este mês ainda.",
     noIncomeSixMonths: "Nenhuma renda registrada nos últimos 6 meses ainda.",
   },
-  people: {
+  settings: {
     members: "Membros",
     you: "VOCÊ",
     invited: "Convidado",
@@ -113,6 +115,13 @@ export const ptBR: Dictionary = {
     confirmDelete: "Sim, excluir minha conta",
     language: "Idioma",
     currency: "Moeda",
+    categories: "Categorias",
+    billCategories: "Contas",
+    incomeCategories: "Renda",
+    addCategoryPlaceholder: "Nome da nova categoria",
+    categoryNameRequired: "O nome da categoria é obrigatório",
+    deleteCategory: "Excluir categoria",
+    noCategoriesYet: "Nenhuma categoria ainda — adicione uma abaixo.",
   },
   notifications: {
     title: "Notificações push",

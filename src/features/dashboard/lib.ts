@@ -2,8 +2,8 @@ import type { AvatarColorIndex } from "@/shared/components/Avatar";
 import { formatCurrency } from "@/shared/lib/utils";
 import { CURRENCY_SYMBOL, type Currency } from "@/shared/lib/currency";
 import type { GroupMember } from "@/features/groups/types";
-import type { IncomeEntry, IncomeCategory } from "@/features/income/types";
-import type { Bill, BillCategory } from "@/features/bills/types";
+import type { IncomeEntry, DefaultIncomeCategory } from "@/features/income/types";
+import type { Bill, DefaultBillCategory } from "@/features/bills/types";
 import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
 export type SummaryMode = "income" | "bills" | "left";
@@ -111,7 +111,7 @@ export function buildIncomeActivity(
     return {
       id: entry.id,
       isIncome: true,
-      title: dict.categories.income[entry.category as IncomeCategory] ?? entry.category,
+      title: dict.categories.income[entry.category as DefaultIncomeCategory] ?? entry.category,
       sub: parts.join(" · "),
       amount: entry.amount,
       amountColorClass: "text-positive",
@@ -122,7 +122,7 @@ export function buildIncomeActivity(
 
 export function buildBillActivity(bills: Bill[], month: string, dict: Dictionary): ActivityItem[] {
   return bills.map((bill) => {
-    const category = dict.categories.bill[bill.category as BillCategory] ?? bill.category;
+    const category = dict.categories.bill[bill.category as DefaultBillCategory] ?? bill.category;
     const status = bill.paid ? dict.home.dueDayPaid : dict.home.dueDayPending;
     const sub = bill.repeatMonthly
       ? `${category} · ${dict.home.dueDayLabel(bill.dueDay)} · ${status}`

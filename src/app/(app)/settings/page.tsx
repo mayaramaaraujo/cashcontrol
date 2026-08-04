@@ -8,6 +8,8 @@ import { InviteLinkCard } from "@/features/groups/components/InviteLinkCard";
 import { InviteByEmailForm } from "@/features/groups/components/InviteByEmailForm";
 import { MembersList } from "@/features/groups/components/MembersList";
 import { CurrencySwitcher } from "@/features/groups/components/CurrencySwitcher";
+import { CATEGORY_COLUMNS, mapCategoryRow } from "@/features/categories/lib";
+import { ManageCategoriesSection } from "@/features/categories/components/ManageCategoriesSection";
 import { LogoutButton } from "@/features/auth/components/LogoutButton";
 import { DeleteAccountButton } from "@/features/auth/components/DeleteAccountButton";
 import { NotificationToggle } from "@/features/notifications/components/NotificationToggle";
@@ -22,11 +24,11 @@ function monthRange(month: string) {
   return { start: start.toISOString().slice(0, 10), end: end.toISOString().slice(0, 10) };
 }
 
-interface PeoplePageProps {
+interface SettingsPageProps {
   searchParams: Promise<{ month?: string }>;
 }
 
-export default async function PeoplePage({ searchParams }: PeoplePageProps) {
+export default async function SettingsPage({ searchParams }: SettingsPageProps) {
   const currentGroup = await getCurrentGroup();
   if (!currentGroup) {
     redirect("/setup");
@@ -44,7 +46,7 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
   const host = headersList.get("host") ?? "";
   const protocol = host.startsWith("localhost") ? "http" : "https";
 
-  const [groupRes, membersRes, entriesRes] = await Promise.all([
+  const [groupRes, membersRes, entriesRes, categoriesRes] = await Promise.all([
     supabase.from("groups").select("invite_code").eq("id", currentGroup.groupId).single(),
     supabase
       .from("group_members")
@@ -57,9 +59,11 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
       .eq("group_id", currentGroup.groupId)
       .gte("entry_date", start)
       .lt("entry_date", end),
+    supabase.from("categories").select(CATEGORY_COLUMNS).eq("group_id", currentGroup.groupId),
   ]);
 
   const members = (membersRes.data ?? []).map(mapGroupMemberRow);
+  const categories = (categoriesRes.data ?? []).map(mapCategoryRow);
 
   const totalsByMember = new Map<string, number>();
   for (const entry of entriesRes.data ?? []) {
@@ -81,14 +85,16 @@ export default async function PeoplePage({ searchParams }: PeoplePageProps) {
       <MembersList rows={rows} dict={dict} currency={currentGroup.currency} />
 
       <div className="mt-8 flex items-center justify-between">
-        <p className="text-xs font-semibold text-text-subtle">{dict.people.language}</p>
+        <p className="text-xs font-semibold text-text-subtle">{dict.settings.language}</p>
         <LanguageSwitcher />
       </div>
 
       <div className="mt-4 flex items-center justify-between">
-        <p className="text-xs font-semibold text-text-subtle">{dict.people.currency}</p>
+        <p className="text-xs font-semibold text-text-subtle">{dict.settings.currency}</p>
         <CurrencySwitcher currency={currentGroup.currency} />
       </div>
+
+      <ManageCategoriesSection categories={categories} />
 
       <NotificationToggle />
 

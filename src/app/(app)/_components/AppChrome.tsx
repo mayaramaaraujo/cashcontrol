@@ -3,26 +3,28 @@
 import { useState, useTransition, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ChevronDown, Home, Receipt, History, Users, ArrowUp, ArrowDown } from "lucide-react";
+import { ChevronDown, Home, Receipt, History, Settings, ArrowUp, ArrowDown } from "lucide-react";
 import { Avatar, type AvatarColorIndex } from "@/shared/components/Avatar";
 import { Sheet } from "@/shared/components/Sheet";
 import { BottomNav, type BottomNavItem } from "@/shared/components/BottomNav";
 import type { GroupMember } from "@/features/groups/types";
 import { BillSheet } from "@/features/bills/components/BillSheet";
 import { IncomeSheet } from "@/features/income/components/IncomeSheet";
+import { categoriesByType } from "@/features/categories/lib";
+import type { Category } from "@/features/categories/types";
 import type { Currency } from "@/shared/lib/currency";
 import { LOCALE_INTL_TAG } from "@/shared/lib/i18n/config";
 import { useTranslation } from "@/shared/lib/i18n/context";
 import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
-type Tab = "home" | "bills" | "history" | "people";
+type Tab = "home" | "bills" | "history" | "settings";
 
 function navItems(dict: Dictionary): BottomNavItem<Tab>[] {
   return [
     { value: "home", label: dict.nav.home, icon: Home },
     { value: "bills", label: dict.nav.bills, icon: Receipt },
     { value: "history", label: dict.nav.history, icon: History },
-    { value: "people", label: dict.nav.people, icon: Users },
+    { value: "settings", label: dict.nav.settings, icon: Settings },
   ];
 }
 
@@ -47,10 +49,18 @@ interface AppChromeProps {
   members: GroupMember[];
   currentMemberId: string;
   currency: Currency;
+  categories: Category[];
   children: ReactNode;
 }
 
-export function AppChrome({ groupName, members, currentMemberId, currency, children }: AppChromeProps) {
+export function AppChrome({
+  groupName,
+  members,
+  currentMemberId,
+  currency,
+  categories,
+  children,
+}: AppChromeProps) {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -128,7 +138,7 @@ export function AppChrome({ groupName, members, currentMemberId, currency, child
             {groupName}
           </h2>
         </div>
-        <Link href="/people" className="flex shrink-0 items-center">
+        <Link href="/settings" className="flex shrink-0 items-center">
           {visibleMembers.map((member) => (
             <Avatar
               key={member.id}
@@ -209,11 +219,13 @@ export function AppChrome({ groupName, members, currentMemberId, currency, child
         members={members}
         defaultMemberId={currentMemberId}
         currency={currency}
+        categories={categoriesByType(categories, "income")}
       />
       <BillSheet
         open={searchParams.get("sheet") === "bill"}
         onClose={closeSheet}
         currency={currency}
+        categories={categoriesByType(categories, "bill")}
       />
     </div>
   );

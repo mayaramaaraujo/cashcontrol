@@ -1,0 +1,11 @@
+# categories
+
+Per-group, per-type (`bill` | `income`) categories. Every group gets the app's original 13 defaults (7 bill + 6 income) seeded on creation (`supabase/migrations/0008_custom_categories.sql`, both for existing groups and via `create_group_with_owner`), and can add/delete its own from there. `bills.category`/`income_entries.category` stay plain `text` — not a foreign key — so renaming or deleting a category never touches historical bills/income rows; a row referencing a removed category just falls back to `neutral-accent` + its literal name.
+
+- `types.ts` — `Category`/`CategoryType`, `createCategorySchema`/`categorySchema`/`CategoryValues` (react-hook-form + zod; `color` is constrained to `CHIP_ACCENTS`, imported from `@/shared/lib/chip-accents` — not `@/shared/components/Chip`, since this schema is also built inside a Server Action; see that lib's file-header comment).
+- `lib.ts` — `CATEGORY_COLUMNS`, `mapCategoryRow` (DB row → `Category`), `categoriesByType` (filter a group's full category list down to one type — used everywhere a bill/income sheet only wants its own type), `colorsByCategoryName` (name → chip accent color, for breakdown charts/dots that only have the plain category name off a `bills`/`income_entries` row).
+- `api/actions.ts` — `addCategory`, `deleteCategory` Server Actions, revalidating `/settings`, `/bills`, `/history`, and `/home` so every screen that renders category chips/colors picks up the change.
+- `components/ManageCategoriesSection.tsx` — the Settings tab's category management UI: a Bills/Income `SegmentedControl`, the current type's categories as removable chips, and `AddCategoryForm` below.
+- `components/AddCategoryForm.tsx` — name input + color-swatch picker (from `CHIP_ACCENTS`), calling `addCategory`.
+
+Every page that renders a `BillSheet`/`IncomeSheet` or a category breakdown fetches this group's `categories` once and threads it down (mirrors how `currency` is threaded from `src/app/(app)/layout.tsx`) — see `AppChrome`, `BillsList`, `ActivitySection`, and the Bills/History pages.

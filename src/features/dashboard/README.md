@@ -7,4 +7,4 @@ Home screen: income/bills/left hero summary, member strip, activity feed. Month 
 - **`components/MemberStrip.tsx`** — server-renderable "by person" horizontal scroll strip.
 - **`components/ActivitySection.tsx`** — client component for the All/Income/Bills filter chips (local state, filters/caps the already-fetched lists — no refetch). Rows are clickable: income rows open `IncomeSheet` and bill rows open `BillSheet` in edit mode (each mounted locally with its own `editingEntryId`/`editingBillId` state), so income entries and bills can be edited or deleted directly from Home.
 
-`src/app/(app)/home/page.tsx` is the async Server Component that queries Supabase (active members, this month's `income_entries`, all `bills`) and passes results into the above.
+`src/app/(app)/home/page.tsx` is the async Server Component that queries Supabase (active members, this month's `income_entries`, all `bills`, and the group's `categories`) and passes results into the above. `ActivitySection` receives the full `categories` list and splits it via `categoriesByType()` (`@/features/categories/lib`) before handing each type to `IncomeSheet`/`BillSheet`.

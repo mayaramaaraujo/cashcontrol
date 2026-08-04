@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { getCurrentGroup } from "@/shared/lib/supabase/get-current-group";
 import { createClient } from "@/shared/lib/supabase/server";
 import { GROUP_MEMBER_COLUMNS, mapGroupMemberRow } from "@/features/groups/lib";
+import { CATEGORY_COLUMNS, mapCategoryRow } from "@/features/categories/lib";
 import type { IncomeEntry } from "@/features/income/types";
 import type { Bill } from "@/features/bills/types";
 import {
@@ -45,7 +46,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   const supabase = await createClient();
 
-  const [membersRes, entriesRes, billsRes, anyEntriesRes] = await Promise.all([
+  const [membersRes, entriesRes, billsRes, anyEntriesRes, categoriesRes] = await Promise.all([
     supabase
       .from("group_members")
       .select(GROUP_MEMBER_COLUMNS)
@@ -68,6 +69,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       .from("income_entries")
       .select("id", { count: "exact", head: true })
       .eq("group_id", currentGroup.groupId),
+    supabase.from("categories").select(CATEGORY_COLUMNS).eq("group_id", currentGroup.groupId),
   ]);
 
   const members = (membersRes.data ?? []).map(mapGroupMemberRow);
@@ -97,6 +99,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     createdAt: row.created_at,
   }));
 
+  const categories = (categoriesRes.data ?? []).map(mapCategoryRow);
+
   const hasAnyActivity = (anyEntriesRes.count ?? 0) > 0 || bills.length > 0;
 
   const hero = computeHero(entries, bills, members.length, dict, currentGroup.currency);
@@ -123,6 +127,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           members={members}
           currentMemberId={currentGroup.memberId}
           currency={currentGroup.currency}
+          categories={categories}
         />
       ) : (
         <div className="mt-8 flex flex-col items-center gap-3 rounded-2xl border border-surface-border bg-surface-1 p-6 text-center">

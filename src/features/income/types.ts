@@ -13,30 +13,17 @@ export type IncomeEntry = {
   createdAt: string;
 };
 
-export const INCOME_CATEGORIES = [
-  "Salary",
-  "Freelance",
-  "Bonus",
-  "Part-time",
-  "Gift",
-  "Other",
-] as const;
-
-export type IncomeCategory = (typeof INCOME_CATEGORIES)[number];
-
-export const INCOME_CATEGORY_COLORS: Record<IncomeCategory, string> = {
-  Salary: "avatar-3",
-  Freelance: "avatar-2",
-  Bonus: "avatar-4",
-  "Part-time": "avatar-5",
-  Gift: "avatar-1",
-  Other: "neutral-accent",
-};
+/**
+ * The literal names seeded for every group (supabase/migrations/0008_custom_categories.sql)
+ * — kept only so `dict.categories.income` can translate them. Not the source of truth for
+ * what categories exist; that's the `categories` table (see `@/features/categories`).
+ */
+export type DefaultIncomeCategory = "Salary" | "Freelance" | "Bonus" | "Part-time" | "Gift" | "Other";
 
 export function createAddIncomeSchema(dict: Dictionary) {
   return z.object({
     memberId: z.uuid(),
-    category: z.enum(INCOME_CATEGORIES),
+    category: z.string().min(1, dict.income.validation.categoryRequired),
     amount: z.coerce.number().positive(dict.income.validation.amountPositive),
     entryDate: z.iso.date(dict.income.validation.dateRequired),
     note: z.string().optional(),

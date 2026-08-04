@@ -36,13 +36,13 @@ export function InviteByEmailForm() {
         <div className="flex-1">
           <Input
             icon={Mail}
-            placeholder={dict.people.inviteByEmailPlaceholder}
+            placeholder={dict.settings.inviteByEmailPlaceholder}
             invalid={!!errors.email}
             {...register("email")}
           />
         </div>
         <Button type="submit" disabled={isSubmitting}>
-          {dict.people.add}
+          {dict.settings.add}
         </Button>
       </div>
       {errors.email ? (

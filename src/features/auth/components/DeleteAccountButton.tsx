@@ -31,11 +31,11 @@ export function DeleteAccountButton() {
         className="flex items-center gap-1.5 text-xs font-semibold text-danger"
       >
         <Trash2 className="size-3.5" />
-        {dict.people.deleteAccount}
+        {dict.settings.deleteAccount}
       </button>
 
-      <Sheet open={open} onClose={() => setOpen(false)} title={dict.people.deleteAccountTitle}>
-        <p className="text-sm text-text-subtle">{dict.people.deleteAccountBody}</p>
+      <Sheet open={open} onClose={() => setOpen(false)} title={dict.settings.deleteAccountTitle}>
+        <p className="text-sm text-text-subtle">{dict.settings.deleteAccountBody}</p>
         {error ? <p className="mt-3 text-xs font-medium text-danger">{error}</p> : null}
         <Button
           variant="danger"
@@ -45,7 +45,7 @@ export function DeleteAccountButton() {
           className="mt-5"
         >
           {isDeleting ? <Loader2 className="size-4 animate-spin" /> : null}
-          {dict.people.confirmDelete}
+          {dict.settings.confirmDelete}
         </Button>
       </Sheet>
     </>

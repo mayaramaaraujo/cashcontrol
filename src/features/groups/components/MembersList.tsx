@@ -17,8 +17,8 @@ interface MembersListProps {
 }
 
 function roleLabel(member: GroupMember, dict: Dictionary) {
-  if (member.status === "invited") return dict.people.invited;
-  return member.role === "admin" ? dict.people.admin : dict.people.member;
+  if (member.status === "invited") return dict.settings.invited;
+  return member.role === "admin" ? dict.settings.admin : dict.settings.member;
 }
 
 function roleColorClass(member: GroupMember, isYou: boolean) {
@@ -30,7 +30,7 @@ function roleColorClass(member: GroupMember, isYou: boolean) {
 export function MembersList({ rows, dict, currency }: MembersListProps) {
   return (
     <div>
-      <p className="mt-6 mb-3 font-display text-base font-semibold text-text-primary">{dict.people.members}</p>
+      <p className="mt-6 mb-3 font-display text-base font-semibold text-text-primary">{dict.settings.members}</p>
       <div className="flex flex-col gap-2">
         {rows.map(({ member, isYou, monthTotal }) => (
           <div
@@ -50,14 +50,14 @@ export function MembersList({ rows, dict, currency }: MembersListProps) {
                 </span>
                 {isYou ? (
                   <span className="shrink-0 rounded bg-primary/16 px-1.5 py-0.5 text-xs font-bold text-primary-light">
-                    {dict.people.you}
+                    {dict.settings.you}
                   </span>
                 ) : null}
               </div>
               <p className="mt-0.5 text-xs text-text-subtle">
                 {member.status === "invited"
-                  ? dict.people.invitationSent
-                  : dict.people.thisMonth(`${CURRENCY_SYMBOL[currency]}${formatCurrency(monthTotal, currency)}`)}
+                  ? dict.settings.invitationSent
+                  : dict.settings.thisMonth(`${CURRENCY_SYMBOL[currency]}${formatCurrency(monthTotal, currency)}`)}
               </p>
             </div>
             <span className={`shrink-0 text-xs font-semibold ${roleColorClass(member, isYou)}`}>

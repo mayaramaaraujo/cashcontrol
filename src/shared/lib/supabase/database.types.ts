@@ -124,6 +124,41 @@ export type Database = {
           },
         ]
       }
+      categories: {
+        Row: {
+          color: string
+          created_at: string
+          group_id: string
+          id: string
+          name: string
+          type: string
+        }
+        Insert: {
+          color: string
+          created_at?: string
+          group_id: string
+          id?: string
+          name: string
+          type: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          group_id?: string
+          id?: string
+          name?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       group_members: {
         Row: {
           color_index: number

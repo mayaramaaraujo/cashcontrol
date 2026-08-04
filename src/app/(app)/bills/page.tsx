@@ -5,7 +5,8 @@ import { BILL_COLUMNS, mapBillRow, computeBillsSummary, computeCategoryBreakdown
 import { BillsSummary } from "@/features/bills/components/BillsSummary";
 import { BillsList } from "@/features/bills/components/BillsList";
 import { CategoryBreakdown } from "@/shared/components/CategoryBreakdown";
-import type { BillCategory } from "@/features/bills/types";
+import type { DefaultBillCategory } from "@/features/bills/types";
+import { CATEGORY_COLUMNS, mapCategoryRow, colorsByCategoryName } from "@/features/categories/lib";
 import { monthLabel } from "@/features/history/lib";
 import { getLocale } from "@/shared/lib/i18n/server";
 import { getDictionary } from "@/shared/lib/i18n/dictionaries";
@@ -21,15 +22,23 @@ export default async function BillsPage() {
   const dict = getDictionary(locale);
 
   const supabase = await createClient();
-  const { data: billRows } = await supabase
-    .from("bills")
-    .select(BILL_COLUMNS)
-    .eq("group_id", currentGroup.groupId)
-    .order("due_day", { ascending: true });
+  const [{ data: billRows }, { data: categoryRows }] = await Promise.all([
+    supabase
+      .from("bills")
+      .select(BILL_COLUMNS)
+      .eq("group_id", currentGroup.groupId)
+      .order("due_day", { ascending: true }),
+    supabase
+      .from("categories")
+      .select(CATEGORY_COLUMNS)
+      .eq("group_id", currentGroup.groupId)
+      .eq("type", "bill"),
+  ]);
 
   const bills = (billRows ?? []).map(mapBillRow);
+  const categories = (categoryRows ?? []).map(mapCategoryRow);
   const summary = computeBillsSummary(bills);
-  const categoryBreakdown = computeCategoryBreakdown(bills);
+  const categoryBreakdown = computeCategoryBreakdown(bills, colorsByCategoryName(categories));
 
   const now = new Date();
   const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -41,10 +50,10 @@ export default async function BillsPage() {
         title={dict.bills.byCategory(monthLabel(currentMonth, true, LOCALE_INTL_TAG[locale]))}
         rows={categoryBreakdown}
         emptyMessage={dict.bills.noPaidBillsThisMonth}
-        categoryLabel={(category) => dict.categories.bill[category as BillCategory] ?? category}
+        categoryLabel={(category) => dict.categories.bill[category as DefaultBillCategory] ?? category}
         currency={currentGroup.currency}
       />
-      <BillsList bills={bills} currency={currentGroup.currency} />
+      <BillsList bills={bills} currency={currentGroup.currency} categories={categories} />
     </div>
   );
 }

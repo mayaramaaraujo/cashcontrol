@@ -10,17 +10,13 @@ import { Input } from "@/shared/components/Input";
 import { DatePicker } from "@/shared/components/DatePicker";
 import { Button } from "@/shared/components/Button";
 import { Avatar, type AvatarColorIndex } from "@/shared/components/Avatar";
-import { Chip, type ChipAccent } from "@/shared/components/Chip";
+import { Chip } from "@/shared/components/Chip";
 import { getInitials } from "@/shared/lib/utils";
 import { CURRENCY_SYMBOL, type Currency } from "@/shared/lib/currency";
 import { addEntry, updateEntry, deleteEntry } from "@/features/income/api/actions";
-import {
-  createAddIncomeSchema,
-  INCOME_CATEGORIES,
-  INCOME_CATEGORY_COLORS,
-  type IncomeEntry,
-} from "@/features/income/types";
+import { createAddIncomeSchema, type IncomeEntry, type DefaultIncomeCategory } from "@/features/income/types";
 import type { GroupMember } from "@/features/groups/types";
+import type { Category } from "@/features/categories/types";
 import { useTranslation } from "@/shared/lib/i18n/context";
 
 interface IncomeSheetProps {
@@ -30,6 +26,7 @@ interface IncomeSheetProps {
   defaultMemberId: string;
   entry?: IncomeEntry;
   currency: Currency;
+  categories: Category[];
 }
 
 type IncomeFormInput = z.input<ReturnType<typeof createAddIncomeSchema>>;
@@ -42,24 +39,32 @@ function todayDate(): string {
 function entryToValues(entry: IncomeEntry): IncomeFormInput {
   return {
     memberId: entry.memberId,
-    category: entry.category as IncomeFormInput["category"],
+    category: entry.category,
     amount: entry.amount,
     entryDate: entry.entryDate,
     note: entry.note ?? "",
   };
 }
 
-function defaultValues(defaultMemberId: string): IncomeFormInput {
+function defaultValues(defaultMemberId: string, categories: Category[]): IncomeFormInput {
   return {
     memberId: defaultMemberId,
-    category: INCOME_CATEGORIES[0],
+    category: categories[0]?.name ?? "",
     amount: undefined,
     entryDate: todayDate(),
     note: "",
   };
 }
 
-export function IncomeSheet({ open, onClose, members, defaultMemberId, entry, currency }: IncomeSheetProps) {
+export function IncomeSheet({
+  open,
+  onClose,
+  members,
+  defaultMemberId,
+  entry,
+  currency,
+  categories,
+}: IncomeSheetProps) {
   const { dict } = useTranslation();
   const addIncomeSchema = useMemo(() => createAddIncomeSchema(dict), [dict]);
   const {
@@ -71,14 +76,14 @@ export function IncomeSheet({ open, onClose, members, defaultMemberId, entry, cu
     formState: { errors, isSubmitting },
   } = useForm<IncomeFormInput, unknown, IncomeFormValues>({
     resolver: zodResolver(addIncomeSchema),
-    defaultValues: entry ? entryToValues(entry) : defaultValues(defaultMemberId),
+    defaultValues: entry ? entryToValues(entry) : defaultValues(defaultMemberId, categories),
   });
 
   useEffect(() => {
     if (open) {
-      reset(entry ? entryToValues(entry) : defaultValues(defaultMemberId));
+      reset(entry ? entryToValues(entry) : defaultValues(defaultMemberId, categories));
     }
-  }, [open, entry, defaultMemberId, reset]);
+  }, [open, entry, defaultMemberId, categories, reset]);
 
   async function onSubmit(values: IncomeFormValues) {
     const result = entry ? await updateEntry(entry.id, values) : await addEntry(values);
@@ -156,15 +161,15 @@ export function IncomeSheet({ open, onClose, members, defaultMemberId, entry, cu
             <div className="mt-3">
               <p className="mb-2 text-xs font-semibold text-text-subtle">{dict.income.category}</p>
               <div className="flex flex-wrap gap-2">
-                {INCOME_CATEGORIES.map((category) => (
+                {categories.map((category) => (
                   <Chip
-                    key={category}
+                    key={category.id}
                     type="button"
-                    accent={INCOME_CATEGORY_COLORS[category] as ChipAccent}
-                    selected={field.value === category}
-                    onClick={() => field.onChange(category)}
+                    accent={category.color}
+                    selected={field.value === category.name}
+                    onClick={() => field.onChange(category.name)}
                   >
-                    {dict.categories.income[category]}
+                    {dict.categories.income[category.name as DefaultIncomeCategory] ?? category.name}
                   </Chip>
                 ))}
               </div>
