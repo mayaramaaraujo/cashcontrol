@@ -62,8 +62,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       .order("entry_date", { ascending: false }),
     supabase
       .from("bills")
-      .select("id, group_id, name, category, amount, due_day, fixed, paid, paid_at, repeat_monthly, created_at")
+      .select(
+        "id, group_id, name, category, amount, due_day, fixed, paid, paid_at, repeat_monthly, cycle_month, created_at",
+      )
       .eq("group_id", currentGroup.groupId)
+      .or(`repeat_monthly.eq.true,cycle_month.eq.${month}`)
       .order("due_day", { ascending: true }),
     supabase
       .from("income_entries")
@@ -96,6 +99,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     paid: row.paid,
     paidAt: row.paid_at,
     repeatMonthly: row.repeat_monthly,
+    cycleMonth: row.cycle_month,
     createdAt: row.created_at,
   }));
 

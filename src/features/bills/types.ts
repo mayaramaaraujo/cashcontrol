@@ -13,6 +13,7 @@ export type Bill = {
   paid: boolean;
   paidAt: string | null;
   repeatMonthly: boolean;
+  cycleMonth: string;
   createdAt: string;
 };
 

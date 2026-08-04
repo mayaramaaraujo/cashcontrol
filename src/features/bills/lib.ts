@@ -3,7 +3,7 @@ import type { Bill } from "@/features/bills/types";
 import type { CategoryBreakdownRow } from "@/shared/components/CategoryBreakdown";
 
 export const BILL_COLUMNS =
-  "id, group_id, name, category, amount, due_day, fixed, paid, paid_at, repeat_monthly, created_at" as const;
+  "id, group_id, name, category, amount, due_day, fixed, paid, paid_at, repeat_monthly, cycle_month, created_at" as const;
 
 type BillRow = Database["public"]["Tables"]["bills"]["Row"];
 
@@ -19,6 +19,7 @@ export function mapBillRow(row: BillRow): Bill {
     paid: row.paid,
     paidAt: row.paid_at,
     repeatMonthly: row.repeat_monthly,
+    cycleMonth: row.cycle_month,
     createdAt: row.created_at,
   };
 }

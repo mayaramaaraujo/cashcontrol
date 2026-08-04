@@ -21,12 +21,16 @@ export default async function BillsPage() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
 
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
   const supabase = await createClient();
   const [{ data: billRows }, { data: categoryRows }] = await Promise.all([
     supabase
       .from("bills")
       .select(BILL_COLUMNS)
       .eq("group_id", currentGroup.groupId)
+      .or(`repeat_monthly.eq.true,cycle_month.eq.${currentMonth}`)
       .order("due_day", { ascending: true }),
     supabase
       .from("categories")
@@ -39,9 +43,6 @@ export default async function BillsPage() {
   const categories = (categoryRows ?? []).map(mapCategoryRow);
   const summary = computeBillsSummary(bills);
   const categoryBreakdown = computeCategoryBreakdown(bills, colorsByCategoryName(categories));
-
-  const now = new Date();
-  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
   return (
     <div>

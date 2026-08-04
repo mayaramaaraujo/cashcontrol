@@ -79,6 +79,7 @@ export type Database = {
           amount: number
           category: string
           created_at: string
+          cycle_month: string
           due_day: number
           fixed: boolean
           group_id: string
@@ -92,6 +93,7 @@ export type Database = {
           amount: number
           category: string
           created_at?: string
+          cycle_month?: string
           due_day: number
           fixed?: boolean
           group_id: string
@@ -105,6 +107,7 @@ export type Database = {
           amount?: number
           category?: string
           created_at?: string
+          cycle_month?: string
           due_day?: number
           fixed?: boolean
           group_id?: string
