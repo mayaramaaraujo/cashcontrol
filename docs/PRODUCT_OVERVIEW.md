@@ -1,4 +1,4 @@
-# CashControl — Product Overview
+# Finkith — Product Overview
 
 Shared income/bills tracker for couples and roommates. Group members log what they bring in each month, track shared bills (fixed/variable, paid/pending), and see a combined picture of income, bills, and what's left.
 

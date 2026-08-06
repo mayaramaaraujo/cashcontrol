@@ -130,10 +130,10 @@ export const ptBR: Dictionary = {
     permissionDenied: "As notificações estão bloqueadas nas configurações do seu navegador.",
   },
   auth: {
-    appTitle: "CashControl",
+    appTitle: "Finkith",
     loginSubtitle: "Acompanhe o que cada um traz e o que é devido. Uma visão em comum, todo mês.",
     signupTitle: "Crie sua conta",
-    signupSubtitle: "Configure seu login para começar a usar o CashControl.",
+    signupSubtitle: "Configure seu login para começar a usar o Finkith.",
     emailPlaceholder: "voce@email.com",
     passwordPlaceholder: "••••••••",
     namePlaceholder: "Seu nome",
@@ -146,8 +146,8 @@ export const ptBR: Dictionary = {
     termsNotice: "Ao continuar você concorda com nossos Termos e Política de Privacidade.",
     confirmationSentBefore: "Enviamos um link de confirmação para",
     confirmationSentAfter: "Clique nele para ativar sua conta e entrar.",
-    loginPageTitle: "Entrar — CashControl",
-    signupPageTitle: "Cadastrar — CashControl",
+    loginPageTitle: "Entrar — Finkith",
+    signupPageTitle: "Cadastrar — Finkith",
     validation: {
       emailInvalid: "Digite um endereço de e-mail válido",
       passwordRequired: "A senha é obrigatória",

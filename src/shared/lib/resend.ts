@@ -2,7 +2,7 @@ import { Resend } from "resend";
 
 // Resend's shared test sender — only delivers to the email address on the
 // Resend account itself until a real domain is verified in the dashboard.
-export const EMAIL_FROM = "CashControl <onboarding@resend.dev>";
+export const EMAIL_FROM = "Finkith <onboarding@resend.dev>";
 
 // FLAG: flip to true once a custom domain is verified at resend.com/domains
 // and EMAIL_FROM above is updated to use it. Until then, sending to anyone

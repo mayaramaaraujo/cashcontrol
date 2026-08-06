@@ -128,10 +128,10 @@ export const en = {
     permissionDenied: "Notifications are blocked in your browser settings.",
   },
   auth: {
-    appTitle: "CashControl",
+    appTitle: "Finkith",
     loginSubtitle: "Track what everyone brings in and what's owed. One shared picture, every month.",
     signupTitle: "Create your account",
-    signupSubtitle: "Set up your login to get started with CashControl.",
+    signupSubtitle: "Set up your login to get started with Finkith.",
     emailPlaceholder: "you@email.com",
     passwordPlaceholder: "••••••••",
     namePlaceholder: "Your name",
@@ -144,8 +144,8 @@ export const en = {
     termsNotice: "By continuing you agree to our Terms and Privacy Policy.",
     confirmationSentBefore: "We sent a confirmation link to",
     confirmationSentAfter: "Click it to activate your account and sign in.",
-    loginPageTitle: "Sign in — CashControl",
-    signupPageTitle: "Sign up — CashControl",
+    loginPageTitle: "Sign in — Finkith",
+    signupPageTitle: "Sign up — Finkith",
     validation: {
       emailInvalid: "Enter a valid email address",
       passwordRequired: "Password is required",

@@ -18,13 +18,13 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "CashControl",
+  title: "Finkith",
   description: "Track what everyone brings in and what's owed. One shared picture, every month.",
-  applicationName: "CashControl",
+  applicationName: "Finkith",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "CashControl",
+    title: "Finkith",
   },
 };
 
