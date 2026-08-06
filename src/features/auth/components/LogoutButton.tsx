@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { LogOut } from "lucide-react";
+import { Button } from "@/shared/components/Button";
 import { logout } from "@/features/auth/api/actions";
 import { useTranslation } from "@/shared/lib/i18n/context";
 
@@ -10,14 +11,16 @@ export function LogoutButton() {
   const [isPending, startTransition] = useTransition();
 
   return (
-    <button
+    <Button
       type="button"
+      variant="outline"
+      size="sm"
+      fullWidth
       disabled={isPending}
       onClick={() => startTransition(() => logout())}
-      className="flex items-center gap-1.5 text-xs font-semibold text-text-dim disabled:opacity-50"
     >
-      <LogOut className="size-3.5" />
+      <LogOut className="size-4" />
       {dict.settings.logOut}
-    </button>
+    </Button>
   );
 }

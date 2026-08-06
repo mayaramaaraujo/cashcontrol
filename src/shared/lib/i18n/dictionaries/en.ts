@@ -104,7 +104,6 @@ export const en = {
     inviteLinkLabel: "Invite link · anyone can join & add income",
     copy: "Copy",
     copied: "Copied!",
-    inviteByEmailPlaceholder: "Invite by email",
     add: "Add",
     logOut: "Log out",
     deleteAccount: "Delete account",
@@ -117,10 +116,11 @@ export const en = {
     categories: "Categories",
     billCategories: "Bills",
     incomeCategories: "Income",
+    addCategory: "Add category",
     addCategoryPlaceholder: "New category name",
     categoryNameRequired: "Category name is required",
     deleteCategory: "Delete category",
-    noCategoriesYet: "No categories yet — add one below.",
+    noCategoriesYet: "No categories yet — tap + to add one.",
   },
   notifications: {
     title: "Push notifications",
@@ -173,9 +173,6 @@ export const en = {
     createAccount: "Create account",
     joinDescription: "You'll be added as a member and can start logging income and bills together.",
     joinGroup: "Join group",
-    email: {
-      inviteRequired: "Enter a valid email address",
-    },
   },
   categories: {
     bill: {

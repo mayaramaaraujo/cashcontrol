@@ -25,14 +25,10 @@ export function DeleteAccountButton() {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 text-xs font-semibold text-danger"
-      >
-        <Trash2 className="size-3.5" />
+      <Button type="button" variant="danger" size="sm" fullWidth onClick={() => setOpen(true)}>
+        <Trash2 className="size-4" />
         {dict.settings.deleteAccount}
-      </button>
+      </Button>
 
       <Sheet open={open} onClose={() => setOpen(false)} title={dict.settings.deleteAccountTitle}>
         <p className="text-sm text-text-subtle">{dict.settings.deleteAccountBody}</p>

@@ -49,7 +49,7 @@ export function NotificationToggle() {
   }
 
   return (
-    <div className="mt-6 flex items-center justify-between border-t border-surface-border pt-5">
+    <div className="flex items-center justify-between p-4">
       <div>
         <p className="text-sm font-semibold text-text-primary">{dict.notifications.title}</p>
         <p className="mt-0.5 text-xs text-text-subtle">{dict.notifications.description}</p>

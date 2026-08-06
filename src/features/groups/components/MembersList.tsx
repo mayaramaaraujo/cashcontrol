@@ -30,7 +30,7 @@ function roleColorClass(member: GroupMember, isYou: boolean) {
 export function MembersList({ rows, dict, currency }: MembersListProps) {
   return (
     <div>
-      <p className="mt-6 mb-3 font-display text-base font-semibold text-text-primary">{dict.settings.members}</p>
+      <p className="mb-3 font-display text-base font-semibold text-text-primary">{dict.settings.members}</p>
       <div className="flex flex-col gap-2">
         {rows.map(({ member, isYou, monthTotal }) => (
           <div

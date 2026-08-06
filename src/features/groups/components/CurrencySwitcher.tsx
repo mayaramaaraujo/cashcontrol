@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { SegmentedControl } from "@/shared/components/SegmentedControl";
+import { Select } from "@/shared/components/Select";
 import { updateGroupCurrency } from "@/features/groups/api/actions";
 import { CURRENCIES, CURRENCY_LABEL, type Currency } from "@/shared/lib/currency";
 
@@ -13,7 +13,7 @@ export function CurrencySwitcher({ currency }: CurrencySwitcherProps) {
   const [isPending, startTransition] = useTransition();
 
   return (
-    <SegmentedControl<Currency>
+    <Select<Currency>
       value={currency}
       onChange={(next) =>
         startTransition(async () => {

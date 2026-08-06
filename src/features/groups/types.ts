@@ -24,14 +24,3 @@ export function createGroupSchemaFor(dict: Dictionary) {
 export const createGroupSchema = createGroupSchemaFor(en);
 
 export type CreateGroupValues = z.infer<typeof createGroupSchema>;
-
-export function createInviteByEmailSchema(dict: Dictionary) {
-  return z.object({
-    email: z.email(dict.join.email.inviteRequired),
-  });
-}
-
-/** Default English schema, used for server-side re-validation in Server Actions. */
-export const inviteByEmailSchema = createInviteByEmailSchema(en);
-
-export type InviteByEmailValues = z.infer<typeof inviteByEmailSchema>;

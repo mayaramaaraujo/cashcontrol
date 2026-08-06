@@ -106,7 +106,6 @@ export const ptBR: Dictionary = {
     inviteLinkLabel: "Link de convite · qualquer pessoa pode entrar e adicionar renda",
     copy: "Copiar",
     copied: "Copiado!",
-    inviteByEmailPlaceholder: "Convidar por e-mail",
     add: "Adicionar",
     logOut: "Sair",
     deleteAccount: "Excluir conta",
@@ -119,10 +118,11 @@ export const ptBR: Dictionary = {
     categories: "Categorias",
     billCategories: "Contas",
     incomeCategories: "Renda",
+    addCategory: "Adicionar categoria",
     addCategoryPlaceholder: "Nome da nova categoria",
     categoryNameRequired: "O nome da categoria é obrigatório",
     deleteCategory: "Excluir categoria",
-    noCategoriesYet: "Nenhuma categoria ainda — adicione uma abaixo.",
+    noCategoriesYet: "Nenhuma categoria ainda — toque em + para adicionar.",
   },
   notifications: {
     title: "Notificações push",
@@ -175,9 +175,6 @@ export const ptBR: Dictionary = {
     createAccount: "Criar conta",
     joinDescription: "Você será adicionado como membro e poderá começar a registrar renda e contas junto com o grupo.",
     joinGroup: "Entrar no grupo",
-    email: {
-      inviteRequired: "Digite um endereço de e-mail válido",
-    },
   },
   categories: {
     bill: {

@@ -5,6 +5,7 @@ Design-system primitives shared across features, built on the tokens in `src/app
 - **Avatar** — circular initials badge, cycles through the app's 6-color avatar palette (`colorIndex` 0–5)
 - **Button** — `primary` / `secondary` / `outline` / `danger` variants, `sm` / `md` sizes
 - **Input** — text input with optional leading icon or `leadingText` (e.g. a "€" currency symbol), `invalid` state
+- **Select** — compact native `<select>` styled to match the design tokens (e.g. Settings' Language/Currency rows), value/onChange over a `{ value, label }[]` options list
 - **DatePicker** — calendar-popup date field (built on `react-datepicker`), value/onChange in `YYYY-MM-DD`, opens a full-screen portal calendar instead of the native OS date input
 - **Chip** — toggleable pill (category/filter selection), `selected` + `accent` props. Re-exports `ChipAccent`, `CHIP_ACCENTS` (the full list of accent tokens, e.g. for a color picker), and `CHIP_ACCENT_BG_CLASSES` (accent → solid `bg-*` class, for dots/swatches — Tailwind needs the full class name statically present, so don't build it via string interpolation) from `@/shared/lib/chip-accents`. **Import those three from `@/shared/lib/chip-accents` directly (not `./Chip`) in any Server Component or Server Action** — `Chip.tsx` is `"use client"`, so a server-side import of its *values* (not types) resolves to an opaque client reference instead of the real value
 - **SegmentedControl** — equal-width multi-option track (e.g. Income/Bills/Left)
@@ -13,7 +14,7 @@ Design-system primitives shared across features, built on the tokens in `src/app
 - **ProgressBar** — thin rounded track with a filled bar (`percent` 0-100, optional `color` override)
 - **CategoryBreakdown** — colored dot + name + amount + `ProgressBar` per category, sorted rows with an empty state; feature passes in `title`, `emptyMessage`, `categoryLabel` translator, and `currency`. Used by History (income) and Bills (paid spend) pages.
 - **Switch** — small toggle (track + sliding knob), e.g. the bill sheet's "Repeat every month" row
-- **LanguageSwitcher** — segmented EN/PT-BR toggle backed by `useTranslation()` from `@/shared/lib/i18n/context`
+- **LanguageSwitcher** — EN/PT-BR `Select` backed by `useTranslation()` from `@/shared/lib/i18n/context`
 - **LogoMark** — the CashControl brand mark (wallet + cash + bar chart), rendered from `src/app/icon.svg`. Used by `AuthShell`
 
 **Before adding a new component here or in a feature's `components/` folder, check this list (and the feature's own folder) for something that already does the job.** See the "Reuse before creating" rule in `AGENTS.md`.

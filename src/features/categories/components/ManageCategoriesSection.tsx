@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { SegmentedControl } from "@/shared/components/SegmentedControl";
 import { CHIP_ACCENT_BG_CLASSES } from "@/shared/components/Chip";
 import { deleteCategory } from "@/features/categories/api/actions";
@@ -20,6 +20,7 @@ export function ManageCategoriesSection({ categories }: ManageCategoriesSectionP
   const { dict } = useTranslation();
   const [type, setType] = useState<CategoryType>("bill");
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
   const [, startTransition] = useTransition();
 
   const visible = categoriesByType(categories, type);
@@ -41,7 +42,17 @@ export function ManageCategoriesSection({ categories }: ManageCategoriesSectionP
 
   return (
     <div>
-      <p className="mt-6 mb-3 font-display text-base font-semibold text-text-primary">{dict.settings.categories}</p>
+      <div className="mb-3 flex items-center justify-between">
+        <p className="font-display text-base font-semibold text-text-primary">{dict.settings.categories}</p>
+        <button
+          type="button"
+          aria-label={dict.settings.addCategory}
+          onClick={() => setAddOpen(true)}
+          className="flex size-8 items-center justify-center rounded-full bg-surface-2 text-text-icon transition-colors hover:text-text-primary"
+        >
+          <Plus className="size-4" />
+        </button>
+      </div>
 
       <SegmentedControl<CategoryType>
         value={type}
@@ -77,7 +88,12 @@ export function ManageCategoriesSection({ categories }: ManageCategoriesSectionP
         )}
       </div>
 
-      <AddCategoryForm type={type} />
+      <AddCategoryForm
+        type={type}
+        usedColors={visible.map((category) => category.color)}
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+      />
     </div>
   );
 }

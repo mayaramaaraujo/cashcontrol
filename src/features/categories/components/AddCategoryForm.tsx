@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo } from "react";
 import type * as z from "zod";
-import { Plus, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { Input } from "@/shared/components/Input";
 import { Button } from "@/shared/components/Button";
+import { Sheet } from "@/shared/components/Sheet";
 import { CHIP_ACCENTS, CHIP_ACCENT_BG_CLASSES, type ChipAccent } from "@/shared/components/Chip";
 import { addCategory } from "@/features/categories/api/actions";
 import { createCategorySchema, type CategoryType } from "@/features/categories/types";
@@ -16,18 +17,26 @@ const COLOR_OPTIONS = CHIP_ACCENTS.filter((accent): accent is Exclude<ChipAccent
 
 interface AddCategoryFormProps {
   type: CategoryType;
+  usedColors: ChipAccent[];
+  open: boolean;
+  onClose: () => void;
 }
 
 type CategoryFormInput = z.input<ReturnType<typeof createCategorySchema>>;
 type CategoryFormValues = z.output<ReturnType<typeof createCategorySchema>>;
 
-function defaultValues(type: CategoryType): CategoryFormInput {
-  return { type, name: "", color: COLOR_OPTIONS[0] };
-}
-
-export function AddCategoryForm({ type }: AddCategoryFormProps) {
+export function AddCategoryForm({ type, usedColors, open, onClose }: AddCategoryFormProps) {
   const { dict } = useTranslation();
   const categorySchema = useMemo(() => createCategorySchema(dict), [dict]);
+  const availableColors = useMemo(
+    () => COLOR_OPTIONS.filter((accent) => !usedColors.includes(accent)),
+    [usedColors],
+  );
+
+  function defaultValues(): CategoryFormInput {
+    return { type, name: "", color: availableColors[0] ?? COLOR_OPTIONS[0] };
+  }
+
   const {
     register,
     control,
@@ -37,12 +46,13 @@ export function AddCategoryForm({ type }: AddCategoryFormProps) {
     formState: { errors, isSubmitting },
   } = useForm<CategoryFormInput, unknown, CategoryFormValues>({
     resolver: zodResolver(categorySchema),
-    defaultValues: defaultValues(type),
+    defaultValues: defaultValues(),
   });
 
   useEffect(() => {
-    reset(defaultValues(type));
-  }, [type, reset]);
+    if (open) reset(defaultValues());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, type]);
 
   async function onSubmit(values: CategoryFormValues) {
     const result = await addCategory(values);
@@ -50,46 +60,53 @@ export function AddCategoryForm({ type }: AddCategoryFormProps) {
       setError("root", { message: result.error });
       return;
     }
-    reset(defaultValues(type));
+    onClose();
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mt-3 flex flex-col gap-2.5">
-      <Controller
-        control={control}
-        name="color"
-        render={({ field }) => (
-          <div className="flex flex-wrap gap-1.5">
-            {COLOR_OPTIONS.map((accent) => (
-              <button
-                key={accent}
-                type="button"
-                aria-label={accent}
-                aria-pressed={field.value === accent}
-                onClick={() => field.onChange(accent)}
-                className={`size-6 shrink-0 rounded-full ${CHIP_ACCENT_BG_CLASSES[accent]} ${
-                  field.value === accent ? "ring-2 ring-text-primary ring-offset-2 ring-offset-bg-sheet" : ""
-                }`}
-              />
-            ))}
-          </div>
-        )}
-      />
+    <Sheet open={open} onClose={onClose} title={dict.settings.addCategory}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <Controller
+          control={control}
+          name="color"
+          render={({ field }) => (
+            <div className="flex flex-wrap gap-2.5">
+              {COLOR_OPTIONS.map((accent) => {
+                const taken = usedColors.includes(accent) && field.value !== accent;
+                return (
+                  <button
+                    key={accent}
+                    type="button"
+                    aria-label={accent}
+                    aria-pressed={field.value === accent}
+                    disabled={taken}
+                    onClick={() => field.onChange(accent)}
+                    className={`size-9 shrink-0 rounded-full ${CHIP_ACCENT_BG_CLASSES[accent]} ${
+                      field.value === accent
+                        ? "ring-2 ring-text-primary ring-offset-2 ring-offset-bg-sheet"
+                        : ""
+                    } ${taken ? "cursor-not-allowed opacity-20" : ""}`}
+                  />
+                );
+              })}
+            </div>
+          )}
+        />
 
-      <div className="flex gap-2">
         <Input
           placeholder={dict.settings.addCategoryPlaceholder}
           invalid={!!errors.name}
-          className="flex-1"
           {...register("name")}
         />
-        <Button type="submit" size="sm" disabled={isSubmitting}>
-          {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
-        </Button>
-      </div>
 
-      {errors.name ? <p className="text-xs font-medium text-danger">{errors.name.message}</p> : null}
-      {errors.root ? <p className="text-xs font-medium text-danger">{errors.root.message}</p> : null}
-    </form>
+        {errors.name ? <p className="text-xs font-medium text-danger">{errors.name.message}</p> : null}
+        {errors.root ? <p className="text-xs font-medium text-danger">{errors.root.message}</p> : null}
+
+        <Button type="submit" disabled={isSubmitting} fullWidth>
+          {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : null}
+          {dict.settings.add}
+        </Button>
+      </form>
+    </Sheet>
   );
 }

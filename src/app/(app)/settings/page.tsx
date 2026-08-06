@@ -5,7 +5,6 @@ import { createClient } from "@/shared/lib/supabase/server";
 import { GROUP_MEMBER_COLUMNS, mapGroupMemberRow } from "@/features/groups/lib";
 import type { MemberRow } from "@/features/groups/components/MembersList";
 import { InviteLinkCard } from "@/features/groups/components/InviteLinkCard";
-import { InviteByEmailForm } from "@/features/groups/components/InviteByEmailForm";
 import { MembersList } from "@/features/groups/components/MembersList";
 import { CurrencySwitcher } from "@/features/groups/components/CurrencySwitcher";
 import { CATEGORY_COLUMNS, mapCategoryRow } from "@/features/categories/lib";
@@ -79,26 +78,26 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
   const inviteUrl = `${protocol}://${host}/join/${groupRes.data?.invite_code ?? ""}`;
 
   return (
-    <div>
+    <div className="flex flex-col gap-8">
       <InviteLinkCard inviteUrl={inviteUrl} />
-      <InviteByEmailForm />
+
       <MembersList rows={rows} dict={dict} currency={currentGroup.currency} />
 
-      <div className="mt-8 flex items-center justify-between">
-        <p className="text-xs font-semibold text-text-subtle">{dict.settings.language}</p>
-        <LanguageSwitcher />
-      </div>
-
-      <div className="mt-4 flex items-center justify-between">
-        <p className="text-xs font-semibold text-text-subtle">{dict.settings.currency}</p>
-        <CurrencySwitcher currency={currentGroup.currency} />
+      <div className="divide-y divide-surface-border rounded-xl border border-surface-border bg-surface-1">
+        <div className="flex items-center justify-between p-4">
+          <p className="text-sm font-semibold text-text-primary">{dict.settings.language}</p>
+          <LanguageSwitcher />
+        </div>
+        <div className="flex items-center justify-between p-4">
+          <p className="text-sm font-semibold text-text-primary">{dict.settings.currency}</p>
+          <CurrencySwitcher currency={currentGroup.currency} />
+        </div>
+        <NotificationToggle />
       </div>
 
       <ManageCategoriesSection categories={categories} />
 
-      <NotificationToggle />
-
-      <div className="mt-6 flex items-center justify-between border-t border-surface-border pt-5">
+      <div className="grid grid-cols-2 gap-3 border-t border-surface-border pt-6">
         <LogoutButton />
         <DeleteAccountButton />
       </div>
