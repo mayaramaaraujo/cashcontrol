@@ -76,6 +76,7 @@ export function BillSheet({ open, onClose, bill, currency, categories }: BillShe
       setError("root", { message: result.error });
       return;
     }
+    reset(defaultValues(categories));
     onClose();
   }
 

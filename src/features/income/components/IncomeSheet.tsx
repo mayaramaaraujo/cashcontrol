@@ -91,6 +91,7 @@ export function IncomeSheet({
       setError("root", { message: result.error });
       return;
     }
+    reset(defaultValues(defaultMemberId, categories));
     onClose();
   }
 
