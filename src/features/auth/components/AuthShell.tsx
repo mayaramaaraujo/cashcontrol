@@ -1,10 +1,12 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { LogoMark } from "@/shared/components/LogoMark";
+import type { Dictionary } from "@/shared/lib/i18n/dictionaries";
 
 interface AuthShellProps {
   title: string;
   subtitle: string;
-  termsNotice: string;
+  termsNotice: Dictionary["auth"]["termsNotice"];
   children: ReactNode;
 }
 
@@ -23,7 +25,17 @@ export function AuthShell({ title, subtitle, termsNotice, children }: AuthShellP
 
       <div className="mt-9 flex flex-1 flex-col">{children}</div>
 
-      <p className="mt-4 text-center text-xs leading-relaxed text-text-faintest">{termsNotice}</p>
+      <p className="mt-4 text-center text-xs leading-relaxed text-text-faintest">
+        {termsNotice.before}
+        <Link href="/terms" className="text-primary underline underline-offset-2">
+          {termsNotice.terms}
+        </Link>
+        {termsNotice.and}
+        <Link href="/privacy" className="text-primary underline underline-offset-2">
+          {termsNotice.privacy}
+        </Link>
+        {termsNotice.after}
+      </p>
     </div>
   );
 }

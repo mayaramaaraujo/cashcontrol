@@ -16,5 +16,6 @@ Design-system primitives shared across features, built on the tokens in `src/app
 - **Switch** — small toggle (track + sliding knob), e.g. the bill sheet's "Repeat every month" row
 - **LanguageSwitcher** — EN/PT-BR `Select` backed by `useTranslation()` from `@/shared/lib/i18n/context`
 - **LogoMark** — the Finkith brand mark (wallet + cash + bar chart), rendered from `src/app/icon.svg`. Used by `AuthShell`
+- **LegalPageShell** — back link + title/last-updated + section list layout for long-form legal copy, locale-aware. Takes a `LegalPageContent` (`title`, `lastUpdated`, `intro`, `sections`) plus `locale`; used by `/privacy` and `/terms` pages, each sourcing content from their own `content.ts`
 
 **Before adding a new component here or in a feature's `components/` folder, check this list (and the feature's own folder) for something that already does the job.** See the "Reuse before creating" rule in `AGENTS.md`.
